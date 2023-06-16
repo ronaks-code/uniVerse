@@ -31,16 +31,27 @@ def save_text_to_json_file(text, filename):
     with open(filename, 'w') as f:
         json.dump(existing_data, f, indent=4)
 
-if __name__ == '__main__':
+def main():
     filename = date.today().strftime("%b-%d-%Y") + '.json'
     url = 'https://one.ufl.edu/apix/soc/schedule/?category=RES&term=2238&last-control-number='
     controlNum = 50
+    threads = []
     while True:  # Infinite loop, we'll break it when no more data
         full_url = url + str(controlNum)
         print(full_url)
+        thread = threading.Thread(target=scrape_page, args=(full_url,))
+        threads.append(thread)
+        thread.start()
+        controlNum += 50
+        # Wait for all threads to finish
+        for thread in threads:
+            thread.join()
+        # Check if there's any more data
         data = scrape_page(full_url)
         if not data or data[0]['RETRIEVEDROWS'] == 0:  # If data is empty or RETRIEVEDROWS is 0, we assume there's no more data and break the loop
             break
-        # filename = 'text.json'
+        # Save the data to a JSON file
         save_text_to_json_file(data, filename)
-        controlNum += 50
+
+if __name__ == '__main__':
+    main()
