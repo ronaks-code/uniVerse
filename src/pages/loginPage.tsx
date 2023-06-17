@@ -1,10 +1,6 @@
-// Create a login page that will allow the user to login to the application.
-// The login page should have a form with two fields: username and password.
-// The login page should have a button that will submit the form.
-
-
 import React, { useState } from 'react';
-// import './App.css';
+import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '../components/firebase';
+import Error from '../components/firebase.FirebaseError';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -12,16 +8,31 @@ function LoginPage() {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-  }
+  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(`Username: ${username} Password: ${password}`);
-  }
+    try {
+      // Sign in with the provided username and password
+      await signInWithEmailAndPassword(auth, username, password);
+      alert('Sign-in successful!');
+      // Continue with your application logic after successful sign-in
+    } catch (signInError) {
+      // If sign-in fails, create a new user with the provided username and password
+      try {
+        await createUserWithEmailAndPassword(auth, username, password);
+        alert('Sign-up successful!');
+        // Continue with your application logic after successful sign-up
+      } catch (signUpError: Error | firebase.FirebaseError) {
+        alert('Error: ' + signUpError.message);
+      }
+    }
+  };
+  
 
   return (
     <div className="App">
