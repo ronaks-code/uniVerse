@@ -1,28 +1,13 @@
-import React from 'react';
-import LoginPage from './pages/loginPage';
-import './App.css';
-import { db } from './components/firebase';
-import { uid } from 'uid';
-import { set, ref } from 'firebase/database';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home';
+// import LoginPage from './pages/LoginPage';
 
-function App() {
-
-  // write
-  const writeToDatabase = () => {
-    const uuid = uid()
-    set(ref(db, `/${uuid}`), {
-      username: 'test',
-      password: 'test'
-    });
-  }
-  // read
-  // update
-  // delete
+const App = () => {
   return (
     <div>
-      <input type="text" />
-      <button>submit</button>
-      <LoginPage />
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
     </div>
   );
 }
