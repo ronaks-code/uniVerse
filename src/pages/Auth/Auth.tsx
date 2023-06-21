@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -83,6 +84,19 @@ const Auth = () => {
     }
   };
 
+  const loginSchema = yup.object().shape({
+  email: yup.string().email("Must be a valid email").required("Email is required"),
+  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
+
+const signUpSchema = yup.object().shape({
+  email: yup.string().email("Must be a valid email").required("Email is required"),
+  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Confirm Password is required"),
+});
+
+
+
   const handleFormSubmit = async (data: AuthForm) => {
     setErrorMessage(null);
     setLoading(true);
@@ -132,12 +146,14 @@ const Auth = () => {
   };
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<AuthForm>({
-    resolver: yupResolver(authFormSchema),
-  });
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<AuthForm>({
+  resolver: yupResolver(authType === 'login' ? loginSchema : signUpSchema),
+});
+
+  
 
   return (
     <>
@@ -204,22 +220,26 @@ const Auth = () => {
                 )}
               </div>
               <div>
-                <input
-                  type="password"
-                  placeholder="confirm password"
-                  className={input}
-                  {...register("confirmPassword")}
-                />
-                {errors.confirmPassword ? (
-                  <span className="text-red-700">
-                    {errors.confirmPassword.message}
-                  </span>
-                ) : (
-                  <></>
+                {authType === "sign-up" && (
+                  <>
+                    <input
+                      type="password"
+                      placeholder="confirm password"
+                      className={input}
+                      {...register("confirmPassword")}
+                    />
+                    {errors.confirmPassword ? (
+                      <span className="text-red-700">
+                        {errors.confirmPassword.message}
+                      </span>
+                    ) : (
+                      <></>
+                    )}
+                  </>
                 )}
               </div>
 
-              <button disabled={loading} className={button}>
+              <button type="submit" disabled={loading} className={button}>
                 Sign {authType === "login" ? "in" : "up"} with Email
               </button>
             </div>
