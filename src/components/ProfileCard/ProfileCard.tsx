@@ -2,6 +2,19 @@ import { Dispatch, FC, SetStateAction } from "react";
 
 import { User } from "../../models/User";
 
+import {
+  FaSearch,
+  FaHashtag,
+  FaRegBell,
+  FaUserCircle,
+  FaMoon,
+  FaSun,
+} from 'react-icons/fa';
+import useDarkMode from '../../hooks/useDarkMode';
+
+import { themeIconClasses } from './ThemeIconClasses';
+
+
 interface ProfileCardProps {
   handleLogout: () => Promise<void>;
   user: User;
@@ -14,6 +27,22 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
     user: { photoUrl, email },
     setResetPassword,
   } = props;
+
+  const { themeIcon } = themeIconClasses;
+
+  const ThemeIcon = () => {
+    const [darkTheme, setDarkTheme] = useDarkMode();
+    const handleMode = () => setDarkTheme(!darkTheme);
+    return (
+      <span onClick={handleMode} className={themeIcon}>
+        {darkTheme ? (
+          <FaSun size='24' className='top-navigation-icon' />
+        ) : (
+          <FaMoon size='24' className='top-navigation-icon' />
+        )}
+      </span>
+    );
+  };
 
   return (
     <div className="w-screen h-[80vh] flex items-center justify-center">
@@ -46,6 +75,7 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
               Logout
             </button>
           </div>
+          <ThemeIcon />
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
+import ContentContainer from "../../components/ContentContainer/ContentContainer";
 import Header from "../../components/Header/Header";
+import SideBar from "../../components/SideBar/Sidebar";
 import { homeClasses } from "./homeClasses";
 
 const Home = () => {
@@ -6,13 +8,9 @@ const Home = () => {
 
   return (
     <>
-    <Header />
-      <div className={container}>
-        <div className={cardContainer}>
-          <h5 className={title}>Firebase Auth</h5>
-          <p className={description}>Master complete auth in firebase</p>
-        </div>
-      </div>
+      <SideBar />
+      {/* <ContentContainer /> */}
+      
     </>
   );
 }
