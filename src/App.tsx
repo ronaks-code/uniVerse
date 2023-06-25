@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Home from "./pages/Home/Home";
 import Auth from "./pages/Auth/Auth";
 import Profile from "./pages/Profile/Profile";
+import Settings from "./pages/Settings/Settings";
+
 import { auth } from "./firebase";
 import { useAppDispatch } from "./hooks/storeHook";
 import { login } from "./features/authSlice";
@@ -34,6 +36,7 @@ const App = () => {
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="auth" element={<Auth />} />
+      <Route path="settings" element={<Settings />} />
     </Routes>
   );
 };
