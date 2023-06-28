@@ -2,34 +2,9 @@
 
 const colors = require('tailwindcss/colors')
 
-// module.exports = {
-//   mode: 'jit',
-//   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-//   darkMode: false, // or 'media' or 'class'
-//   theme: {
-//     extend: {
-//       primary: '#202225',
-//       secondary: '#5865f2',
-//       gray: colors.trueGray,
-//       gray: {
-//         900: '#202225',
-//         800: '#2f3136',
-//         700: '#36393f',
-//         600: '#4f545c',
-//         400: '#d4d7dc',
-//         300: '#e3e5e8',
-//         200: '#ebedef',
-//         100: '#f2f3f5',
-//       }
-//     },
-//   },
-//   plugins: [],
-// }
-
-
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: 'class', // class, 'media' or boolean
+  darkMode: 'class', // or 'media' or boolean
   theme: {
     extend: {
       colors: {
@@ -44,8 +19,19 @@ module.exports = {
           100: '#f2f3f5',
         },
       },
-      spacing: {
-        88: '22rem',
+      keyframes: {
+        'zoom-in': {
+          '0%': { transform: 'scale(0.95)', opacity: 0 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
+        'zoom-out': {
+          '0%': { transform: 'scale(1)', opacity: 1 },
+          '100%': { transform: 'scale(0.95)', opacity: 0 },
+        },
+      },
+      animation: {
+        'zoom-in': 'zoom-in 0.3s',
+        'zoom-out': 'zoom-out 0.3s', 
       },
     },
   },

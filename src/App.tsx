@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home";
 import Auth from "./pages/Auth/Auth";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
+// import CourseCard from "./components/CourseCard/CourseCard";
+import DisplayCourses from "./pages/DisplayCourse/DisplayCourse";
 
 import { auth } from "./firebase";
 import { useAppDispatch } from "./hooks/storeHook";
@@ -37,6 +39,14 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="auth" element={<Auth />} />
       <Route path="settings" element={<Settings />} />
+      {/* <Route path="courses" element={<CourseCard course={{
+        code: "asdfasfdsa",
+        name: "asdfasfsafsaf",
+        description: "asfdasfasfsaf",
+        prerequisites: "asfsafsafasfasf",
+        sections: []
+      }} />} /> */}
+      <Route path="courses" element={<DisplayCourses />} />
     </Routes>
   );
 };

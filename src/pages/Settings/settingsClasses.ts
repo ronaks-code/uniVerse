@@ -13,4 +13,6 @@ export const settingsClasses = {
     'bg-blue-500 dark:bg-blue-500 transform translate-x-6 transition-transform duration-300 ease-in-out',
   input: 'w-full py-2 px-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500',
   button: 'bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded',
+  zoomInAnimation: 'animate-zoom-in',
+  zoomOutAnimation: 'animate-zoom-out',
 };
