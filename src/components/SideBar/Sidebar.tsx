@@ -50,16 +50,17 @@ const SideBar = () => {
 
       <SideBarIcon icon={<BsPlus size="32" />} />
       <Link to="/course-service">
-        <SideBarIcon icon={<BsFillLightningFill size="20" />} />
+        <SideBarIcon icon={<BsFillLightningFill size="20" />} text='Firebase' />
       </Link>
       
       <Link to="/courses">
-        <SideBarIcon icon={<FaPoo size="20" />} />
+        <SideBarIcon icon={<FaPoo size="20" />} text='Course Cards' />
       </Link>
 
       <Divider />
       
       {renderUserProfile()}
+
       <Link to ="/settings">
         <SideBarIcon icon={<BsGearFill size="22" />} text='Settings' />
       </Link>
