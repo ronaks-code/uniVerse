@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { sendPasswordResetEmail, signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../../services/firebase";
 
+import SideBar from "../../components/SideBar/Sidebar";
 import Header from "../../components/Header/Header";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHook";
@@ -49,25 +50,30 @@ const Profile = () => {
   // }, [navigate, user]);
 
   return (
-    <>
-      <Header />
-      <ResetPassword
-        handlePasswordReset={handlePasswordReset}
-        isOpen={resetPassword}
-        onClose={() => setResetPassword(false)}
-        resetPasswordEmail={resetPasswordEmail}
-        resetPasswordError={resetPasswordError}
-        resetPasswordSuccess={resetPasswordSuccess}
-        setResetPasswordEmail={setResetPasswordEmail}
-      />
-      {user && (
-        <ProfileCard
-          setResetPassword={() => setResetPassword(true)}
-          user={user}
-          handleLogout={handleLogout}
+    <div className="flex-nowrap">
+      <SideBar />
+      <div className="ml-16">
+        <Header />
+      </div>
+      <div>
+        <ResetPassword
+          handlePasswordReset={handlePasswordReset}
+          isOpen={resetPassword}
+          onClose={() => setResetPassword(false)}
+          resetPasswordEmail={resetPasswordEmail}
+          resetPasswordError={resetPasswordError}
+          resetPasswordSuccess={resetPasswordSuccess}
+          setResetPasswordEmail={setResetPasswordEmail}
         />
-      )}
-    </>
+        {user && (
+          <ProfileCard
+            setResetPassword={() => setResetPassword(true)}
+            user={user}
+            handleLogout={handleLogout}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 

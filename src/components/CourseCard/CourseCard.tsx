@@ -11,7 +11,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const [finalExamExists, setFinalExamExists] = useState(false);
 
   useEffect(() => {
-    const doesTermExist = course.termInd != " ";
+    const doesTermExist = course.termInd !== " ";
     setTermExists(doesTermExist);
 
     const doesMeetTimeExist = course.sections.some(

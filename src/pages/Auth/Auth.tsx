@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import { authClasses } from "./authClasses";
 import { AuthForm, authFormSchema } from "../../models/Form";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../services/firebase";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHook";
 import { login } from "../../features/authSlice";
 import ResetPassword from "../../components/ResetPassword/ResetPassword";
@@ -85,17 +85,30 @@ const Auth = () => {
   };
 
   const loginSchema = yup.object().shape({
-  email: yup.string().email("Must be a valid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-});
+    email: yup
+      .string()
+      .email("Must be a valid email")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
 
-const signUpSchema = yup.object().shape({
-  email: yup.string().email("Must be a valid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-  confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Confirm Password is required"),
-});
-
-
+  const signUpSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email("Must be a valid email")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
 
   const handleFormSubmit = async (data: AuthForm) => {
     setErrorMessage(null);
@@ -146,14 +159,12 @@ const signUpSchema = yup.object().shape({
   };
 
   const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm<AuthForm>({
-  resolver: yupResolver(authType === 'login' ? loginSchema : signUpSchema),
-});
-
-  
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthForm>({
+    resolver: yupResolver(authType === "login" ? loginSchema : signUpSchema),
+  });
 
   return (
     <>

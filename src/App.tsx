@@ -5,10 +5,11 @@ import Home from "./pages/Home/Home";
 import Auth from "./pages/Auth/Auth";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
+import CourseService from "./services/CourseService";
 // import CourseCard from "./components/CourseCard/CourseCard";
 import DisplayCourses from "./pages/DisplayCourse/DisplayCourse";
 
-import { auth } from "./firebase";
+import { auth } from "./services/firebase";
 import { useAppDispatch } from "./hooks/storeHook";
 import { login } from "./features/authSlice";
 import AuthRoutes from "./components/HOC/AuthRoutes";
@@ -47,6 +48,7 @@ const App = () => {
         sections: []
       }} />} /> */}
       <Route path="courses" element={<DisplayCourses />} />
+      <Route path="course-service" element={<CourseService />} />
     </Routes>
   );
 };

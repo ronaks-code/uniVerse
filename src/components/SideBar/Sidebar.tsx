@@ -49,7 +49,10 @@ const SideBar = () => {
       <Divider />
 
       <SideBarIcon icon={<BsPlus size="32" />} />
-      <SideBarIcon icon={<BsFillLightningFill size="20" />} />
+      <Link to="/course-service">
+        <SideBarIcon icon={<BsFillLightningFill size="20" />} />
+      </Link>
+      
       <Link to="/courses">
         <SideBarIcon icon={<FaPoo size="20" />} />
       </Link>
