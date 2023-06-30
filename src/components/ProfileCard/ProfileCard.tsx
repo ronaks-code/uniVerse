@@ -1,4 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { User } from "../../models/User";
 
@@ -43,7 +44,6 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
       </span>
     );
   };
-
   return (
     <div className="w-screen h-[80vh] flex items-center justify-center">
       <div className="w-full p-4 max-w-sm bg-white border border-gray-200 rounded-lg shadow">

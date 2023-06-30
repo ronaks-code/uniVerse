@@ -9,7 +9,7 @@ type CourseData = {
   COURSES: Course[];
 };
 
-const DisplayCourses: React.FC = () => {
+const JSONCourseDisplay: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
@@ -29,6 +29,7 @@ const DisplayCourses: React.FC = () => {
 
   const filteredCourses = useMemo(() => {
     return (jsonData as CourseData[]).map((data: CourseData) => {
+      console.log(data);
       return {
         ...data,
         COURSES: data.COURSES.filter((course: Course) =>
@@ -62,4 +63,4 @@ const DisplayCourses: React.FC = () => {
   );
 };
 
-export default DisplayCourses;
+export default JSONCourseDisplay;

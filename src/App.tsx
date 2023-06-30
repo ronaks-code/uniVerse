@@ -7,7 +7,8 @@ import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import CourseService from "./services/CourseService";
 // import CourseCard from "./components/CourseCard/CourseCard";
-import DisplayCourses from "./pages/DisplayCourse/DisplayCourse";
+import JSONCourseDisplay from "./pages/CourseDisplay/JSONCourseDisplay";
+import FirebaseCourseDisplay from "./pages/CourseDisplay/FirebaseCourseDisplay";
 
 import { auth } from "./services/firebase";
 import { useAppDispatch } from "./hooks/storeHook";
@@ -47,7 +48,8 @@ const App = () => {
         prerequisites: "asfsafsafasfasf",
         sections: []
       }} />} /> */}
-      <Route path="courses" element={<DisplayCourses />} />
+      <Route path="firebase-courses" element={<FirebaseCourseDisplay />} />
+      <Route path="JSON-courses" element={<JSONCourseDisplay />} />
       <Route path="course-service" element={<CourseService />} />
     </Routes>
   );

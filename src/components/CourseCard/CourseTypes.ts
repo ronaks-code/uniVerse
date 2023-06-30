@@ -22,6 +22,7 @@ export type Section = {
 
 export type Course = {
   code: string;
+  // id: string;
   name: string;
   termInd: string;
   description: string;

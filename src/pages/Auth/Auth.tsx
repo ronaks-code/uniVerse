@@ -166,6 +166,11 @@ const Auth = () => {
     resolver: yupResolver(authType === "login" ? loginSchema : signUpSchema),
   });
 
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
+
+
   return (
     <>
       <ResetPassword
@@ -186,6 +191,9 @@ const Auth = () => {
           )}
           <form onSubmit={handleSubmit(handleFormSubmit)} className={form}>
             <div className="grid gap-y-3">
+              <button className="text-blue-500 hover:underline" onClick={handleBackButtonClick}>
+                Back
+              </button>
               <button
                 onClick={signInWithGoogle}
                 className={button}
@@ -255,7 +263,7 @@ const Auth = () => {
               </button>
             </div>
 
-            <div className="text-sm font-light py-4">
+            <div className="text-sm font-light py-4 dark:text-slate-400">
               {authType === "login" ? (
                 <span>
                   Don&apos;t have an account yet?{" "}
@@ -283,7 +291,7 @@ const Auth = () => {
                 type="button"
                 className={forgotPasswordButton}
               >
-                forgot password
+                Forgot Password
               </button>
               <hr className={hr} />
             </div>

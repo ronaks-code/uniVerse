@@ -52,9 +52,6 @@ const Profile = () => {
   return (
     <div className="flex-nowrap">
       <SideBar />
-      <div className="ml-16">
-        <Header />
-      </div>
       <div>
         <ResetPassword
           handlePasswordReset={handlePasswordReset}

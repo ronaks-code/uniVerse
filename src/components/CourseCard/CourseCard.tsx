@@ -45,11 +45,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       <ul>
         {course.sections.map((section, index) => (
           <li key={index}>
-            <p className="ml-8">
+            <div className="ml-8">
               <strong>Section {section.number}:</strong> {section.display} (
               {section.credits} credits)
               <br />
-              <p className="ml-4">
+              <div className="ml-4">
                 <strong>Department:</strong> {section.deptName}
                 <br />
                 <strong>Instructors:</strong>{" "}
@@ -75,8 +75,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                 </ul>
                 <strong>Final Exam:</strong>{" "}
                 {finalExamExists ? section.finalExam : "N/A"}
-              </p>
-            </p>
+              </div>
+            </div>
             <br />
           </li>
         ))}
