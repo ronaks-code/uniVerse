@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, Suspense, lazy } from "react";
-import jsonData from "../../courses/Jun-15-2023_23_summer.json";
+import jsonData from "../../courses/UF_Jun-30-2023_23_summer_clean.json";
 import { Course } from "../../components/CourseCard/CourseTypes";
 import SideBar from "../../components/SideBar/Sidebar";
 
@@ -13,6 +13,7 @@ const JSONCourseDisplay: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
+  const [courses, setCourses] = useState<Course[]>([]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -28,16 +29,14 @@ const JSONCourseDisplay: React.FC = () => {
   };
 
   const filteredCourses = useMemo(() => {
-    return (jsonData as CourseData[]).map((data: CourseData) => {
-      console.log(data);
-      return {
-        ...data,
-        COURSES: data.COURSES.filter((course: Course) =>
-          course.code.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-        ),
-      };
+    const formattedSearchTerm = debouncedSearchTerm.toUpperCase();
+    return (jsonData as Course[]).filter((course: Course) => {
+      const { code } = course;
+      return code.toUpperCase().includes(formattedSearchTerm);
     });
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, courses]);
+
+  
 
   return (
     <>
@@ -50,12 +49,8 @@ const JSONCourseDisplay: React.FC = () => {
           onChange={handleSearchChange}
         />
         <Suspense fallback={<div>Loading...</div>}>
-          {filteredCourses.map((data: CourseData, index: number) => (
-            <div key={index}>
-              {data.COURSES.map((course: Course, idx: number) => (
-                <CourseCard key={`${index}-${idx}`} course={course} />
-              ))}
-            </div>
+          {filteredCourses.map((course: Course, index: number) => (
+            <CourseCard key={index} course={course} />
           ))}
         </Suspense>
       </div>
