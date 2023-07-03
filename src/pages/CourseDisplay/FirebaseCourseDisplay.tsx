@@ -42,11 +42,14 @@ const FirebaseCourseDisplay: React.FC = () => {
 
       const searchTermUpperCase = searchTerm.toUpperCase();
       const searchTermLowerCase = searchTerm.toLowerCase();
-      
+
       const querySnapshot = await getDocs(
         query(
           nestedCollectionRef,
-          where("code", "array-contains-any", [searchTermUpperCase, searchTermLowerCase])
+          where("code", "array-contains-any", [
+            searchTermUpperCase,
+            searchTermLowerCase,
+          ])
         )
       );
 
@@ -85,7 +88,10 @@ const FirebaseCourseDisplay: React.FC = () => {
     const formattedSearchTerm = debouncedSearchTerm.toUpperCase();
     return courses.filter((course: Course) => {
       const { code } = course;
-      return code[0].toUpperCase().includes(formattedSearchTerm) || code[1].toUpperCase().includes(formattedSearchTerm);
+      return (
+        code[0].toUpperCase().includes(formattedSearchTerm) ||
+        code[1].toUpperCase().includes(formattedSearchTerm)
+      );
     });
   }, [debouncedSearchTerm, courses]);
 
