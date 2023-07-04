@@ -17,8 +17,13 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
 
   return (
     <div className={`${hoverableList} mt-4 p-4`}>
-      <div className="cursor-pointer text-blue-500" onClick={toggleSections}>
-        {course.code}
+      <div className="cursor-pointer">
+        <div
+          className="text-blue-500 hover:underline"
+          onClick={toggleSections}
+        >
+          <strong className="mr-1">{course.code.replace(/([A-Z]+)/g, "$1 ")}</strong>
+        </div>
       </div>
       {showSections && (
         <ul className={list}>
