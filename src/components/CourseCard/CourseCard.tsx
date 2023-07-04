@@ -26,7 +26,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   }, [course]);
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px" }}>
+    <div className="border-2 min-w-[95%] max-w-[95%] border-gray-900 p-4 m-4">
       <h3>
         {course.code} - {course.name}
       </h3>
