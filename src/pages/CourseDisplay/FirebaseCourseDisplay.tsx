@@ -9,7 +9,7 @@ import React, {
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
-import { Course } from "../../components/CourseCard/CourseTypes";
+import { Course } from "../../components/CourseUI/CourseTypes";
 import SideBar from "../../components/SideBar/Sidebar";
 
 import { coursePrefixSet } from "../../services/CourseService";
@@ -17,7 +17,9 @@ import { coursePrefixSet } from "../../services/CourseService";
 // Access the coursePrefixSet variable here
 console.log(coursePrefixSet);
 
-const CourseCard = lazy(() => import("../../components/CourseCard/CourseCard"));
+const CourseCard = lazy(
+  () => import("../../components/CourseUI/CourseCard/CourseCard")
+);
 
 const FirebaseCourseDisplay: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");

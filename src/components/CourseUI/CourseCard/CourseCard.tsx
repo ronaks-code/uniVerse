@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Course } from "./CourseTypes";
+import { useMediaQuery } from "react-responsive";
+import { Course } from "../CourseTypes";
+import { courseUIClasses } from "../CourseUIClasses";
 
 export type CourseCardProps = {
   course: Course;
@@ -9,6 +11,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const [termExists, setTermExists] = useState(false);
   const [meetTimeExists, setMeetTimeExists] = useState(false);
   const [finalExamExists, setFinalExamExists] = useState(false);
+
+  const isMobile = useMediaQuery({ maxWidth: 640 });
 
   useEffect(() => {
     const doesTermExist = course.termInd !== " ";
@@ -25,13 +29,24 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     setFinalExamExists(doesFinalExamExist);
   }, [course]);
 
+  const {
+    card,
+    title,
+    subtitle,
+    list,
+    listItem,
+    content,
+    contentML2,
+    hoverableList,
+  } = courseUIClasses;
+
   return (
-    <div className="border-2 min-w-[95%] max-w-[95%] border-gray-900 p-4 m-4">
-      <h3>
+    <div className={`${card} ${isMobile ? "p-4 m-2" : "p-6 m-4"}`}>
+      <h3 className={`${title} ${isMobile ? "text-lg" : "text-2xl"}`}>
         {course.code} - {course.name}
       </h3>
       {termExists && (
-        <p>
+        <p className={subtitle}>
           <strong>Term:</strong> {course.termInd}
         </p>
       )}
@@ -42,14 +57,14 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         <strong>Prerequisites:</strong> {course.prerequisites}
       </p>
       <strong>Sections:</strong>
-      <ul>
+      <ul className={list}>
         {course.sections.map((section, index) => (
-          <li key={index}>
-            <div className="ml-8">
+          <li key={index} className={listItem}>
+            <div className={content}>
               <strong>Section {section.number}:</strong> {section.display} (
               {section.credits} credits)
               <br />
-              <div className="ml-4">
+              <div className={contentML2}>
                 <strong>Department:</strong> {section.deptName}
                 <br />
                 <strong>Instructors:</strong>{" "}
@@ -59,10 +74,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                 <br />
                 <strong>Meeting Times:</strong>
                 {meetTimeExists ? "" : " N/A"}
-                <ul>
+                <ul
+                  className={`${hoverableList} ${isMobile ? "ml-0" : "ml-4"}`}
+                >
                   {meetTimeExists &&
                     section.meetTimes.map((meetTime, index) => (
-                      <li key={index}>
+                      <li key={index} className={listItem}>
                         Days: {meetTime.meetDays.join(", ")}
                         <br />
                         Time: {meetTime.meetTimeBegin} - {meetTime.meetTimeEnd}

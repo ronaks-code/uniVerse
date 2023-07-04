@@ -1,9 +1,12 @@
 import React, { useState, useMemo, useRef, Suspense, lazy } from "react";
 import jsonData from "../../courses/UF_Jun-30-2023_23_summer_clean.json";
-import { Course } from "../../components/CourseCard/CourseTypes";
+import { Course } from "../../components/CourseUI/CourseTypes";
 import SideBar from "../../components/SideBar/Sidebar";
+import CourseDropdown from "../../components/CourseUI/CourseDropdown/CourseDropdown";
 
-const CourseCard = lazy(() => import("../../components/CourseCard/CourseCard"));
+const CourseCard = lazy(
+  () => import("../../components/CourseUI/CourseCard/CourseCard")
+);
 
 type CourseData = {
   COURSES: Course[];
@@ -30,18 +33,26 @@ const JSONCourseDisplay: React.FC = () => {
 
   const filteredCourses = useMemo(() => {
     const formattedSearchTerm = debouncedSearchTerm.toUpperCase();
+    if (formattedSearchTerm.length === 0) {
+      return []; // Return an empty array if no search term is provided
+    }
+    const prefix = formattedSearchTerm.match(/[a-zA-Z]+/)?.[0]?.toUpperCase(); // Extract course prefix
+    const additionalCharacters = formattedSearchTerm.slice(prefix?.length); // Extract additional characters
     return (jsonData as Course[]).filter((course: Course) => {
       const { code } = course;
-      return code.toUpperCase().includes(formattedSearchTerm);
+      const coursePrefix = code.match(/[a-zA-Z]+/)?.[0]?.toUpperCase(); // Extract course prefix
+      return (
+        coursePrefix &&
+        coursePrefix === prefix &&
+        code.toUpperCase().includes(additionalCharacters)
+      );
     });
-  }, [debouncedSearchTerm, courses]);
-
-  
+  }, [debouncedSearchTerm]);
 
   return (
     <>
       <SideBar />
-      <div className='flex flex-col items-start content-start h-[100vh] ml-[4.75rem] p-4'>
+      <div className="flex flex-col items-start content-start h-[100vh] ml-[4.75rem] p-4">
         <input
           type="text"
           placeholder="Search by course code..."
@@ -49,9 +60,13 @@ const JSONCourseDisplay: React.FC = () => {
           onChange={handleSearchChange}
         />
         <Suspense fallback={<div>Loading...</div>}>
-          {filteredCourses.map((course: Course, index: number) => (
-            <CourseCard key={index} course={course} />
-          ))}
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course: Course, index: number) => (
+              <CourseDropdown key={index} course={course} />
+            ))
+          ) : (
+            <div>No courses found.</div>
+          )}
         </Suspense>
       </div>
     </>
