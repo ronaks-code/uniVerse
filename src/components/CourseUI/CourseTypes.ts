@@ -17,6 +17,7 @@ export type Section = {
   deptName: string;
   instructors: Instructor[];
   meetTimes: MeetingTime[];
+  // openSeats: number;
   finalExam: string;
 };
 
