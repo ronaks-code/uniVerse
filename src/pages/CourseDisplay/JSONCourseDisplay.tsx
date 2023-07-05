@@ -3,6 +3,7 @@ import jsonData from "../../courses/UF_Jun-30-2023_23_summer_clean.json";
 import { Course } from "../../components/CourseUI/CourseTypes";
 import SideBar from "../../components/SideBar/Sidebar";
 import CourseDropdown from "../../components/CourseUI/CourseDropdown/CourseDropdown";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 const CourseCard = lazy(
   () => import("../../components/CourseUI/CourseCard/CourseCard")
@@ -18,6 +19,8 @@ const JSONCourseDisplay: React.FC = () => {
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]); // Newly added state for selected courses
+  const [ displayCourse, setDisplayCourse ] = useState<boolean>(false);
+  const [openCourseCode, setOpenCourseCode] = useState<string | null>(null);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
@@ -46,6 +49,12 @@ const JSONCourseDisplay: React.FC = () => {
     debounceRef.current = setTimeout(() => {
       setDebouncedSearchTerm(formattedInput);
     }, 300); // 300ms delay
+  };
+
+  const toggleCourseDropdown = (courseCode: string) => {
+    setOpenCourseCode((prevOpenCourseCode) =>
+      prevOpenCourseCode === courseCode ? null : courseCode
+    );
   };
 
   const toggleCourseSelection = (course: Course) => {
@@ -111,26 +120,44 @@ const JSONCourseDisplay: React.FC = () => {
           onChange={handleSearchChange}
           autoCorrect="off"
         />
-
-        <Suspense fallback={<div>Loading...</div>}>
-          {filteredCourses.length > 0 ? (
-            filteredCourses.map((course: Course, index: number) => (
-              <div key={index}>
-                <div
-                  className="cursor-pointer text-blue-500"
-                  onClick={() => toggleCourseSelection(course)}
-                >
-                  {course.code.replace(/([A-Z]+)/g, "$1 ")}
-                </div>
-                {selectedCourses.includes(course) && (
-                  <CourseDropdown course={course} />
+      <Suspense fallback={<div>Loading...</div>}>
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course: Course, index: number) => (
+            <>
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center">
+                {selectedCourses.includes(course) ? (
+                  <AiFillStar
+                    className="cursor-pointer text-yellow-500 mr-1 mt-2"
+                    onClick={() => toggleCourseSelection(course)}
+                  />
+                ) : (
+                  <AiOutlineStar
+                    className="cursor-pointer mr-1 mt-2 text-[1.2rem]"
+                    onClick={() => toggleCourseSelection(course)}
+                  />
                 )}
+                <div
+                  className="cursor-pointer rounded-md bg-gray-400 px-2 py-1 font-semibold mt-2"
+                  onClick={() => toggleCourseDropdown(course.code)}
+                >
+                  <div>{course.code.replace(/([A-Z]+)/g, "$1 ")}</div>
+                  <div className="text-sm font-normal">{course.name}</div>
+                </div>
               </div>
-            ))
-          ) : (
-            <div>No courses found.</div>
-          )}
-        </Suspense>
+
+            </div>
+              <div className="ml-10">
+              {openCourseCode === course.code && (
+                <CourseDropdown course={course} />
+              )}
+            </div>
+          </>  
+          ))
+        ) : (
+          <div>No courses found.</div>
+        )}
+      </Suspense>
       </div>
     </>
   );
