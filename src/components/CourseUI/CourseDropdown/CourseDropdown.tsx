@@ -17,7 +17,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
       <ul className="list-none pl-0">
         {course.sections.map((section, index) => (
           <li key={index} className={`${listItem} border-t border-gray-400 dark:border-gray-700`}>
-            <div className="font-bold text-gray-900 dark:text-white">
+            <div className="font-bold text-gray-900 dark:text-white" style={{ marginBottom: '2px'}}>
               Section {section.number}:
             </div>
             {/* Render additional section information here */}
