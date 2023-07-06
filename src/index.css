@@ -44,16 +44,6 @@
     @apply fixed top-0 left-0 bottom-0 bg-gray-300 dark:bg-gray-700 w-16;
   }
   
-  .top-navigation {
-    @apply flex flex-row items-center justify-between
-    bg-gray-300 dark:bg-gray-700 bg-opacity-90
-    w-full h-16
-    m-0
-    shadow-lg;
-    /* position: fixed; */
-    /* left: 4rem; */
-  }
-  
   .title-text {
     @apply text-xl text-gray-500 tracking-wider font-semibold text-opacity-80 ml-2;
   }

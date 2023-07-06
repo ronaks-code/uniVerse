@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CSSTransition } from "react-transition-group";
 import { Course, Section } from "../CourseTypes";
 import { courseUIClasses } from "../CourseUIClasses";
 
@@ -9,13 +10,15 @@ type CourseDropdownProps = {
 const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
   const { list, listItem, hoverableList } = courseUIClasses;
 
+  const [isVisible, setIsVisible] = useState(false);
+
   return (
     <div className={`${hoverableList} p-4`}>
       <ul className={list}>
         {/* Display the term */}
         <li className={listItem}><strong>Term:</strong> {course.termInd}</li>
         {course.sections.map((section, index) => (
-          <li key={index} className={`${listItem} w-[300px]`}>
+          <li key={index} className={`${listItem} w-[500px]`}>
             <div>
               <strong>Section {section.number}:</strong>
             </div>

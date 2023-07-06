@@ -1,16 +1,26 @@
-import React, { useState, useMemo, useRef, Suspense, lazy } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  Suspense,
+  lazy,
+} from "react";
 import jsonData from "../../courses/UF_Jun-30-2023_23_summer_clean.json";
 import { Course } from "../../components/CourseUI/CourseTypes";
 import SideBar from "../../components/SideBar/Sidebar";
 import CourseDropdown from "../../components/CourseUI/CourseDropdown/CourseDropdown";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import {
+  PiPlusBold,
+  PiMinusBold,
+  PiCaretDownBold,
+  PiCaretUpBold,
+  PiHeartBold,
+  PiHeartFill,
+} from "react-icons/pi";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses"; // Import the styles
-
-const CourseCard = lazy(
-  () => import("../../components/CourseUI/CourseCard/CourseCard")
-);
-
-type CourseData = Course[];
+import ColorHash from "color-hash"; // Import the color hash function
+import { CSSTransition } from "react-transition-group";
 
 const groupByCourseCodeAndName = (courses: Course[]) => {
   return courses.reduce((grouped: { [key: string]: Course[] }, course) => {
@@ -23,14 +33,34 @@ const groupByCourseCodeAndName = (courses: Course[]) => {
   }, {});
 };
 
+const colorHash = new ColorHash({
+  saturation: [0.4],
+  lightness: [0.4, 0.5, 0.6],
+});
+
+const getHashedColor = (course: Course) => {
+  return colorHash.hex(course.code + course.name);
+};
+
 const JSONCourseDisplay: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
-  const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]); // Newly added state for selected courses
-  const [displayCourse, setDisplayCourse] = useState<boolean>(false);
   const [openCourseCode, setOpenCourseCode] = useState<string[] | null>();
+  const [lastClick, setLastClick] = useState(0);
+  const [likedCourses, setLikedCourses] = useState<Course[]>([]);
+  const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [courseAnimation, setCourseAnimation] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const getCourseBackgroundColor = (course: Course) => {
+    const hashedColor = getHashedColor(course);
+    return {
+      backgroundColor: hashedColor,
+    };
+  };
 
   const {
     container,
@@ -38,6 +68,10 @@ const JSONCourseDisplay: React.FC = () => {
     input,
     minusIcon,
     plusIcon,
+    caretDownIcon,
+    caretUpIcon,
+    heartOutlineIcon,
+    heartFillIcon,
     courseCard,
   } = JSONCourseDisplayClasses;
 
@@ -70,43 +104,150 @@ const JSONCourseDisplay: React.FC = () => {
     }, 300); // 300ms delay
   };
 
+  const handleCourseCardClick = (event: React.MouseEvent, course: Course) => {
+    const isButtonClick =
+      (event.target as HTMLElement).closest(".plus-icon") !== null ||
+      (event.target as HTMLElement).closest(".minus-icon") !== null ||
+      (event.target as HTMLElement).closest(".carets") !== null ||
+      (event.target as HTMLElement).closest(".heart-icon") !== null;
+  
+    const currentTime = new Date().getTime();
+  
+    if (!isButtonClick) {
+      const isSelected = selectedCourses.some(
+        (selectedCourse) =>
+          selectedCourse.code === course.code &&
+          selectedCourse.name === course.name
+      );
+  
+      // If less than 250ms have passed since the last click, treat it as a double click.
+      if (currentTime - lastClick < 250) {
+        // Clear any existing timeouts
+        if (clickTimeout) {
+          clearTimeout(clickTimeout);
+          setClickTimeout(null);
+        }
+  
+        toggleCourseSelected(course);
+      } else {
+        // Set up a timeout for the single click action
+        setClickTimeout(
+          setTimeout(() => {
+            toggleCourseDropdown(`${course.code}|${course.name}`);
+          }, 250)
+        );
+      }
+  
+      // Update last click time
+      setLastClick(currentTime);
+    }
+  };
+
+  const handleBadgeClick = (course: Course) => {
+    setSelectedCourses((prevSelectedCourses) =>
+      prevSelectedCourses.filter(
+        (selectedCourse) =>
+          selectedCourse.code !== course.code ||
+          selectedCourse.name !== course.name
+      )
+    );
+
+    setLikedCourses((prevLikedCourses) =>
+      prevLikedCourses.filter(
+        (likedCourse) =>
+          likedCourse.code !== course.code || likedCourse.name !== course.name
+      )
+    );
+  };
+
   const toggleCourseDropdown = (courseCode: string) => {
     setOpenCourseCode((prevOpenCourseCodes = []) => {
-      if (prevOpenCourseCodes !== null) {
+      if (prevOpenCourseCodes === null) {
+        // If prevOpenCourseCodes is null, initialize it with the current course code
+        return [courseCode];
+      } else {
         const isOpen = prevOpenCourseCodes.includes(courseCode);
-        if (isOpen) {
-          // Course is already open, remove it from the array
-          return prevOpenCourseCodes.filter((code) => code !== courseCode);
-        } else {
+        // Update the courseAnimation state
+        setCourseAnimation((prevCourseAnimation) => ({
+          ...prevCourseAnimation,
+          [courseCode]: !isOpen,
+        }));
+        if (!isOpen) {
           // Course is closed, add it to the array
           return [...prevOpenCourseCodes, courseCode];
+        } else {
+          // Course is already open, remove it from the array
+          return prevOpenCourseCodes.filter((code) => code !== courseCode);
         }
       }
     });
   };
 
-  const toggleCourseSelection = (course: Course) => {
-    // Check if the course is already selected
-    const index = selectedCourses.findIndex(
+  const toggleCourseSelected = (course: Course) => {
+    const isSelected = selectedCourses.some(
       (selectedCourse) =>
         selectedCourse.code === course.code &&
         selectedCourse.name === course.name
     );
-    if (index !== -1) {
-      // Course isalready selected, remove it from the selectedCourses array
-      setSelectedCourses((prevSelectedCourses) => {
-        const updatedSelectedCourses = [...prevSelectedCourses];
-        updatedSelectedCourses.splice(index, 1);
-        return updatedSelectedCourses;
-      });
+
+    if (isSelected) {
+      // Remove the course from the list of selected courses if it's already selected.
+      setSelectedCourses((prevSelectedCourses) =>
+        prevSelectedCourses.filter(
+          (selectedCourse) =>
+            selectedCourse.code !== course.code ||
+            selectedCourse.name !== course.name
+        )
+      );
     } else {
-      // Course is not selected, add it to the selectedCourses array
+      // Add the course to the list of selected courses if it's not already selected.
       setSelectedCourses((prevSelectedCourses) => [
         ...prevSelectedCourses,
         course,
       ]);
+
+      // If the course is liked, un-like it.
+      if (
+        likedCourses.some(
+          (likedCourse) =>
+            likedCourse.code === course.code && likedCourse.name === course.name
+        )
+      ) {
+        toggleCourseLiked(course);
+      }
     }
-    setDisplayCourse(true); // Trigger animation
+  };
+
+  const toggleCourseLiked = (course: Course) => {
+    const isCourseLiked = likedCourses.some(
+      (likedCourse) =>
+        likedCourse.code === course.code && likedCourse.name === course.name
+    );
+
+    if (isCourseLiked) {
+      // Remove the course from the list of liked courses if it's already liked.
+      setLikedCourses((prevLikedCourses) =>
+        prevLikedCourses.filter(
+          (prevLikedCourse) =>
+            prevLikedCourse.code !== course.code ||
+            prevLikedCourse.name !== course.name
+        )
+      );
+    } else {
+      // Add the course to the list of liked courses if it's not already liked.
+      setLikedCourses((prevLikedCourses) => [...prevLikedCourses, course]);
+
+      // If the course is selected, unselect it.
+      if (
+        selectedCourses.some(
+          (selectedCourse) =>
+            selectedCourse.code === course.code &&
+            selectedCourse.name === course.name
+        )
+      ) {
+        toggleCourseSelected(course);
+      }
+    }
   };
 
   const filteredCourses = useMemo(() => {
@@ -143,14 +284,29 @@ const JSONCourseDisplay: React.FC = () => {
       <SideBar />
       <div className={container}>
         <div className="space-x-2 mb-4">
-          {selectedCourses.length > 0 &&
-            selectedCourses.map((course: Course, index: number) => (
-              <span
+          {likedCourses.length > 0 &&
+            likedCourses.map((course: Course, index: number) => (
+              <button
                 key={index}
-                className={badge}
+                className={`${badge} opacity-60`}
+                style={getCourseBackgroundColor(course)}
+                onClick={() => handleBadgeClick(course)}
               >
                 {course.code.replace(/([A-Z]+)/g, "$1 ")}
-              </span>
+              </button>
+            ))}
+        </div>
+        <div className="space-x-2 mb-4">
+          {selectedCourses.length > 0 &&
+            selectedCourses.map((course: Course, index: number) => (
+              <button
+                key={index}
+                className={badge}
+                style={getCourseBackgroundColor(course)}
+                onClick={() => handleBadgeClick(course)}
+              >
+                {course.code.replace(/([A-Z]+)/g, "$1 ")}
+              </button>
             ))}
         </div>
         <input
@@ -166,52 +322,99 @@ const JSONCourseDisplay: React.FC = () => {
             Object.keys(groupedFilteredCourses).map((key, index) => {
               const courses = groupedFilteredCourses[key];
               const firstCourse = courses[0];
+              const isCourseSelected = selectedCourses.includes(firstCourse);
+              const isCourseAnimated =
+                courseAnimation[`${firstCourse.code}|${firstCourse.name}`] ||
+                false;
+              const isOpen = openCourseCode?.includes(
+                `${firstCourse.code}|${firstCourse.name}`
+              );
 
               return (
                 <React.Fragment key={index}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      {selectedCourses.includes(firstCourse) ? (
-                        <>
-                          <AiOutlineMinus
-                            className={`${minusIcon} ${
-                              displayCourse ? "opacity-0 transition-opacity duration-300" : ""
-                            }`}
-                            onClick={() => toggleCourseSelection(firstCourse)}
-                          />
-                          <AiOutlinePlus
-                            className={`${plusIcon} ${
-                              displayCourse ? "opacity-100 transition-opacity duration-300" : "opacity-0"
-                            }`}
-                            onClick={() => toggleCourseSelection(firstCourse)}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <AiOutlinePlus
-                            className={`${plusIcon} ${
-                              displayCourse ? "opacity-0 transition-opacity duration-300" : ""
-                            }`}
-                            onClick={() => toggleCourseSelection(firstCourse)}
-                          />
-                          <AiOutlineMinus
-                            className={`${minusIcon} ${
-                              displayCourse ? "opacity-100 transition-opacity duration-300" : "opacity-0"
-                            }`}
-                            onClick={() => toggleCourseSelection(firstCourse)}
-                          />
-                        </>
-                      )}
                       <div
-                        className={courseCard} // Apply the courseCard class
-                        onClick={() =>
-                          toggleCourseDropdown(
-                            `${firstCourse.code}|${firstCourse.name}`
-                          )
-                        }
+                        className={courseCard}
+                        onClick={(e) => handleCourseCardClick(e, firstCourse)}
                       >
-                        <div>
-                          {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
+                        <div className="flex flex-row items-center justify-evenly w-full m-0">
+                          <div className="mr-auto">
+                            {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
+                          </div>
+                          <div className="mx-1">
+                            {isCourseSelected ? (
+                              <>
+                                <PiMinusBold
+                                  className={`${minusIcon} hover:opacity-60`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleCourseSelected(firstCourse);
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <PiPlusBold
+                                  className={`${plusIcon} hover:opacity-60`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleCourseSelected(firstCourse);
+                                  }}
+                                />
+                              </>
+                            )}
+                          </div>
+                          <div className="mx-1">
+                            {isOpen ? (
+                              <PiCaretUpBold
+                                className={`${caretUpIcon} ${
+                                  isCourseAnimated
+                                    ? "opacity-100 transition-opacity duration-300"
+                                    : ""
+                                } hover:opacity-60`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseDropdown(
+                                    `${firstCourse.code}|${firstCourse.name}`
+                                  );
+                                }}
+                              />
+                            ) : (
+                              <PiCaretDownBold
+                                className={`${caretDownIcon} ${
+                                  isCourseAnimated
+                                    ? "opacity-100 transition-opacity duration-100"
+                                    : ""
+                                } hover:opacity-60`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseDropdown(
+                                    `${firstCourse.code}|${firstCourse.name}`
+                                  );
+                                }}
+                              />
+                            )}
+                          </div>
+                          <div className="mx-1">
+                            {likedCourses.includes(firstCourse) ? (
+                              <PiHeartFill
+                                className={`${heartFillIcon} hover:opacity-60`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseLiked(firstCourse);
+                                }}
+                              />
+                            ) : (
+                              <PiHeartBold
+                                className={`${heartOutlineIcon} hover:opacity-60`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseLiked(firstCourse);
+                                }}
+                              />
+                            )}
+                          </div>
                         </div>
                         <div className="text-sm font-normal">
                           {firstCourse.name}
@@ -219,12 +422,13 @@ const JSONCourseDisplay: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="ml-10">
-                    {openCourseCode && openCourseCode.includes(`${firstCourse.code}|${firstCourse.name}`) &&
-                      courses.map((course, index) => (
+                  {isOpen && (
+                    <div className="ml-4 opacity-100 visible transition-all">
+                      {courses.map((course, index) => (
                         <CourseDropdown key={index} course={course} />
                       ))}
-                  </div>
+                    </div>
+                  )}
                 </React.Fragment>
               );
             })

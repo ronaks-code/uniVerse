@@ -8,4 +8,5 @@ export const courseUIClasses = {
   content: "ml-2 sm:ml-4 my-2 text-gray-700 dark:text-gray-300",
   contentML2: "ml-2 sm:ml-4",
   hoverableList: "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 ease-in-out rounded",
+  courseDropdown: "",
 };
