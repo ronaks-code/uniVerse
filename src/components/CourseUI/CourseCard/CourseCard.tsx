@@ -37,7 +37,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     listItem,
     content,
     contentML2,
-    hoverableList,
   } = courseUIClasses;
 
   return (
@@ -75,7 +74,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                 <strong>Meeting Times:</strong>
                 {meetTimeExists ? "" : " N/A"}
                 <ul
-                  className={`${hoverableList} ${isMobile ? "ml-0" : "ml-4"}`}
+                  className={`${isMobile ? "ml-0" : "ml-4"}`}
                 >
                   {meetTimeExists &&
                     section.meetTimes.map((meetTime, index) => (

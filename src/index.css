@@ -10,6 +10,13 @@
 }
 
 @layer components {
+  .hoverable-list {
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
   .sidebar-icon {
     @apply relative flex items-center justify-center 
     h-12 w-12 mt-2 mb-2 mx-auto  

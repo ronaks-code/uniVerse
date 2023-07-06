@@ -283,30 +283,41 @@ const JSONCourseDisplay: React.FC = () => {
     <>
       <SideBar />
       <div className={container}>
-        <div className="space-x-2 mb-4">
+        <div className="space-x-2 mb-4 flex flex-wrap">
           {likedCourses.length > 0 &&
             likedCourses.map((course: Course, index: number) => (
-              <button
+              <div 
                 key={index}
-                className={`${badge} opacity-60`}
+                className={`p-4 rounded-md m-2 text-black dark:text-white opacity-60 cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
                 style={getCourseBackgroundColor(course)}
                 onClick={() => handleBadgeClick(course)}
               >
                 {course.code.replace(/([A-Z]+)/g, "$1 ")}
-              </button>
+                <div className="text-xs line-clamp-2 overflow-ellipsis overflow-hidden">{course.name}</div>
+              </div>
             ))}
         </div>
-        <div className="space-x-2 mb-4">
+        <div className="space-x-2 mb-4 flex flex-wrap">
           {selectedCourses.length > 0 &&
             selectedCourses.map((course: Course, index: number) => (
-              <button
+              <div 
                 key={index}
-                className={badge}
+                className={`p-3 rounded-md m-2 text-black dark:text-white cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
                 style={getCourseBackgroundColor(course)}
                 onClick={() => handleBadgeClick(course)}
               >
-                {course.code.replace(/([A-Z]+)/g, "$1 ")}
-              </button>
+                {course.termInd !== " " && course.termInd !== "C" ? (
+                  <strong>
+                    {course.code.replace(/([A-Z]+)/g, "$1 ")} - {course.termInd}
+                  </strong>
+                ) : (
+                  <strong>
+                    {course.code.replace(/([A-Z]+)/g, "$1 ")}
+                  </strong>
+                )
+                }
+                <div className="text-sm line-clamp-1 overflow-ellipsis overflow-hidden">{course.name}</div>
+              </div>
             ))}
         </div>
         <input
@@ -338,11 +349,19 @@ const JSONCourseDisplay: React.FC = () => {
                         className={courseCard}
                         onClick={(e) => handleCourseCardClick(e, firstCourse)}
                       >
-                        <div className="flex flex-row items-center justify-evenly w-full m-0">
-                          <div className="mr-auto">
-                            {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
-                          </div>
-                          <div className="mx-1">
+                        <div className="flex flex-row items-center justify-evenly w-full h-6 p-1 m-0">
+                          {firstCourse.termInd !== " " && firstCourse.termInd !== "C" ? (
+                            <>
+                              <div className="mr-auto h-6">
+                                {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")} - {firstCourse.termInd}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="mr-auto h-6">
+                              {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
+                            </div>
+                          )}
+                          <div className="mx-1 h-9">
                             {isCourseSelected ? (
                               <>
                                 <PiMinusBold
@@ -365,7 +384,7 @@ const JSONCourseDisplay: React.FC = () => {
                               </>
                             )}
                           </div>
-                          <div className="mx-1">
+                          <div className="mx-1 h-9">
                             {isOpen ? (
                               <PiCaretUpBold
                                 className={`${caretUpIcon} ${
@@ -396,7 +415,7 @@ const JSONCourseDisplay: React.FC = () => {
                               />
                             )}
                           </div>
-                          <div className="mx-1">
+                          <div className="ml-1 mr-[-0.25rem] h-9">
                             {likedCourses.includes(firstCourse) ? (
                               <PiHeartFill
                                 className={`${heartFillIcon} hover:opacity-60`}
@@ -416,14 +435,14 @@ const JSONCourseDisplay: React.FC = () => {
                             )}
                           </div>
                         </div>
-                        <div className="text-sm font-normal">
+                        <div className="text-sm font-normal mx-1 line-clamp-1 overflow-ellipsis overflow-hidden">
                           {firstCourse.name}
                         </div>
                       </div>
                     </div>
                   </div>
                   {isOpen && (
-                    <div className="ml-4 opacity-100 visible transition-all">
+                    <div className="ml-4 opacity-100 visible transition-opacity">
                       {courses.map((course, index) => (
                         <CourseDropdown key={index} course={course} />
                       ))}
@@ -433,7 +452,7 @@ const JSONCourseDisplay: React.FC = () => {
               );
             })
           ) : (
-            <div>No courses found.</div>
+            <div className="dark:text-gray-300">No courses found.</div>
           )}
         </Suspense>
       </div>
