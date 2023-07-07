@@ -6,7 +6,6 @@ import { useAppSelector } from "../../hooks/storeHook";
 import { BsPlus, BsFillLightningFill, BsGearFill } from "react-icons/bs";
 import { FaFire, FaPoo } from "react-icons/fa";
 import { PiSignIn } from "react-icons/pi";
-// import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const SideBar = () => {
   const {
@@ -30,20 +29,22 @@ const SideBar = () => {
     }
 
     return (
-      <Link to="/profile">
-        {user?.photoUrl ? (
-          <SideBarIcon
-            icon={
-              <img className={linkProfile} src={user.photoUrl} alt="Avatar" />
-            }
-            text="Profile"
-          />
-        ) : (
-          <div className="w-11 h-11 m-3 ml-2.5 text-2xl font-bold grid place-content-center bg-green-200 rounded-full shadow-lg">
-            {user?.email[0].toUpperCase()}
-          </div>
-        )}
-      </Link>
+      <div className="fixed top-0 left-0 h-screen w-16 flex flex-col bg-white dark:bg-gray-900 shadow-lg z-10">
+        <Link to="/profile">
+          {user?.photoUrl ? (
+            <SideBarIcon
+              icon={
+                <img className={linkProfile} src={user.photoUrl} alt="Avatar" />
+              }
+              text="Profile"
+            />
+          ) : (
+            <div className="w-11 h-11 m-3 ml-2.5 text-2xl font-bold grid place-content-center bg-green-200 rounded-full shadow-lg">
+              {user?.email[0].toUpperCase()}
+            </div>
+          )}
+        </Link>
+      </div>
     );
   };
 

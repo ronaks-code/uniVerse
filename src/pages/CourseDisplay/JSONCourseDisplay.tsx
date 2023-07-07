@@ -21,6 +21,7 @@ import {
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses"; // Import the styles
 import ColorHash from "color-hash"; // Import the color hash function
 import { CSSTransition } from "react-transition-group";
+import CalendarUI from "../../components/Calendar/Calendar";
 
 const groupByCourseCodeAndName = (courses: Course[]) => {
   return courses.reduce((grouped: { [key: string]: Course[] }, course) => {
@@ -455,6 +456,9 @@ const JSONCourseDisplay: React.FC = () => {
             <div className="dark:text-gray-300">No courses found.</div>
           )}
         </Suspense>
+      </div>
+      <div className="flex ml-20">
+        <CalendarUI />
       </div>
     </>
   );
