@@ -10,14 +10,14 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
   const { listItem, content, term } = courseUIClasses;
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 space-y-4`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 space-y-0`}>
       <div className={`${listItem} font-semibold text-gray-800 dark:text-gray-200 mb-1`}>
-        <strong>Term:</strong> <span className={term} style={{ marginRight: '4px'}}>{course.termInd}</span>
+        <strong>Term:</strong> <span className={term}>{course.termInd}</span>
       </div>
       <ul className="list-none pl-0">
         {course.sections.map((section, index) => (
           <li key={index} className={`${listItem} border-t border-gray-400 dark:border-gray-700`}>
-            <div className="font-bold text-gray-900 dark:text-white" style={{ marginBottom: '2px'}}>
+            <div className="font-bold text-gray-900 dark:text-white">
               Section {section.number}:
             </div>
             {/* Render additional section information here */}
