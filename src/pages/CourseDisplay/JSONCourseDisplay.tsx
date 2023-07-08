@@ -22,6 +22,7 @@ import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses"; // Import
 import ColorHash from "color-hash"; // Import the color hash function
 import { CSSTransition } from "react-transition-group";
 import CalendarUI from "../../components/Calendar/Calendar";
+import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
 
 const groupByCourseCodeAndName = (courses: Course[]) => {
   return courses.reduce((grouped: { [key: string]: Course[] }, course) => {
@@ -282,183 +283,185 @@ const JSONCourseDisplay: React.FC = () => {
 
   return (
     <>
-      <SideBar />
-      <div className={container}>
-        <div className="space-x-2 mb-4 flex flex-wrap">
-          {likedCourses.length > 0 &&
-            likedCourses.map((course: Course, index: number) => (
-              <div 
-                key={index}
-                className={`p-4 rounded-md m-2 text-black dark:text-white opacity-60 cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
-                style={getCourseBackgroundColor(course)}
-                onClick={() => handleBadgeClick(course)}
-              >
-                {course.code.replace(/([A-Z]+)/g, "$1 ")}
-                <div className="text-xs line-clamp-2 overflow-ellipsis overflow-hidden">{course.name}</div>
-              </div>
-            ))}
-        </div>
-        <div className="space-x-2 mb-4 flex flex-wrap">
-          {selectedCourses.length > 0 &&
-            selectedCourses.map((course: Course, index: number) => (
-              <div 
-                key={index}
-                className={`p-3 rounded-md m-2 text-black dark:text-white cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
-                style={getCourseBackgroundColor(course)}
-                onClick={() => handleBadgeClick(course)}
-              >
-                {course.termInd !== " " && course.termInd !== "C" ? (
-                  <strong>
-                    {course.code.replace(/([A-Z]+)/g, "$1 ")} - {course.termInd}
-                  </strong>
-                ) : (
-                  <strong>
-                    {course.code.replace(/([A-Z]+)/g, "$1 ")}
-                  </strong>
-                )
-                }
-                <div className="text-sm line-clamp-1 overflow-ellipsis overflow-hidden">{course.name}</div>
-              </div>
-            ))}
-        </div>
-        <input
-          type="text"
-          placeholder="Search by course code (e.g., XXX 0000)"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          autoCorrect="off"
-          className={input}
-        />
-        <Suspense fallback={<div>Loading...</div>}>
-          {Object.keys(groupedFilteredCourses).length > 0 ? (
-            Object.keys(groupedFilteredCourses).map((key, index) => {
-              const courses = groupedFilteredCourses[key];
-              const firstCourse = courses[0];
-              const isCourseSelected = selectedCourses.includes(firstCourse);
-              const isCourseAnimated =
-                courseAnimation[`${firstCourse.code}|${firstCourse.name}`] ||
-                false;
-              const isOpen = openCourseCode?.includes(
-                `${firstCourse.code}|${firstCourse.name}`
-              );
+      <div className="flex">
+        <SideBar />
+        <div className={container}>
+          <div className="space-x-2 mb-4 flex flex-wrap">
+            {likedCourses.length > 0 &&
+              likedCourses.map((course: Course, index: number) => (
+                <div 
+                  key={index}
+                  className={`p-4 rounded-md m-2 text-black dark:text-white opacity-60 cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
+                  style={getCourseBackgroundColor(course)}
+                  onClick={() => handleBadgeClick(course)}
+                >
+                  {course.code.replace(/([A-Z]+)/g, "$1 ")}
+                  <div className="text-xs line-clamp-2 overflow-ellipsis overflow-hidden">{course.name}</div>
+                </div>
+              ))}
+          </div>
+          <div className="space-x-2 mb-4 flex flex-wrap">
+            {selectedCourses.length > 0 &&
+              selectedCourses.map((course: Course, index: number) => (
+                <div 
+                  key={index}
+                  className={`p-3 rounded-md m-2 text-black dark:text-white cursor-pointer sm:w-[18.5rem] w-full h-20 overflow-hidden`} 
+                  style={getCourseBackgroundColor(course)}
+                  onClick={() => handleBadgeClick(course)}
+                >
+                  {course.termInd !== " " && course.termInd !== "C" ? (
+                    <strong>
+                      {course.code.replace(/([A-Z]+)/g, "$1 ")} - {course.termInd}
+                    </strong>
+                  ) : (
+                    <strong>
+                      {course.code.replace(/([A-Z]+)/g, "$1 ")}
+                    </strong>
+                  )
+                  }
+                  <div className="text-sm line-clamp-1 overflow-ellipsis overflow-hidden">{course.name}</div>
+                </div>
+              ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Search by course code (e.g., XXX 0000)"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            autoCorrect="off"
+            className={input}
+          />
+          <Suspense fallback={<div>Loading...</div>}>
+            {Object.keys(groupedFilteredCourses).length > 0 ? (
+              Object.keys(groupedFilteredCourses).map((key, index) => {
+                const courses = groupedFilteredCourses[key];
+                const firstCourse = courses[0];
+                const isCourseSelected = selectedCourses.includes(firstCourse);
+                const isCourseAnimated =
+                  courseAnimation[`${firstCourse.code}|${firstCourse.name}`] ||
+                  false;
+                const isOpen = openCourseCode?.includes(
+                  `${firstCourse.code}|${firstCourse.name}`
+                );
 
-              return (
-                <React.Fragment key={index}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div
-                        className={courseCard}
-                        onClick={(e) => handleCourseCardClick(e, firstCourse)}
-                      >
-                        <div className="flex flex-row items-center justify-evenly w-full h-6 p-1 m-0">
-                          {firstCourse.termInd !== " " && firstCourse.termInd !== "C" ? (
-                            <>
+                return (
+                  <React.Fragment key={index}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div
+                          className={courseCard}
+                          onClick={(e) => handleCourseCardClick(e, firstCourse)}
+                        >
+                          <div className="flex flex-row text-black dark:text-white items-center justify-evenly w-full h-6 p-1 m-0">
+                            {firstCourse.termInd !== " " && firstCourse.termInd !== "C" ? (
+                              <>
+                                <div className="mr-auto h-6">
+                                  {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")} - {firstCourse.termInd}
+                                </div>
+                              </>
+                            ) : (
                               <div className="mr-auto h-6">
-                                {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")} - {firstCourse.termInd}
+                                {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
                               </div>
-                            </>
-                          ) : (
-                            <div className="mr-auto h-6">
-                              {firstCourse.code.replace(/([A-Z]+)/g, "$1 ")}
+                            )}
+                            <div className="mx-1 h-9">
+                              {isCourseSelected ? (
+                                <>
+                                  <PiMinusBold
+                                    className={`${minusIcon}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleCourseSelected(firstCourse);
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <PiPlusBold
+                                    className={`${plusIcon}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleCourseSelected(firstCourse);
+                                    }}
+                                  />
+                                </>
+                              )}
                             </div>
-                          )}
-                          <div className="mx-1 h-9">
-                            {isCourseSelected ? (
-                              <>
-                                <PiMinusBold
-                                  className={`${minusIcon} hover:opacity-60`}
+                            <div className="mx-1 h-9">
+                              {isOpen ? (
+                                <PiCaretUpBold
+                                  className={`${caretUpIcon} ${
+                                    isCourseAnimated
+                                      ? "opacity-100 transition-opacity duration-300"
+                                      : ""
+                                  }`}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    toggleCourseSelected(firstCourse);
+                                    toggleCourseDropdown(
+                                      `${firstCourse.code}|${firstCourse.name}`
+                                    );
                                   }}
                                 />
-                              </>
-                            ) : (
-                              <>
-                                <PiPlusBold
-                                  className={`${plusIcon} hover:opacity-60`}
+                              ) : (
+                                <PiCaretDownBold
+                                  className={`${caretDownIcon} ${
+                                    isCourseAnimated
+                                      ? "opacity-100 transition-opacity duration-100"
+                                      : ""
+                                  }`}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    toggleCourseSelected(firstCourse);
+                                    toggleCourseDropdown(
+                                      `${firstCourse.code}|${firstCourse.name}`
+                                    );
                                   }}
                                 />
-                              </>
-                            )}
+                              )}
+                            </div>
+                            <div className="ml-1 mr-[-0.25rem] h-9">
+                              {likedCourses.includes(firstCourse) ? (
+                                <PiHeartFill
+                                  className={`${heartFillIcon}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleCourseLiked(firstCourse);
+                                  }}
+                                />
+                              ) : (
+                                <PiHeartBold
+                                  className={`${heartOutlineIcon}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleCourseLiked(firstCourse);
+                                  }}
+                                />
+                              )}
+                            </div>
                           </div>
-                          <div className="mx-1 h-9">
-                            {isOpen ? (
-                              <PiCaretUpBold
-                                className={`${caretUpIcon} ${
-                                  isCourseAnimated
-                                    ? "opacity-100 transition-opacity duration-300"
-                                    : ""
-                                } hover:opacity-60`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseDropdown(
-                                    `${firstCourse.code}|${firstCourse.name}`
-                                  );
-                                }}
-                              />
-                            ) : (
-                              <PiCaretDownBold
-                                className={`${caretDownIcon} ${
-                                  isCourseAnimated
-                                    ? "opacity-100 transition-opacity duration-100"
-                                    : ""
-                                } hover:opacity-60`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseDropdown(
-                                    `${firstCourse.code}|${firstCourse.name}`
-                                  );
-                                }}
-                              />
-                            )}
+                          <div className="text-sm font-normal text-black dark:text-white mx-1 line-clamp-1 overflow-ellipsis overflow-hidden">
+                            {firstCourse.name}
                           </div>
-                          <div className="ml-1 mr-[-0.25rem] h-9">
-                            {likedCourses.includes(firstCourse) ? (
-                              <PiHeartFill
-                                className={`${heartFillIcon} hover:opacity-60`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseLiked(firstCourse);
-                                }}
-                              />
-                            ) : (
-                              <PiHeartBold
-                                className={`${heartOutlineIcon} hover:opacity-60`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseLiked(firstCourse);
-                                }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-sm font-normal mx-1 line-clamp-1 overflow-ellipsis overflow-hidden">
-                          {firstCourse.name}
                         </div>
                       </div>
                     </div>
-                  </div>
-                  {isOpen && (
-                    <div className="ml-4 opacity-100 visible transition-opacity">
-                      {courses.map((course, index) => (
-                        <CourseDropdown key={index} course={course} />
-                      ))}
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })
-          ) : (
-            <div className="dark:text-gray-300">No courses found.</div>
-          )}
-        </Suspense>
-      </div>
-      <div className="flex ml-20">
-        <CalendarUI />
+                    {isOpen && (
+                      <div className="ml-4 opacity-100 visible transition-opacity">
+                        {courses.map((course, index) => (
+                          <CourseDropdown key={index} course={course} />
+                        ))}
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })
+            ) : (
+              <div className="dark:text-gray-300">No courses found.</div>
+            )}
+          </Suspense>
+        </div>
+        <div className={`${CalendarUIClasses.mainContainer} flex`}>
+          <CalendarUI />
+        </div>
       </div>
     </>
   );

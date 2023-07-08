@@ -7,7 +7,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 class CalendarUI extends React.Component {
   render() {
     return (
-      <div className={CalendarUIClasses.calendar}>
+      <div className={`${CalendarUIClasses.calendar} bg-white dark:bg-gray-800`}>
         {days.map((day) => (
           <DayColumn key={day} day={day} />
         ))}
