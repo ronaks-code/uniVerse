@@ -20,8 +20,8 @@
   .sidebar-icon {
     @apply relative flex items-center justify-center 
     h-12 w-12 mt-2 mb-2 mx-auto  
-  bg-gray-400 hover:bg-green-600 dark:bg-gray-800 
-  text-green-500 hover:text-white
+  bg-gray-400 hover:bg-blue-600 dark:bg-gray-800 
+  text-blue-400 hover:text-white
     hover:rounded-xl rounded-3xl
     transition-all duration-200 ease-linear
     cursor-pointer shadow-lg ;
@@ -256,5 +256,5 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  @apply bg-gray-500 dark:bg-purple-800;
+  @apply bg-gray-500 dark:bg-blue-500;
 }

@@ -9,7 +9,7 @@ interface DayColumnProps {
 class DayColumn extends React.Component<DayColumnProps> {
   render() {
     const hours = [];
-    for (let hour = 8; hour < 22; hour++) {
+    for (let hour = 7; hour < 22; hour++) {
       hours.push(<TimeSlot key={hour} hour={hour} />);
     }
 
