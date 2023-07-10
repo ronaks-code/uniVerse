@@ -1,5 +1,5 @@
-import React from 'react';
-import { CalendarUIClasses } from './CalendarUIClasses';
+import React from "react";
+import { CalendarUIClasses } from "./CalendarUIClasses";
 
 interface TimeSlotProps {
   hour: number;
@@ -8,12 +8,18 @@ interface TimeSlotProps {
 class TimeSlot extends React.Component<TimeSlotProps> {
   render() {
     const standardTime = convertHourToStandard(this.props.hour);
-    return <div className={CalendarUIClasses.timeSlot}>{standardTime}</div>;
+    const dynamicSize =
+      this.props.hour >= 20 ? CalendarUIClasses.timeSlot : "";
+
+    return (
+      <div className={`${CalendarUIClasses.timeSlot} ${dynamicSize}`}>
+        {standardTime}
+      </div>
+    );
   }
 }
 
 export default TimeSlot;
-
 
 function convertHourToStandard(hour: number): string {
   if (hour === 0) {

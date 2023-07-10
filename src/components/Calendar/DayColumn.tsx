@@ -1,6 +1,6 @@
-import React from 'react';
-import TimeSlot from './TimeSlot';
-import { CalendarUIClasses } from './CalendarUIClasses';
+import React from "react";
+import TimeSlot from "./TimeSlot";
+import { CalendarUIClasses } from "./CalendarUIClasses";
 
 interface DayColumnProps {
   day: string;
@@ -16,7 +16,9 @@ class DayColumn extends React.Component<DayColumnProps> {
     return (
       <div className={CalendarUIClasses.dayColumn}>
         <div className={CalendarUIClasses.dayHeader}>{this.props.day}</div>
-        {hours}
+        <div className="grid grid-rows-16">
+          {hours}
+        </div>
       </div>
     );
   }

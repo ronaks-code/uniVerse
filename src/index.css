@@ -256,5 +256,5 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  @apply bg-gray-500 dark:bg-blue-500;
+  @apply bg-gray-500 dark:bg-slate-500;
 }

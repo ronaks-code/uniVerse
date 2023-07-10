@@ -1,10 +1,10 @@
-import React from 'react';
-import DayColumn from './DayColumn';
-import { CalendarUIClasses } from './CalendarUIClasses';
+import React from "react";
+import DayColumn from "./DayColumn";
+import { CalendarUIClasses } from "./CalendarUIClasses";
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-class CalendarUI extends React.Component {
+class Calendar extends React.Component {
   render() {
     return (
       <div className={`${CalendarUIClasses.calendar} bg-white dark:bg-gray-800`}>
@@ -16,4 +16,4 @@ class CalendarUI extends React.Component {
   }
 }
 
-export default CalendarUI;
+export default Calendar;
