@@ -6,7 +6,7 @@ class CoursesHandler extends React.Component {
 
   render() {
     return (
-      <div className="courses-handler">
+      <div className="courses-handler bg-white dark:bg-gray-800 rounded-md p-4 shadow-md transition-shadow duration-300">
         {/* Add/Remove Courses UI goes here */}
       </div>
     );
