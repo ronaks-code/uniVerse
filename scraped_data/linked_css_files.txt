@@ -1,0 +1,2 @@
+Linked CSS Files:
+/static/css/main.b88deb58.css

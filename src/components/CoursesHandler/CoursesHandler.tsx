@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
 import CourseSearch from "./CourseSearch/CourseSearch";
 import ShowFilteredCourses from "./ShowFilteredCourses/ShowFilteredCourses";
-import { Course } from '../CourseUI/CourseTypes';
+import { Course } from "../CourseUI/CourseTypes";
 
 const CoursesHandler: React.FC = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -10,7 +10,7 @@ const CoursesHandler: React.FC = () => {
   const [likedCourses, setLikedCourses] = useState<Course[]>([]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-md p-4 shadow-md transition-shadow duration-300 overflow-auto">
+    <div className="bg-white dark:bg-gray-800 rounded-md p-4 shadow-md transition-shadow duration-300">
       <LikedSelectedCourses
         selectedCourses={selectedCourses}
         likedCourses={likedCourses}

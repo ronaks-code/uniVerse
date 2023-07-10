@@ -185,7 +185,6 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
     }
   };
 
-
   const filteredCourses = useMemo(() => {
     const formattedSearchTerm = debouncedSearchTerm
       .replace(/\s/g, "")
