@@ -2,7 +2,7 @@ import React from "react";
 import { CalendarUIClasses } from "./CalendarUIClasses";
 
 interface TimeSlotProps {
-  hour: number;
+  hour?: number;
 }
 
 class TimeSlot extends React.Component<TimeSlotProps> {
@@ -28,6 +28,8 @@ function convertHourToStandard(hour: number): string {
     return `${hour} AM`;
   } else if (hour === 12) {
     return `12 PM`;
+  } else if (hour === 99) {
+    return '';
   } else {
     return `${hour % 12} PM`;
   }
