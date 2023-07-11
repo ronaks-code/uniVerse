@@ -2,7 +2,7 @@ import React from "react";
 import { Course, Section } from "../CourseTypes";
 import { courseUIClasses } from "../CourseUIClasses";
 
-type CourseDropdownProps = {
+interface CourseDropdownProps {
   course: Course;
 };
 
@@ -68,7 +68,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 space-y-0`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 space-y-2`}>
       <div
         className={`${listItem} font-semibold text-gray-800 dark:text-gray-200 mb-1`}
       >

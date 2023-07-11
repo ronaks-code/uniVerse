@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { ShowFilteredCoursesClasses } from "../ShowFilteredCourses/ShowFilteredCoursesClasses";
 
 interface CourseSearchProps {
   debouncedSearchTerm: string;
@@ -12,8 +11,6 @@ const CourseSearch: React.FC<CourseSearchProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
-
-  const { input } = ShowFilteredCoursesClasses;
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
@@ -51,7 +48,7 @@ const CourseSearch: React.FC<CourseSearchProps> = ({
       value={searchTerm}
       onChange={handleSearchChange}
       autoCorrect="off"
-      className={input}
+      className="w-96 px-2 py-2 text-black bg-gray-200 rounded-md placeholder-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-500"
     />
   );
 };

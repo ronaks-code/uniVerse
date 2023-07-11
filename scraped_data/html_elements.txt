@@ -1,0 +1,23 @@
+HTML Elements:
+<html lang="en"><head><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-TPJQQ46MS9"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-TPJQQ46MS9")</script><meta charset="utf-8"/><link href="/favicon.ico" rel="shortcut icon"/><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport"/><meta content="#000000" name="theme-color"/><link href="/manifest.json" rel="manifest"/><title>GT Scheduler</title><meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." name="description"/><meta content="Jinseo Park, Bits of Good, and the GT Scheduler contributors" name="author"/><meta content="https://gt-scheduler.org/screenshot.png" property="og:image"/><meta content="website" property="og:type"/><meta content="GT Scheduler" property="og:title"/><meta content="https://gt-scheduler.org" property="og:url"/><meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." property="og:description"/><script defer="defer" src="/static/js/main.83ed860b.js"></script><link href="/static/css/main.b88deb58.css" rel="stylesheet"/></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<head><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-TPJQQ46MS9"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-TPJQQ46MS9")</script><meta charset="utf-8"/><link href="/favicon.ico" rel="shortcut icon"/><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport"/><meta content="#000000" name="theme-color"/><link href="/manifest.json" rel="manifest"/><title>GT Scheduler</title><meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." name="description"/><meta content="Jinseo Park, Bits of Good, and the GT Scheduler contributors" name="author"/><meta content="https://gt-scheduler.org/screenshot.png" property="og:image"/><meta content="website" property="og:type"/><meta content="GT Scheduler" property="og:title"/><meta content="https://gt-scheduler.org" property="og:url"/><meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." property="og:description"/><script defer="defer" src="/static/js/main.83ed860b.js"></script><link href="/static/css/main.b88deb58.css" rel="stylesheet"/></head>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-TPJQQ46MS9"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-TPJQQ46MS9")</script>
+<meta charset="utf-8"/>
+<link href="/favicon.ico" rel="shortcut icon"/>
+<meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport"/>
+<meta content="#000000" name="theme-color"/>
+<link href="/manifest.json" rel="manifest"/>
+<title>GT Scheduler</title>
+<meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." name="description"/>
+<meta content="Jinseo Park, Bits of Good, and the GT Scheduler contributors" name="author"/>
+<meta content="https://gt-scheduler.org/screenshot.png" property="og:image"/>
+<meta content="website" property="og:type"/>
+<meta content="GT Scheduler" property="og:title"/>
+<meta content="https://gt-scheduler.org" property="og:url"/>
+<meta content="Georgia Tech Scheduler lets you find the schedule that fits you best among all the possible combinations of courses." property="og:description"/>
+<script defer="defer" src="/static/js/main.83ed860b.js"></script>
+<link href="/static/css/main.b88deb58.css" rel="stylesheet"/>
+<body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>

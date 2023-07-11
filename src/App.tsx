@@ -41,13 +41,6 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="auth" element={<Auth />} />
       <Route path="settings" element={<Settings />} />
-      {/* <Route path="courses" element={<CourseCard course={{
-        code: "asdfasfdsa",
-        name: "asdfasfsafsaf",
-        description: "asfdasfasfsaf",
-        prerequisites: "asfsafsafasfasf",
-        sections: []
-      }} />} /> */}
       <Route path="firebase-courses" element={<FirebaseCourseDisplay />} />
       <Route path="JSON-courses" element={<JSONCourseDisplay />} />
       <Route path="course-service" element={<CourseService />} />
