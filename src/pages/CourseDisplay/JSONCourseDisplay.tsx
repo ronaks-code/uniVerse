@@ -2,6 +2,7 @@ import React from "react";
 import SideBar from "../../components/SideBar/Sidebar";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/Calendar/Calendar";
+import CalendarNew from "../../components/Tester/Calendar";
 import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
 import CoursesHandler from "../../components/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter"; // Add CourseFilter component
@@ -21,6 +22,7 @@ const JSONCourseDisplay: React.FC = () => {
       </div> */}
       <div className={`${CalendarUIClasses.mainContainer} flex calendar-ui`}>
         <Calendar />
+        {/* <CalendarNew /> */}
       </div>
     </div>
   );

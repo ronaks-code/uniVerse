@@ -8,7 +8,7 @@ const Home = () => {
 
   return (
     <>
-      <div className='flex flex-col items-start content-start h-[100vh] ml-16'>
+      <div className='flex flex-col items-start content-start h-[100vh]'>
         <SideBar />
         <ContentContainer />
       </div>

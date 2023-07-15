@@ -231,7 +231,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
 
             return (
               <React.Fragment key={index}>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mr-4">
                   <div className="flex items-center">
                     <div
                       className={courseCard}
@@ -332,7 +332,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                   </div>
                 </div>
                 {isOpen && (
-                  <div className="ml-4 opacity-100 visible transition-opacity">
+                  <div className="ml-2 opacity-100 visible transition-opacity max-w-[32rem]">
                     {courses.map((course, index) => (
                       <CourseDropdown key={index} course={course} />
                     ))}

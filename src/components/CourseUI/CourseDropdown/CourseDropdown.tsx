@@ -19,7 +19,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
         </div> */}
 
         {/* Instructors */}
-        <div className="text-gray-900 dark:text-white">
+        <div className="text-sm text-gray-900 dark:text-white">
           <strong>Instructors:</strong>{" "}
           {section.instructors.length > 0
             ? section.instructors
@@ -29,7 +29,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
         </div>
 
         {/* Meeting Times */}
-        <div className="text-gray-900 dark:text-white">
+        <div className="text-sm text-gray-900 dark:text-white">
           <strong>Meeting Times:</strong>{" "}
           {section.meetTimes.length > 0 ? (
             section.meetTimes.map((meetingTime) => (
@@ -70,7 +70,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg p-4 space-y-2`}>
       <div
-        className={`${listItem} font-semibold text-gray-800 dark:text-gray-200 mb-1`}
+        className={`${listItem} text-base font-medium text-gray-800 dark:text-gray-200 mb-1`}
       >
         <strong>Term:</strong>{" "}
         <span className={term}>{course.termInd || "N/A"}</span>

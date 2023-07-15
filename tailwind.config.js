@@ -33,6 +33,17 @@ module.exports = {
         'zoom-in': 'zoom-in 0.3s',
         'zoom-out': 'zoom-out 0.3s', 
       },
+      transitionProperty: {
+        multiple: "width, height",
+      },
+      transitionDuration: {
+        0: "0ms",
+        800: "800ms",
+        1200: "1200ms",
+        1300: "1300ms",
+        1500: "1500ms",
+        2000: "2000ms",
+      },
     },
   },
   plugins: [
