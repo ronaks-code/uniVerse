@@ -6,21 +6,20 @@ import CalendarNew from "../../components/Tester/Calendar";
 import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
 import CoursesHandler from "../../components/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter"; // Add CourseFilter component
-import "./CourseDisplay.css";
 
 const JSONCourseDisplay: React.FC = () => {
   const { container } = JSONCourseDisplayClasses;
 
   return (
-    <div className="flex course-display">
+    <div className="flex flex-row">
       <SideBar />
-      <div className={`${container} courses-handler`}>
+      <div className={`${container} px-24`}>
         <CoursesHandler />
       </div>
       {/* <div className="course-filter">
         <CourseFilter />
       </div> */}
-      <div className={`${CalendarUIClasses.mainContainer} flex calendar-ui`}>
+      <div className={`${CalendarUIClasses.mainContainer} flex`}>
         <Calendar />
         {/* <CalendarNew /> */}
       </div>
