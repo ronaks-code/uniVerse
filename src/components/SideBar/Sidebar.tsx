@@ -45,10 +45,11 @@ const SideBar = () => {
           to="/auth"
           style={{
             transition: `all 0.1s ease ${
-              isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05
+              isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05 - 0.35
             }s`,
             transform: isOpen ? "translateY(0)" : "translateY(-20px)",
-            opacity: isOpen ? 1 : 0,
+            // opacity: isOpen ? 1 : 0,
+            visibility: isOpen ? "visible" : "hidden",
           }}
         >
           <SideBarItem
@@ -66,10 +67,11 @@ const SideBar = () => {
         onClick={(event) => event.preventDefault()}
         style={{
           transition: `all 0.1s ease ${
-            isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05
+            isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05 -0.35
           }s`,
           transform: isOpen ? "translateY(0)" : "translateY(-20px)",
-          opacity: isOpen ? 1 : 0,
+          // opacity: isOpen ? 1 : 0,
+          visibility: isOpen ? "visible" : "hidden",
         }}
       >
         {user?.photoUrl ? (
@@ -123,10 +125,11 @@ const SideBar = () => {
             transition: `all 0.1s ease ${
               isOpen
                 ? index * 0.05 + 0.05
-                : (menuItems.length - index) * 0.05 + 0.05
+                : (menuItems.length - index) * 0.05 - 0.3
             }s`,
             transform: isOpen ? "translateY(0)" : "translateY(-20px)",
-            opacity: isOpen ? 1 : 0,
+            // opacity: isOpen ? 1 : 0,
+            visibility: isOpen ? "visible" : "hidden",
           }}
         >
           <SideBarItem icon={item.icon} text={item.text} />
@@ -284,6 +287,7 @@ const Divider = ({
       }s`,
       transform: isOpen ? "translateY(0)" : "translateY(-10px)",
       opacity: isOpen ? 1 : 0,
+      // visibility: isOpen ? "visible" : "hidden",
     }}
   />
 );

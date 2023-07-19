@@ -170,7 +170,41 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   }, [filteredCourses]);
 
   return (
-    <div className="max-h-[calc(100vh-8rem)] overflow-auto">
+    <div
+      className={`max-h-[calc(100vh)] overflow-auto pl-4 courseHandlerScrollbar`}
+    >
+      {/* Apply the scrollbar-dark class for a dark-themed scrollbar */}
+      <style>
+        {`
+          /* Custom scrollbar style for dark theme */
+          .scrollbar-dark::-webkit-scrollbar {
+            width: 2.5px;
+            background: transparent;
+          }
+          
+          .scrollbar-dark::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: red;
+          }
+        `}
+      </style>
+
+      {/* Apply the scrollbar-light class for a light-themed scrollbar */}
+      <style>
+        {`
+          /* Custom scrollbar style for light theme */
+          .scrollbar-light::-webkit-scrollbar {
+            width: 2.5px;
+            background: transparent;
+          }
+          
+          .scrollbar-light::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: blue;
+          }
+        `}
+      </style>
+
       <Suspense fallback={<div>Loading...</div>}>
         {Object.keys(groupedFilteredCourses).length > 0 ? (
           Object.keys(groupedFilteredCourses).map((key, index) => {
@@ -338,7 +372,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
             );
           })
         ) : (
-          <div className="dark:text-gray-300">No courses found.</div>
+          <div className="px-4 pb-4 dark:text-gray-300">No courses found.</div>
         )}
       </Suspense>
     </div>

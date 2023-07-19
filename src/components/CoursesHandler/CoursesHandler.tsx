@@ -10,16 +10,16 @@ const CoursesHandler: React.FC = () => {
   const [likedCourses, setLikedCourses] = useState<Course[]>([]);
 
   return (
-    <div className="mt-[3rem] bg-white dark:bg-gray-800 rounded-md p-4 pt-3 shadow-md transition-shadow duration-300">
+    <div className="mt-[1rem] bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300">
+      <CourseSearch
+        debouncedSearchTerm={debouncedSearchTerm}
+        setDebouncedSearchTerm={setDebouncedSearchTerm}
+      />
       <LikedSelectedCourses
         selectedCourses={selectedCourses}
         likedCourses={likedCourses}
         setSelectedCourses={setSelectedCourses}
         setLikedCourses={setLikedCourses}
-      />
-      <CourseSearch
-        debouncedSearchTerm={debouncedSearchTerm}
-        setDebouncedSearchTerm={setDebouncedSearchTerm}
       />
       <ShowFilteredCourses
         debouncedSearchTerm={debouncedSearchTerm}
@@ -61,6 +61,5 @@ const CoursesHandler: React.FC = () => {
   //   </div>
   // );
 };
-  
 
 export default CoursesHandler;
