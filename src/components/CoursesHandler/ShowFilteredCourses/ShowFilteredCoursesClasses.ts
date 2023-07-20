@@ -18,5 +18,5 @@ export const ShowFilteredCoursesClasses = {
   eyeIcon:
     "cursor-pointer mr-1 mt-2 text-[1.0rem] text-gray-700 dark:text-white hover:opacity-60",
   courseCard:
-    "cursor-pointer bg-gray-200 dark:bg-gray-700 rounded-md p-4 my-2 w-[320px] shadow-md transition-shadow duration-300",
+    "cursor-pointer bg-gray-200 dark:bg-gray-700 rounded-md p-4 my-2 w-[83vw] lg-xl:w-[320px] shadow-md transition-shadow duration-300",
 };

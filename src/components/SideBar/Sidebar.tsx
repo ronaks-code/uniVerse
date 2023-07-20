@@ -7,10 +7,11 @@ import { BsPlus, BsFillLightningFill, BsGearFill } from "react-icons/bs";
 import { FaFire, FaPoo, FaBars } from "react-icons/fa";
 import { PiSignIn } from "react-icons/pi";
 
+const transitionTime = "0.2s";
+
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const gradientRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const { user } = useAppSelector((state) => state.auth);
@@ -25,16 +26,10 @@ const SideBar = () => {
   };
 
   useEffect(() => {
-    if (gradientRef.current) {
-      gradientRef.current.style.opacity = `${scrollPosition}`;
-    }
-  }, [scrollPosition]);
-
-  useEffect(() => {
     if (sidebarRef.current) {
       sidebarRef.current.style.maxHeight = isOpen
         ? `${sidebarRef.current.scrollHeight}px`
-        : "0";
+        : "55px";
     }
   }, [isOpen]);
 
@@ -44,10 +39,10 @@ const SideBar = () => {
         <Link
           to="/auth"
           style={{
-            transition: `all 0.1s ease ${
-              isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05 - 0.35
+            transition: `all ${transitionTime} ease-in-out ${
+              isOpen ? (menuItems.length + 1) * 0.055 : 0.05
             }s`,
-            transform: isOpen ? "translateY(0)" : "translateY(-20px)",
+            transform: isOpen ? "translateX(0)" : "translateX(-120%)",
             // opacity: isOpen ? 1 : 0,
             visibility: isOpen ? "visible" : "hidden",
           }}
@@ -63,13 +58,12 @@ const SideBar = () => {
 
     return (
       <Link
-        to={isOpen ? "/profile" : window.location.pathname}
-        onClick={(event) => event.preventDefault()}
+        to="/profile"
         style={{
-          transition: `all 0.1s ease ${
-            isOpen ? (menuItems.length + 1) * 0.1 - 0.15 : 0.05 -0.35
+          transition: `all ${transitionTime} ease-in-out ${
+            isOpen ? (menuItems.length + 1) * 0.05 : 0.05
           }s`,
-          transform: isOpen ? "translateY(0)" : "translateY(-20px)",
+          transform: isOpen ? "translateX(0)" : "translateX(-120%)",
           // opacity: isOpen ? 1 : 0,
           visibility: isOpen ? "visible" : "hidden",
         }}
@@ -122,14 +116,8 @@ const SideBar = () => {
         <Link
           to={item.to}
           style={{
-            transition: `all 0.1s ease ${
-              isOpen
-                ? index * 0.05 + 0.05
-                : (menuItems.length - index) * 0.05 - 0.3
-            }s`,
-            transform: isOpen ? "translateY(0)" : "translateY(-20px)",
-            // opacity: isOpen ? 1 : 0,
-            visibility: isOpen ? "visible" : "hidden",
+            transition: `all ${transitionTime} ease-in-out ${isOpen ? 0.05 * index : (menuItems.length + 1 - index) * 0.05}s`, // Updated transition time
+            transform: isOpen ? "translateX(0)" : "translateX(-120%)", // New transform for expanding effect
           }}
         >
           <SideBarItem icon={item.icon} text={item.text} />
@@ -137,17 +125,15 @@ const SideBar = () => {
         {(index === 0 || index === 3) && (
           <Divider
             isOpen={isOpen}
-            index={index}
             transitionDelay={
-              isOpen ? (index + 1) * 0.05 + 0.05 : (index + 1) * 0.05 + 0.05
+              isOpen ? (index + 1) * 0.05 + 0.025 : (menuItems.length + 1 - index) * 0.05 - 0.025
             }
-            menuItems={menuItems}
           />
         )}
       </React.Fragment>
     ));
   };
-
+  
   type MenuItem = {
     to: string;
     icon: React.ReactNode;
@@ -156,27 +142,27 @@ const SideBar = () => {
 
   const menuItems: MenuItem[] = [
     {
-      to: isOpen ? "/" : window.location.pathname,
+      to: "/",
       icon: <FaFire size="28" />,
       text: "Home",
     },
     {
-      to: isOpen ? "/course-service" : window.location.pathname,
+      to: "/course-service",
       icon: <BsFillLightningFill size="20" />,
       text: "Firebase",
     },
     {
-      to: isOpen ? "/firebase-courses" : window.location.pathname,
+      to: "/firebase-courses",
       icon: <BsPlus size="32" />,
       text: "Courses",
     },
     {
-      to: isOpen ? "/JSON-courses" : window.location.pathname,
+      to: "/JSON-courses",
       icon: <FaPoo size="20" />,
       text: "Course Cards",
     },
     {
-      to: isOpen ? "/settings" : window.location.pathname,
+      to: "/settings",
       icon: <BsGearFill size="22" />,
       text: "Settings",
     },
@@ -187,7 +173,7 @@ const SideBar = () => {
       {/* Sidebar menu */}
       <div
         className={`sidebar ${
-          isOpen ? "duration-700" : "shadow-lg duration-700"
+          isOpen ? "shadow-lg shadow-purple-600 duration-700" : "shadow-lg shadow-purple-600 duration-700"
         } ${isOpen ? "rounded-full" : "rounded-full"}`}
         style={{
           transformOrigin: "center",
@@ -196,49 +182,37 @@ const SideBar = () => {
         ref={sidebarRef}
         onScroll={handleScroll}
       >
-        {/* Sidebar Content */}
-        <div className="w-full relative">
-          {/* Sidebar Icon */}
-          <div
-            className={`relative h-14 w-14 flex items-center justify-center bg-white dark:bg-gray-900 ${
-              isOpen ? "rounded-full" : "rounded-full"
-            }`}
-            onClick={toggleSidebar}
-            style={{
-              transition: isOpen
-                ? "border-radius 0.2s ease"
-                : "border-radius 1s ease",
-            }}
-          >
-            <div
-              className={`sidebar-icon group ${
-                isOpen ? "rounded-full" : "rounded-full"
-              }`}
-            >
-              <SideBarItem
-                icon={<FaBars size="20" />}
-                text={isOpen ? "Close Sidebar" : "Open Sidebar"}
-                isOpen={isOpen}
-              />
-            </div>
+        {/* Sidebar Icon */}
+        <div
+          className={`relative h-14 w-14 flex items-center justify-center bg-white dark:bg-gray-900 rounded-full`}
+          onClick={toggleSidebar}
+          style={{
+            transition: `transform 0.3s`,
+          }}
+        >
+          <div className="sidebar-icon">
+            <SideBarItem
+              icon={<FaBars size="20" />}
+              text={isOpen ? "Close Sidebar" : "Open Sidebar"}
+              isOpen={isOpen}
+            />
           </div>
-
-          {/* Menu items and user profile... */}
-          {renderMenuItems()}
-
-          {/* Gradient Overlay */}
-          {/* <div
-            className="absolute top-0 left-0 right-0 h-full pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
-              opacity: 0,
-            }}
-            ref={gradientRef}
-          ></div> */}
-
-          {renderUserProfile()}
         </div>
+
+        {/* Menu items and user profile... */}
+        {renderMenuItems()}
+
+        {/* Gradient Overlay */}
+        {/* <div
+          className="absolute top-0 left-0 right-0 h-full pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
+            opacity: isOpen ? scrollPosition : 0,
+            transition: `opacity ${transitionTime} linear`, // Added transition for opacity
+          }}
+        ></div> */}
+
+        {renderUserProfile()}
       </div>
     </div>
   );
@@ -260,7 +234,7 @@ const SideBarItem = ({
     <span
       className="sidebar-tooltip group-hover:scale-100"
       style={{
-        transition: "transform 0.1s ease",
+        transition: "transform ${transitionTime} ease-in-out",
       }}
     >
       {text}
@@ -270,22 +244,16 @@ const SideBarItem = ({
 
 const Divider = ({
   isOpen,
-  index,
   transitionDelay,
-  menuItems,
 }: {
   isOpen: boolean;
-  index: number;
   transitionDelay: number;
-  menuItems: any;
 }) => (
   <hr
     className="sidebar-hr"
     style={{
-      transition: `all 0.1s ease ${
-        isOpen ? transitionDelay : (menuItems.length - index) * 0.05 + 0.05
-      }s`,
-      transform: isOpen ? "translateY(0)" : "translateY(-10px)",
+      transition: `all ${transitionTime} ease-in-out ${transitionDelay}s`,
+      transform: isOpen ? "translateX(0)" : "translateX(-120%)",
       opacity: isOpen ? 1 : 0,
       // visibility: isOpen ? "visible" : "hidden",
     }}

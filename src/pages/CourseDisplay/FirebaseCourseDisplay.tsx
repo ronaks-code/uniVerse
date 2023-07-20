@@ -10,7 +10,6 @@ import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
 import { Course } from "../../components/CourseUI/CourseTypes";
-import SideBar from "../../components/SideBar/Sidebar";
 
 import { coursePrefixSet } from "../../services/CourseService";
 
@@ -99,7 +98,6 @@ const FirebaseCourseDisplay: React.FC = () => {
 
   return (
     <>
-      <SideBar />
       <div className="flex flex-col items-start content-start h-[100vh] ml-[4.75rem] p-4">
         <input
           type="text"

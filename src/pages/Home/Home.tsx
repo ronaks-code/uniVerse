@@ -1,6 +1,5 @@
 import ContentContainer from "../../components/ContentContainer/ContentContainer";
 import Header from "../../components/Header/Header";
-import SideBar from "../../components/SideBar/Sidebar";
 import { homeClasses } from "./homeClasses";
 
 const Home = () => {
@@ -9,7 +8,6 @@ const Home = () => {
   return (
     <>
       <div className='flex flex-col items-start content-start h-[100vh]'>
-        <SideBar />
         <ContentContainer />
       </div>
     </>

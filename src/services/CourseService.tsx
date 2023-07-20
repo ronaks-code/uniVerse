@@ -2,7 +2,6 @@ import React from "react";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "./firebase";
 import jsonDataImport from "../courses/UF_Jun-30-2023_23_summer_clean.json";
-import SideBar from "../components/SideBar/Sidebar";
 import { courseServiceClasses } from "./courseServiceClasses";
 
 const { page, title, container, text, button } = courseServiceClasses;
@@ -88,7 +87,6 @@ const importDataToFirestore = async () => {
 const CourseService = () => {
   return (
     <>
-      <SideBar />
       <div className={page}>
         <div className={container}>
           <h1 className={title}>Importing Data to Firestore</h1>

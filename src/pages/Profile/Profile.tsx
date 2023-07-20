@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { sendPasswordResetEmail, signOut } from "firebase/auth";
 import { auth } from "../../services/firebase";
 
-import SideBar from "../../components/SideBar/Sidebar";
 import Header from "../../components/Header/Header";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHook";
@@ -43,15 +42,14 @@ const Profile = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (Boolean(!user)) {
-  //     navigate("/auth");
-  //   }
-  // }, [navigate, user]);
+  useEffect(() => {
+    if (Boolean(!user)) {
+      navigate("/auth");
+    }
+  }, [navigate, user]);
 
   return (
     <div className="flex-nowrap">
-      <SideBar />
       <div>
         <ResetPassword
           handlePasswordReset={handlePasswordReset}

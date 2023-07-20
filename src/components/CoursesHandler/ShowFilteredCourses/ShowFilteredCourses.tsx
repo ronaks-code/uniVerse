@@ -173,38 +173,6 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
     <div
       className={`max-h-[calc(100vh)] overflow-auto pl-4 courseHandlerScrollbar`}
     >
-      {/* Apply the scrollbar-dark class for a dark-themed scrollbar */}
-      <style>
-        {`
-          /* Custom scrollbar style for dark theme */
-          .scrollbar-dark::-webkit-scrollbar {
-            width: 2.5px;
-            background: transparent;
-          }
-          
-          .scrollbar-dark::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background-color: red;
-          }
-        `}
-      </style>
-
-      {/* Apply the scrollbar-light class for a light-themed scrollbar */}
-      <style>
-        {`
-          /* Custom scrollbar style for light theme */
-          .scrollbar-light::-webkit-scrollbar {
-            width: 2.5px;
-            background: transparent;
-          }
-          
-          .scrollbar-light::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background-color: blue;
-          }
-        `}
-      </style>
-
       <Suspense fallback={<div>Loading...</div>}>
         {Object.keys(groupedFilteredCourses).length > 0 ? (
           Object.keys(groupedFilteredCourses).map((key, index) => {
@@ -228,7 +196,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                       onClick={(e) => handleCourseCardClick(e, firstCourse)}
                     >
                       {/* Course code and term indicator */}
-                      <div className="flex flex-row text-black dark:text-white items-center justify-evenly w-full h-6 p-1 m-0">
+                      <div className="flex flex-row mr-auto text-black dark:text-white items-center justify-evenly w-full h-6 p-1 m-0">
                         {firstCourse.termInd !== " " &&
                         firstCourse.termInd !== "C" ? (
                           <div className="mr-auto h-6 font-bold">

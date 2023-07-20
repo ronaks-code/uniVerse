@@ -1,18 +1,26 @@
-export const settingsClasses = {
-  page: 'flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800',
-  title: 'text-3xl font-bold mb-8 text-gray-800 dark:text-white',
-  container: 'bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8',
-  section: 'mb-8',
-  sectionTitle: 'text-xl font-bold mb-4 text-gray-800 dark:text-white',
-  option: 'flex items-center justify-between mb-4',
-  optionLabel: 'mr-4 text-gray-800 dark:text-white',
-  toggle: 'relative inline-block w-12 h-6 align-middle select-none',
-  slider:
-    'absolute block w-6 h-6 rounded-full transition-transform duration-300 ease-in-out bg-gray-300 dark:bg-gray-600',
-  sliderChecked:
-    'bg-blue-500 dark:bg-blue-500 transform translate-x-6 transition-transform duration-300 ease-in-out',
-  input: 'w-full py-2 px-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500',
-  button: 'bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded',
-  zoomInAnimation: 'animate-zoom-in',
-  zoomOutAnimation: 'animate-zoom-out',
+const settingsClasses = {
+  // Sidebar
+  sidebarContainer: "w-128 bg-transparent p-4 flex flex-col justify-between",
+  sidebarHeader: "flex items-center justify-center mb-8",
+  sidebarHeaderLink: "text-3xl font-bold text-purple-600",
+  sidebarMenu: "flex flex-col space-y-4 pl-16",
+  sidebarMenuItem:
+    "py-2 px-4 rounded-lg hover:bg-purple-600 hover:text-white dark:text-white tion-colors",
+  sidebarFooter: "mt-auto text-gray-500 text-sm dark:text-gray-400",
+
+  // Settings Page
+  settingsPageContainer: "flex h-screen bg-gradient-to-r from-gray-300 to-gray-400 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-600",
+  settingsPageContent: "flex flex-col flex-1 p-8",
+  settingsPageHeader: "text-2xl font-bold mb-4 dark:text-white",
+
+  // Settings Section
+  settingsSection: "bg-white bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-md",
+  settingsSectionTitle: "text-lg font-bold mb-2 text-gray-800 dark:text-white",
+
+  // Sidebar Icon Styles
+  sidebarIconGradient: "sidebar-icon-gradient",
+  sidebarTooltip: "sidebar-tooltip group-hover:scale-100",
+  sidebarHr: "bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-500 rounded-full mx-2",
 };
+
+export default settingsClasses;

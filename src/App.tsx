@@ -14,6 +14,7 @@ import { auth } from "./services/firebase";
 import { useAppDispatch } from "./hooks/storeHook";
 import { login } from "./features/authSlice";
 import AuthRoutes from "./components/HOC/AuthRoutes";
+import SideBar from "./components/SideBar/Sidebar";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -34,17 +35,20 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <Routes>
-      <Route element={<AuthRoutes />}>
-        <Route path="profile" element={<Profile />} />
-      </Route>
-      <Route path="/" element={<Home />} />
-      <Route path="auth" element={<Auth />} />
-      <Route path="settings" element={<Settings />} />
-      <Route path="firebase-courses" element={<FirebaseCourseDisplay />} />
-      <Route path="JSON-courses" element={<JSONCourseDisplay />} />
-      <Route path="course-service" element={<CourseService />} />
-    </Routes>
+    <>
+      <SideBar />
+      <Routes>
+        <Route element={<AuthRoutes />}>
+          <Route path="profile" element={<Profile />} />
+        </Route>
+        <Route path="/" element={<Home />} />
+        <Route path="auth" element={<Auth />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="firebase-courses" element={<FirebaseCourseDisplay />} />
+        <Route path="JSON-courses" element={<JSONCourseDisplay />} />
+        <Route path="course-service" element={<CourseService />} />
+      </Routes>
+    </>
   );
 };
 
