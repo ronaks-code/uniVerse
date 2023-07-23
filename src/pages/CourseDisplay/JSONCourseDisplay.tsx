@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
-// import Calendar from "../../components/Calendar/Calendar";
+import Calendar from "../../components/Calendar/Calendar";
+// import Calendar from "@toast-ui/react-calendar"
 import CalendarNew from "../../components/Tester/Calendar";
 import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
 import CoursesHandler from "../../components/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
-import Calendar from "@toast-ui/react-calendar"
 
 const JSONCourseDisplay: React.FC = () => {
   const { container } = JSONCourseDisplayClasses;
@@ -62,7 +62,7 @@ const JSONCourseDisplay: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col lg-xl:flex-row">
+    <div className="flex flex-col lg-xl:flex-row h-screen max-h-[calc(100vh] overflow-hidden">
       {/* Header for options */}
       <div className="lg-xl:hidden flex justify-center items-center bg-white dark:bg-gray-900 h-12 border-b border-gray-300 dark:border-gray-700">
         <button
@@ -94,7 +94,7 @@ const JSONCourseDisplay: React.FC = () => {
       <div
         className={`${container} px-24 ${
           isCourseHandlerVisible ? "" : "hidden"
-        }`}
+        } flex-grow`}
       >
         {isCourseHandlerVisible && <CoursesHandler />}
       </div>
@@ -102,7 +102,7 @@ const JSONCourseDisplay: React.FC = () => {
         {isCourseFilterVisible && <CourseFilter />}
       </div> */}
       <div
-        className={`flex flex-row ${
+        className={`${CalendarUIClasses.mainContainer} flex flex-row ${
           isCalendarVisible ? "" : "hidden"
         }`}
       >

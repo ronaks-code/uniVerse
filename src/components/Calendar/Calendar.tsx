@@ -23,7 +23,7 @@ class Calendar extends React.Component {
 
   render() {
     return (
-      <div className={CalendarStyles.calendar}>
+      <div className={`${CalendarStyles.calendar} max-h-[calc(100vh-7rem)] lg-xl:max-h-[calc(100vh)]`}>
         <div className={CalendarStyles.times}>
           {this.renderTimeSlots()}
         </div>

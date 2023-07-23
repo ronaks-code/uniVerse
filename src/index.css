@@ -271,6 +271,7 @@
 .courseHandlerScrollbar::-webkit-scrollbar {
   width: "0.4rem";
   background: "transparent";
+  height: fit-content;
 }
 
 .courseHandlerScrollbar::-webkit-scrollbar-thumb {
@@ -279,10 +280,22 @@
 }
 
 ::-webkit-scrollbar {
-  @apply bg-transparent w-2.5;
+  @apply bg-transparent w-2;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  @apply bg-gray-500 dark:bg-slate-500;
+  transition: background-color 1s ease-in-out;
+  @apply bg-[#888] rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#555];
+}
+
+@media (max-width: 600px) {
+  /* Adjust the top margin as needed */
+  
+  body {
+    margin-top: -16px; /* For example, you can adjust the margin to your desired value */
+  }
 }

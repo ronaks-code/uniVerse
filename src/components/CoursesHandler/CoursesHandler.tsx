@@ -10,56 +10,36 @@ const CoursesHandler: React.FC = () => {
   const [likedCourses, setLikedCourses] = useState<Course[]>([]);
 
   return (
-    <div className="mt-[1rem] bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300">
-      <CourseSearch
-        debouncedSearchTerm={debouncedSearchTerm}
-        setDebouncedSearchTerm={setDebouncedSearchTerm}
-      />
-      <LikedSelectedCourses
-        selectedCourses={selectedCourses}
-        likedCourses={likedCourses}
-        setSelectedCourses={setSelectedCourses}
-        setLikedCourses={setLikedCourses}
-      />
-      <ShowFilteredCourses
-        debouncedSearchTerm={debouncedSearchTerm}
-        selectedCourses={selectedCourses}
-        setSelectedCourses={setSelectedCourses}
-        likedCourses={likedCourses}
-        setLikedCourses={setLikedCourses}
-      />
+    <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">
+      <div className="overflow-y-scroll lg-xl:mb-0 pb-4 flex flex-col max-h-[calc(100vh-4rem)] lg-xl:max-h-[calc(100vh-2rem)]">
+        <div className="sticky top-0">
+          <CourseSearch
+            debouncedSearchTerm={debouncedSearchTerm}
+            setDebouncedSearchTerm={setDebouncedSearchTerm}
+          />
+        </div>
+
+        <div className="flex-grow overflow-y-auto pb-4">
+          {/* The rest of your content */}
+          <LikedSelectedCourses
+            selectedCourses={selectedCourses}
+            likedCourses={likedCourses}
+            setSelectedCourses={setSelectedCourses}
+            setLikedCourses={setLikedCourses}
+          />
+          <div className="">
+            <ShowFilteredCourses
+              debouncedSearchTerm={debouncedSearchTerm}
+              selectedCourses={selectedCourses}
+              setSelectedCourses={setSelectedCourses}
+              likedCourses={likedCourses}
+              setLikedCourses={setLikedCourses}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
-
-  // return (
-  //   <div className="bg-white dark:bg-gray-800 rounded-md p-4 shadow-md transition-shadow duration-300">
-  //     <div className="lg:flex">
-  //       <div className="lg:w-2/3 lg:mr-4">
-  //         <ShowFilteredCourses
-  //           debouncedSearchTerm={debouncedSearchTerm}
-  //           selectedCourses={selectedCourses}
-  //           setSelectedCourses={setSelectedCourses}
-  //           likedCourses={likedCourses}
-  //           setLikedCourses={setLikedCourses}
-  //         />
-  //       </div>
-  //       <div className="lg:w-1/3">
-  //         <LikedSelectedCourses
-  //           selectedCourses={selectedCourses}
-  //           likedCourses={likedCourses}
-  //           setSelectedCourses={setSelectedCourses}
-  //           setLikedCourses={setLikedCourses}
-  //         />
-  //       </div>
-  //     </div>
-  //     <div className="hidden lg:block">
-  //       <CourseSearch
-  //         debouncedSearchTerm={debouncedSearchTerm}
-  //         setDebouncedSearchTerm={setDebouncedSearchTerm}
-  //       />
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default CoursesHandler;
