@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
-import Calendar from "../../components/Calendar/Calendar";
+// import Calendar from "../../components/Calendar/Calendar";
 import CalendarNew from "../../components/Tester/Calendar";
 import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
 import CoursesHandler from "../../components/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
+import Calendar from "@toast-ui/react-calendar"
 
 const JSONCourseDisplay: React.FC = () => {
   const { container } = JSONCourseDisplayClasses;
@@ -90,13 +91,21 @@ const JSONCourseDisplay: React.FC = () => {
         </button>
       </div>
       {/* Components */}
-      <div className={`${container} px-24 ${isCourseHandlerVisible ? "" : "hidden"}`}>
+      <div
+        className={`${container} px-24 ${
+          isCourseHandlerVisible ? "" : "hidden"
+        }`}
+      >
         {isCourseHandlerVisible && <CoursesHandler />}
       </div>
       {/* <div className={`course-filter ${isCourseFilterVisible ? "" : "hidden"}`}>
         {isCourseFilterVisible && <CourseFilter />}
       </div> */}
-      <div className={`${CalendarUIClasses.mainContainer} flex flex-row ${isCalendarVisible ? "" : "hidden"}`}>
+      <div
+        className={`flex flex-row ${
+          isCalendarVisible ? "" : "hidden"
+        }`}
+      >
         {isCalendarVisible && <Calendar />}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
