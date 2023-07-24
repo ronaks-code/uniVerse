@@ -82,7 +82,7 @@ const JSONCourseDisplay: React.FC = () => {
           Combinations
         </button> */}
         <button
-          className={`px-4 py-2 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
+          className={`px-4 py-4 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
             isCalendarVisible ? "font-bold" : ""
           }`}
           onClick={() => handleHeaderClick("Calendar")}
@@ -92,7 +92,7 @@ const JSONCourseDisplay: React.FC = () => {
       </div>
       {/* Components */}
       <div
-        className={`${container} px-24 ${
+        className={`${container} ${
           isCourseHandlerVisible ? "" : "hidden"
         } flex-grow`}
       >
@@ -102,7 +102,7 @@ const JSONCourseDisplay: React.FC = () => {
         {isCourseFilterVisible && <CourseFilter />}
       </div> */}
       <div
-        className={`${CalendarUIClasses.mainContainer} flex flex-row ${
+        className={`${CalendarUIClasses.mainContainer} ${
           isCalendarVisible ? "" : "hidden"
         }`}
       >

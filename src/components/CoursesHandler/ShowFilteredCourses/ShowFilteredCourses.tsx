@@ -170,9 +170,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   }, [filteredCourses]);
 
   return (
-    <div
-      className={`pl-4`}
-    >
+    <div className={`pl-4`}>
       <Suspense fallback={<div>Loading...</div>}>
         {Object.keys(groupedFilteredCourses).length > 0 ? (
           <div className="mb-[-2rem]">
@@ -190,14 +188,14 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
 
               return (
                 <React.Fragment key={index}>
-                  <div className="items-center justify-between mr-4">
+                  <div className="items-center justify-between mr-2">
                     <div className="flex items-center">
                       <div
                         className={courseCard}
                         onClick={(e) => handleCourseCardClick(e, firstCourse)}
                       >
                         {/* Course code and term indicator */}
-                        <div className="flex flex-row mr-auto text-black dark:text-white items-center justify-evenly w-full h-6 p-1 m-0">
+                        <div className="flex flex-row mr-auto text-black dark:text-white items-center justify-evenly w-screen max-w-[calc(100vw-4.5rem)] lg-xl:w-full h-6 p-1 m-0">
                           {firstCourse.termInd !== " " &&
                           firstCourse.termInd !== "C" ? (
                             <div className="mr-auto h-6 font-bold">
@@ -306,7 +304,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                   </div>
 
                   {isDescriptionVisible && isDescriptionOpen && (
-                    <div className="px-4 py-2 mb-2 bg-white dark:bg-gray-800 rounded-md shadow-md overflow-auto z-10 w-[320px]">
+                    <div className="px-4 py-2 mb-2 bg-white dark:bg-gray-800 rounded-md shadow-md overflow-auto z-10 w-screen max-w-[calc(100vw-2.5rem)] lg-xl:w-[320px]">
                       <div className="modal-content">
                         <div className="text-sm text-gray-900 dark:text-white">
                           <strong>Description:</strong>
@@ -320,20 +318,12 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                               : "N/A"}
                           </div>
                         </div>
-                        <button
-                          className="mb-4"
-                          onClick={() =>
-                            toggleCourseDescription(firstCourse.code)
-                          }
-                        >
-                          Close
-                        </button>
                       </div>
                     </div>
                   )}
 
                   {isOpen && (
-                    <div className="ml-0 opacity-100 visible transition-opacity max-w-[320px]">
+                    <div className="ml-0 opacity-100 visible transition-opacity max-w-[calc(100vw-3rem)] lg-xl:w-[320px]">
                       {courses.map((course, index) => (
                         <CourseDropdown key={index} course={course} />
                       ))}

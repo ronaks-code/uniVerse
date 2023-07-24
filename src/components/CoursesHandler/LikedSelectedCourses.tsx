@@ -127,7 +127,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
             {likedCourses.map((course: Course, index: number) => (
               <div key={index} className="relative">
                 <div
-                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
+                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw-9rem)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
                   style={{
                     backgroundImage: getGradientColors(course),
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -172,7 +172,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   </div>
                 </div>
                 {isCourseActive(course) && (
-                  <div className="w-[320px] pl-4" ref={dropdownRef}>
+                  <div className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4" ref={dropdownRef}>
                     <CourseDropdown course={course} />
                   </div>
                 )}
@@ -192,7 +192,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
             {selectedCourses.map((course: Course, index: number) => (
               <div key={index} className="relative select-none">
                 <div
-                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
+                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw-9rem)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
                   style={{
                     backgroundImage: getGradientColors(course),
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -237,7 +237,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   </div>
                 </div>
                 {isCourseActive(course) && (
-                  <div className="w-[320px] pl-4" ref={dropdownRef}>
+                  <div className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4" ref={dropdownRef}>
                     <CourseDropdown course={course} />
                   </div>
                 )}

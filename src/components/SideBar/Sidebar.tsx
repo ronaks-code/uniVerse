@@ -169,7 +169,7 @@ const SideBar = () => {
   ];
 
   return (
-    <div className="absolute top-0 left-0 h-screen pt-4 pl-4 pb-4 pr-0 z-50 bg-transparent">
+    <div className={`absolute top-0 left-0 h-screen pt-2 pl-2 lg-xl:pt-2 lg-xl:pl-2 pr-0 pb-4 z-50 bg-transparent`}>
       {/* Sidebar menu */}
       <div
         className={`sidebar ${

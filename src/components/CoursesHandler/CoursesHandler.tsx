@@ -12,7 +12,7 @@ const CoursesHandler: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">
       <div className="overflow-y-scroll lg-xl:mb-0 pb-4 flex flex-col max-h-[calc(100vh-4rem)] lg-xl:max-h-[calc(100vh-2rem)]">
-        <div className="sticky top-0">
+        <div className="sticky top-0 lg-xl:pl-14">
           <CourseSearch
             debouncedSearchTerm={debouncedSearchTerm}
             setDebouncedSearchTerm={setDebouncedSearchTerm}
