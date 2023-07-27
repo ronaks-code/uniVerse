@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
-import Calendar from "../../components/Calendar/Calendar";
+import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 // import Calendar from "@toast-ui/react-calendar"
 import CalendarNew from "../../components/Tester/Calendar";
-import { CalendarUIClasses } from "../../components/Calendar/CalendarUIClasses";
-import CoursesHandler from "../../components/CoursesHandler/CoursesHandler";
+import { CalendarUIClasses } from "../../components/CourseDisplay/Calendar/CalendarUIClasses";
+import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
 const JSONCourseDisplay: React.FC = () => {

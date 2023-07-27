@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Course } from "../CourseTypes";
-import { courseUIClasses } from "../CourseUIClasses";
+import { Course } from "./CourseTypes";
+import { courseUIClasses } from "./CourseUIClasses";
 
 export type CourseCardProps = {
   course: Course;

@@ -2,9 +2,8 @@ import React, { useState, useRef } from "react";
 import { Course } from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
-import CourseDropdown from "../CourseUI/CourseDropdown/CourseDropdown";
+import CourseDropdown from "../CourseUI/CourseDropdown";
 import { PiCaretDownBold, PiCaretUpBold, PiTrashBold } from "react-icons/pi";
-import { ShowFilteredCoursesClasses } from "./ShowFilteredCourses/ShowFilteredCoursesClasses";
 
 interface LikedSelectedCoursesProps {
   likedCourses: Course[];
@@ -172,7 +171,10 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   </div>
                 </div>
                 {isCourseActive(course) && (
-                  <div className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4" ref={dropdownRef}>
+                  <div
+                    className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4"
+                    ref={dropdownRef}
+                  >
                     <CourseDropdown course={course} />
                   </div>
                 )}
@@ -237,7 +239,10 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   </div>
                 </div>
                 {isCourseActive(course) && (
-                  <div className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4" ref={dropdownRef}>
+                  <div
+                    className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4"
+                    ref={dropdownRef}
+                  >
                     <CourseDropdown course={course} />
                   </div>
                 )}

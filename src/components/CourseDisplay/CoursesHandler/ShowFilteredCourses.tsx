@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
-import { Course } from "../../CourseUI/CourseTypes";
-import CourseDropdown from "../../CourseUI/CourseDropdown/CourseDropdown";
+import { Course } from "../CourseUI/CourseTypes";
+import CourseDropdown from "../CourseUI/CourseDropdown";
 import {
   PiPlusBold,
   PiMinusBold,

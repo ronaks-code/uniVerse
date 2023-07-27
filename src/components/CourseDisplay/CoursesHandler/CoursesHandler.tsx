@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
-import CourseSearch from "./CourseSearch/CourseSearch";
-import ShowFilteredCourses from "./ShowFilteredCourses/ShowFilteredCourses";
+import CourseSearch from "./CourseSearch";
+import ShowFilteredCourses from "./ShowFilteredCourses";
 import { Course } from "../CourseUI/CourseTypes";
 
 const CoursesHandler: React.FC = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Course, Section, Instructor } from "../CourseTypes";
-import { courseUIClasses } from "../CourseUIClasses";
+import { Course, Section, Instructor } from "./CourseTypes";
+import { courseUIClasses } from "./CourseUIClasses";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
@@ -85,11 +85,11 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
           .join("|");
         acc[`instructor|${instructorKey}`] = true;
         return acc;
-      }, {})
+      }, {}),
     };
     setExpanded(initialState);
   }, [course]);
-  
+
   return (
     <div className={`${sectionContainer}`}>
       <div
