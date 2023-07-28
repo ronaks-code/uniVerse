@@ -7,7 +7,7 @@ const days = ["M", "T", "W", "R", "F"];
 
 class Calendar extends React.Component {
   renderTimeSlots() {
-    const timeSlots = ["7 am", "8 am", "9 am", "10 am", "11 am", "12 pm", "1 pm", "2 pm", "3 pm", "4 pm", "5 pm", "6 pm", "7 pm", "8 pm", "9 pm", "10 pm"];
+    const timeSlots = ["7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm"];
     return timeSlots.map((time) => (
       <div className={CalendarStyles.time} key={time}>
         <span className={CalendarStyles.label}>{time}</span>
@@ -23,7 +23,7 @@ class Calendar extends React.Component {
 
   render() {
     return (
-      <div className={`${CalendarStyles.calendar} max-h-[calc(100vh-7rem)] lg-xl:max-h-[calc(100vh)]`}>
+      <div className={`${CalendarStyles.calendar}`}>
         <div className={CalendarStyles.times}>
           {this.renderTimeSlots()}
         </div>
@@ -49,7 +49,7 @@ export default Calendar;
 
 // class Calendar extends React.Component {
 //   renderTimeSlots() {
-//     const timeSlots = ["8am", "9am", "10am", "11am", "12 pm", "1 pm", "2 pm", "3 pm", "4 pm", "5 pm", "6 pm", "7 pm", "8 pm", "9 pm"];
+//     const timeSlots = ["8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm"];
 //     return timeSlots.map((time) => (
 //       <div className={CalendarUIClasses.time} key={time}>
 //         <span className={CalendarUIClasses.label}>{time}</span>

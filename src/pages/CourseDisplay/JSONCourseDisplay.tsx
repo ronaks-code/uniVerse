@@ -3,7 +3,6 @@ import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 // import Calendar from "@toast-ui/react-calendar"
 import CalendarNew from "../../components/Tester/Calendar";
-import { CalendarUIClasses } from "../../components/CourseDisplay/Calendar/CalendarUIClasses";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
@@ -102,7 +101,7 @@ const JSONCourseDisplay: React.FC = () => {
         {isCourseFilterVisible && <CourseFilter />}
       </div> */}
       <div
-        className={`${CalendarUIClasses.mainContainer} ${
+        className={`overflow-y-scroll bg-white dark:bg-gray-800 transition-colors duration-200 ease-in-out w-full ${
           isCalendarVisible ? "" : "hidden"
         }`}
       >

@@ -1,6 +1,4 @@
 export const CalendarUIClasses = {
-  mainContainer:
-    "bg-white dark:bg-gray-800 transition-colors duration-200 ease-in-out w-full",
   calendar:
     "Calendar calendar grid grid-cols-6 gap-0.4 divide-x border border-gray-400 dark:border-gray-500 rounded-lg p-4 sm:p-6 m-2 sm:m-4 transition-colors duration-200 ease-in-out w-full sm:min-w-[95%] max-w-full ml-16",
   dayColumn:
