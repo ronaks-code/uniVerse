@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Course, Section, Instructor } from "./CourseTypes";
+import {
+  Course,
+  Section,
+  Instructor,
+  SectionWithCourseCode,
+} from "./CourseTypes";
 import { courseUIClasses } from "./CourseUIClasses";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
   course: Course;
+  selectedSections?: SectionWithCourseCode[];
+  setSelectedSections?: React.Dispatch<
+    React.SetStateAction<SectionWithCourseCode[]>
+  >;
 }
 
-const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
+const CourseDropdown: React.FC<CourseDropdownProps> = ({
+  course,
+  selectedSections,
+  setSelectedSections,
+}) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
 
   const { listItem, content, noContent, term, sectionContainer } =
@@ -16,7 +29,10 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
   // Render section information
   const renderSectionInformation = (section: Section) => {
     return (
-      <div className={`${content}`}>
+      <div
+        className={`${content}`}
+        onClick={() => handleSectionSelect(section)}
+      >
         {/* Meeting Times */}
         <div>
           <strong>Meeting Times:</strong>{" "}
@@ -30,7 +46,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
                 }
                 className={`${content}`}
               >
-                {meetingTime.meetDays.join(", ")}: {meetingTime.meetTimeBegin} -{" "}
+                {meetingTime.meetDays.join(", ")}: {meetingTime.meetTimeBegin} - {" "}
                 {meetingTime.meetTimeEnd}
               </div>
             ))
@@ -48,6 +64,40 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
         {/* Render other section details if needed */}
       </div>
     );
+  };
+
+  // Function to handle the section selection
+  const handleSectionSelect = (section: Section) => {
+    let currentSelectedSections = selectedSections || [];
+    const sectionWithCourseCode: SectionWithCourseCode = {
+      ...section,
+      code: course.code,
+    };
+
+    if (
+      currentSelectedSections.some(
+        (sec) =>
+          sec.code === sectionWithCourseCode.code &&
+          sec.number === sectionWithCourseCode.number
+      )
+    ) {
+      setSelectedSections &&
+        setSelectedSections(
+          currentSelectedSections.filter(
+            (sec) =>
+              sec.code !== sectionWithCourseCode.code ||
+              sec.number !== sectionWithCourseCode.number
+          )
+        );
+    } else {
+      setSelectedSections &&
+        setSelectedSections([
+          ...currentSelectedSections,
+          sectionWithCourseCode,
+        ]);
+    }
+
+    console.log("In CourseDropdown, selectedSections is", selectedSections);
   };
 
   // Function to toggle the expanded state of terms and professors
@@ -88,7 +138,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
       }, {}),
     };
     setExpanded(initialState);
-  }, [course]);
+  }, [course, selectedSections, setSelectedSections]);
 
   return (
     <div className={`${sectionContainer}`}>
@@ -126,7 +176,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({ course }) => {
               </div>
               {expanded[`instructor|${instructorKey}`] && // Only render if professor is expanded
                 instructors[instructorKey].map((section, sectionIndex) => (
-                  <div key={sectionIndex} className="pl-4">
+                  <div key={sectionIndex} className="pl-4 cursor-pointer">
                     <div className="font-bold text-gray-900 dark:text-white px-2">{`${section.number}`}</div>
                     {renderSectionInformation(section)}
                   </div>

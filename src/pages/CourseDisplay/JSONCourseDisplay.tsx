@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Course, SectionWithCourseCode } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 // import Calendar from "@toast-ui/react-calendar"
@@ -6,11 +7,22 @@ import CalendarNew from "../../components/Tester/Calendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
+interface CourseDropdownProps {
+  course: Course;
+  selectedSections?: SectionWithCourseCode[];
+  setSelectedSections?: React.Dispatch<
+    React.SetStateAction<SectionWithCourseCode[]>
+  >;
+}
+
 const JSONCourseDisplay: React.FC = () => {
   const { container } = JSONCourseDisplayClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   // const [isCourseFilterVisible, setCourseFilterVisible] = useState(false);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
+  const [selectedSections, setSelectedSections] = useState<SectionWithCourseCode[]>([]);
+
+  console.log("In JSONCourseDisplay, selectedSections is", selectedSections);
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
@@ -105,7 +117,7 @@ const JSONCourseDisplay: React.FC = () => {
           isCalendarVisible ? "" : "hidden"
         }`}
       >
-        {isCalendarVisible && <Calendar />}
+        {isCalendarVisible && <Calendar selectedSections={selectedSections} setSelectedSections={setSelectedSections} />}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>

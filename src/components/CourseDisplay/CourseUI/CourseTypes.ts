@@ -31,3 +31,6 @@ export type Course = {
   sections: Section[];
 };
 
+export type SectionWithCourseCode = Section & {
+  code: string;
+};

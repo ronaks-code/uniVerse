@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Course } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
 import CourseDropdown from "../CourseUI/CourseDropdown";
@@ -10,6 +10,10 @@ interface LikedSelectedCoursesProps {
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   selectedCourses: Course[];
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  selectedSections?: SectionWithCourseCode[];
+  setSelectedSections?: React.Dispatch<
+    React.SetStateAction<SectionWithCourseCode[]>
+  >;
 }
 
 const colorHash = new ColorHash({
@@ -76,7 +80,16 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   setLikedCourses,
   selectedCourses,
   setSelectedCourses,
+  selectedSections = [],
+  setSelectedSections = () => {},
 }) => {
+  const [localSelectedSections, setLocalSelectedSections] = useState<
+    SectionWithCourseCode[]
+  >(selectedSections || []);
+  const [localSetSelectedSections, setLocalSetSelectedSections] = useState<
+    React.Dispatch<React.SetStateAction<SectionWithCourseCode[]>>
+  >(setSelectedSections || (() => {}));
+
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -126,7 +139,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
             {likedCourses.map((course: Course, index: number) => (
               <div key={index} className="relative">
                 <div
-                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw-9rem)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
+                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
                   style={{
                     backgroundImage: getGradientColors(course),
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -172,10 +185,14 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                 </div>
                 {isCourseActive(course) && (
                   <div
-                    className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4"
+                    className="max-w-[calc(100vw-2.5rem)] lg-xl:w-[320px] pl-4"
                     ref={dropdownRef}
                   >
-                    <CourseDropdown course={course} />
+                    <CourseDropdown
+                      course={course}
+                      selectedSections={localSelectedSections}
+                      setSelectedSections={localSetSelectedSections}
+                    />
                   </div>
                 )}
               </div>
@@ -194,7 +211,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
             {selectedCourses.map((course: Course, index: number) => (
               <div key={index} className="relative select-none">
                 <div
-                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw-9rem)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
+                  className={`flex flex-col relative px-4 py-2 rounded-md m-2 text-black dark:text-white max-w-[calc(100vw)] lg-xl:w-[320px] cursor-pointer h-20 overflow-hidden backdrop-filter backdrop-blur-md`}
                   style={{
                     backgroundImage: getGradientColors(course),
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -240,10 +257,14 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                 </div>
                 {isCourseActive(course) && (
                   <div
-                    className="max-w-[calc(100vw-9rem)] lg-xl:w-[320px] pl-4"
+                    className="max-w-[calc(100vw-2.5rem)] lg-xl:w-[320px] pl-4"
                     ref={dropdownRef}
                   >
-                    <CourseDropdown course={course} />
+                    <CourseDropdown
+                      course={course}
+                      selectedSections={localSelectedSections}
+                      setSelectedSections={localSetSelectedSections}
+                    />
                   </div>
                 )}
               </div>
