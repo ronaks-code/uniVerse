@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
 import CourseSearch from "./CourseSearch";
 import ShowFilteredCourses from "./ShowFilteredCourses";
-import { Course } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
 
 const CoursesHandler: React.FC = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
   const [likedCourses, setLikedCourses] = useState<Course[]>([]);
+  const [selectedSections, setSelectedSections] =
+    useState<SectionWithCourseCode | null>(null);
+
+  // Function to handle section selection
+  const handleSectionsSelection = (section: SectionWithCourseCode) => {
+    setSelectedSections(section);
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">
@@ -34,6 +41,7 @@ const CoursesHandler: React.FC = () => {
               setSelectedCourses={setSelectedCourses}
               likedCourses={likedCourses}
               setLikedCourses={setLikedCourses}
+              onSelectSection={handleSectionsSelection}
             />
           </div>
         </div>

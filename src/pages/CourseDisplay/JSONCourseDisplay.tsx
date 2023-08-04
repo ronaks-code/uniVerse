@@ -52,19 +52,17 @@ const JSONCourseDisplay: React.FC = () => {
       const width = window.innerWidth;
       if (width < 1075) {
         setCourseHandlerVisible(true);
-        // setCourseFilterVisible(false);
         setCalendarVisible(false);
       } else if (width >= 1075 && width < 1125) {
         setCourseHandlerVisible(true);
-        // setCourseFilterVisible(true);
         setCalendarVisible(false);
       } else {
         setCourseHandlerVisible(true);
-        // setCourseFilterVisible(true);
         setCalendarVisible(true);
       }
     };
 
+    handleResize(); // Call immediately to set initial state
     window.addEventListener("resize", handleResize);
     // Clean up the event listener on component unmount
     return () => {
