@@ -10,10 +10,7 @@ interface LikedSelectedCoursesProps {
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   selectedCourses: Course[];
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-  selectedSections?: SectionWithCourseCode[];
-  setSelectedSections?: React.Dispatch<
-    React.SetStateAction<SectionWithCourseCode[]>
-  >;
+  onSelectSection: (section: SectionWithCourseCode) => void;
 }
 
 const colorHash = new ColorHash({
@@ -80,16 +77,8 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   setLikedCourses,
   selectedCourses,
   setSelectedCourses,
-  selectedSections = [],
-  setSelectedSections = () => {},
+  onSelectSection,
 }) => {
-  const [localSelectedSections, setLocalSelectedSections] = useState<
-    SectionWithCourseCode[]
-  >(selectedSections || []);
-  const [localSetSelectedSections, setLocalSetSelectedSections] = useState<
-    React.Dispatch<React.SetStateAction<SectionWithCourseCode[]>>
-  >(setSelectedSections || (() => {}));
-
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -190,8 +179,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
-                      selectedSections={localSelectedSections}
-                      setSelectedSections={localSetSelectedSections}
+                      onSelectSection={onSelectSection}
                     />
                   </div>
                 )}
@@ -262,8 +250,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
-                      selectedSections={localSelectedSections}
-                      setSelectedSections={localSetSelectedSections}
+                      onSelectSection={onSelectSection}
                     />
                   </div>
                 )}

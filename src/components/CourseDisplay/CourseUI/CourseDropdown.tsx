@@ -10,16 +10,12 @@ import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
   course: Course;
-  selectedSections?: SectionWithCourseCode[];
-  setSelectedSections?: React.Dispatch<
-    React.SetStateAction<SectionWithCourseCode[]>
-  >;
+  onSelectSection: (section: SectionWithCourseCode) => void;
 }
 
 const CourseDropdown: React.FC<CourseDropdownProps> = ({
   course,
-  selectedSections,
-  setSelectedSections,
+  onSelectSection,
 }) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
 
@@ -29,10 +25,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
   // Render section information
   const renderSectionInformation = (section: Section) => {
     return (
-      <div
-        className={`${content}`}
-        onClick={() => handleSectionSelect(section)}
-      >
+      <div className={`${content}`}>
         {/* Meeting Times */}
         <div>
           <strong>Meeting Times:</strong>{" "}
@@ -46,7 +39,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
                 }
                 className={`${content}`}
               >
-                {meetingTime.meetDays.join(", ")}: {meetingTime.meetTimeBegin} - {" "}
+                {meetingTime.meetDays.join(", ")}: {meetingTime.meetTimeBegin} -{" "}
                 {meetingTime.meetTimeEnd}
               </div>
             ))
@@ -68,37 +61,45 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
 
   // Function to handle the section selection
   const handleSectionSelect = (section: Section) => {
-    let currentSelectedSections = selectedSections || [];
     const sectionWithCourseCode: SectionWithCourseCode = {
       ...section,
       code: course.code,
     };
 
-    if (
-      currentSelectedSections.some(
-        (sec) =>
-          sec.code === sectionWithCourseCode.code &&
-          sec.number === sectionWithCourseCode.number
-      )
-    ) {
-      setSelectedSections &&
-        setSelectedSections(
-          currentSelectedSections.filter(
-            (sec) =>
-              sec.code !== sectionWithCourseCode.code ||
-              sec.number !== sectionWithCourseCode.number
-          )
-        );
-    } else {
-      setSelectedSections &&
-        setSelectedSections([
-          ...currentSelectedSections,
-          sectionWithCourseCode,
-        ]);
-    }
-
-    console.log("In CourseDropdown, selectedSections is", selectedSections);
+    onSelectSection(sectionWithCourseCode);
   };
+  // const handleSectionSelect = (section: Section) => {
+  //   let currentSelectedSections = selectedSections || [];
+  //   const sectionWithCourseCode: SectionWithCourseCode = {
+  //     ...section,
+  //     code: course.code,
+  //   };
+
+  //   if (
+  //     currentSelectedSections.some(
+  //       (sec) =>
+  //         sec.code === sectionWithCourseCode.code &&
+  //         sec.number === sectionWithCourseCode.number
+  //     )
+  //   ) {
+  //     setSelectedSections &&
+  //       setSelectedSections(
+  //         currentSelectedSections.filter(
+  //           (sec) =>
+  //             sec.code !== sectionWithCourseCode.code ||
+  //             sec.number !== sectionWithCourseCode.number
+  //         )
+  //       );
+  //   } else {
+  //     setSelectedSections &&
+  //       setSelectedSections([
+  //         ...currentSelectedSections,
+  //         sectionWithCourseCode,
+  //       ]);
+  //   }
+
+  //   console.log("In CourseDropdown, selectedSections is", selectedSections);
+  // };
 
   // Function to toggle the expanded state of terms and professors
   const toggleExpanded = (key: string) => {
@@ -138,7 +139,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
       }, {}),
     };
     setExpanded(initialState);
-  }, [course, selectedSections, setSelectedSections]);
+  }, [course]);
 
   return (
     <div className={`${sectionContainer}`}>
@@ -176,7 +177,11 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
               </div>
               {expanded[`instructor|${instructorKey}`] && // Only render if professor is expanded
                 instructors[instructorKey].map((section, sectionIndex) => (
-                  <div key={sectionIndex} className="pl-4 cursor-pointer">
+                  <div
+                    key={sectionIndex}
+                    className="pl-4 cursor-pointer"
+                    onClick={() => handleSectionSelect(section)}
+                  >
                     <div className="font-bold text-gray-900 dark:text-white px-2">{`${section.number}`}</div>
                     {renderSectionInformation(section)}
                   </div>

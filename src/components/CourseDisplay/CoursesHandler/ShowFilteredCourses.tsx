@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
-import { Course } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
 import CourseDropdown from "../CourseUI/CourseDropdown";
 import {
   PiPlusBold,
@@ -11,7 +11,6 @@ import {
   PiHeartFill,
   PiEye,
 } from "react-icons/pi";
-import { Suspense } from "react";
 import { ShowFilteredCoursesClasses } from "./ShowFilteredCoursesClasses";
 
 interface ShowFilteredCoursesProps {
@@ -20,6 +19,7 @@ interface ShowFilteredCoursesProps {
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  onSelectSection: (section: SectionWithCourseCode) => void;
 }
 
 const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
@@ -28,6 +28,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   setSelectedCourses,
   likedCourses,
   setLikedCourses,
+  onSelectSection,
 }) => {
   const [expandedCourses, setExpandedCourses] = useState<{
     [key: string]: boolean;
@@ -325,7 +326,11 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                   {isOpen && (
                     <div className="ml-0 opacity-100 visible transition-opacity max-w-[calc(100vw-3rem)] lg-xl:w-[320px]">
                       {courses.map((course, index) => (
-                        <CourseDropdown key={index} course={course} />
+                        <CourseDropdown
+                          key={index}
+                          course={course}
+                          onSelectSection={onSelectSection}
+                        />
                       ))}
                     </div>
                   )}

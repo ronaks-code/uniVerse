@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Course, SectionWithCourseCode } from "../../components/CourseDisplay/CourseUI/CourseTypes";
+import {
+  Course,
+  SectionWithCourseCode,
+} from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 // import Calendar from "@toast-ui/react-calendar"
@@ -7,22 +10,13 @@ import CalendarNew from "../../components/Tester/Calendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
-interface CourseDropdownProps {
-  course: Course;
-  selectedSections?: SectionWithCourseCode[];
-  setSelectedSections?: React.Dispatch<
-    React.SetStateAction<SectionWithCourseCode[]>
-  >;
-}
-
 const JSONCourseDisplay: React.FC = () => {
   const { container } = JSONCourseDisplayClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
-  // const [isCourseFilterVisible, setCourseFilterVisible] = useState(false);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourseCode[]>([]);
-
-  console.log("In JSONCourseDisplay, selectedSections is", selectedSections);
+  const [selectedSections, setSelectedSections] = useState<
+    SectionWithCourseCode[]
+  >([]);
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
@@ -70,6 +64,20 @@ const JSONCourseDisplay: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("JSONCourseDisplay - Selected Sections:", selectedSections);
+  }, [selectedSections]);
+
+  const handleSectionsSelection = (section: SectionWithCourseCode) => {
+    setSelectedSections((prev) => {
+      if (prev.some((s) => s.number === section.number)) {
+        return prev.filter((s) => s.number !== section.number);
+      } else {
+        return [...prev, section];
+      }
+    });
+  };
+
   return (
     <div className="flex flex-col lg-xl:flex-row h-screen max-h-[calc(100vh] overflow-hidden">
       {/* Header for options */}
@@ -105,7 +113,9 @@ const JSONCourseDisplay: React.FC = () => {
           isCourseHandlerVisible ? "" : "hidden"
         } flex-grow`}
       >
-        {isCourseHandlerVisible && <CoursesHandler />}
+        {isCourseHandlerVisible && (
+          <CoursesHandler onSelectSection={handleSectionsSelection} />
+        )}
       </div>
       {/* <div className={`course-filter ${isCourseFilterVisible ? "" : "hidden"}`}>
         {isCourseFilterVisible && <CourseFilter />}
@@ -115,7 +125,7 @@ const JSONCourseDisplay: React.FC = () => {
           isCalendarVisible ? "" : "hidden"
         }`}
       >
-        {isCalendarVisible && <Calendar selectedSections={selectedSections} setSelectedSections={setSelectedSections} />}
+        {isCalendarVisible && <Calendar selectedSections={selectedSections} />}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useEffect, useState } from "react";
 import DayColumn from "./DayColumn";
 import { CalendarStyles } from "./CalendarUIClasses";
 import "./stylesheet.scss";
@@ -8,11 +8,14 @@ const days = ["M", "T", "W", "R", "F"];
 
 type CalendarProps = {
   selectedSections: SectionWithCourseCode[];
-  setSelectedSections: Dispatch<SetStateAction<SectionWithCourseCode[]>>;
 };
 
-class Calendar extends React.Component<CalendarProps, {}> {
-  renderTimeSlots() {
+const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
+  useEffect(() => {
+    console.log("Calendar - Selected Sections:", selectedSections);
+  }, [selectedSections]);
+
+  const renderTimeSlots = () => {
     const timeSlots = [
       "7am",
       "8am",
@@ -36,34 +39,21 @@ class Calendar extends React.Component<CalendarProps, {}> {
         <span className={CalendarStyles.label}>{time}</span>
       </div>
     ));
-  }
+  };
 
-  renderDayColumns() {
-    console.log(
-      "In Calendar, selectedSections is",
-      this.props.selectedSections
-    );
-
-    // If selectedSections or setSelectedSections are not provided in the props, use default values
+  const renderDayColumns = () => {
     return days.map((day) => (
-      <DayColumn
-        key={day}
-        day={day}
-        selectedSections={this.props.selectedSections}
-        setSelectedSections={this.props.setSelectedSections}
-      />
+      <DayColumn key={day} day={day} selectedSections={selectedSections} />
     ));
-  }
+  };
 
-  render() {
-    return (
-      <div className={`${CalendarStyles.calendar}`}>
-        <div className={CalendarStyles.times}>{this.renderTimeSlots()}</div>
-        <div className={CalendarStyles.days}>{this.renderDayColumns()}</div>
-        <div className={CalendarStyles.meetings}></div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={`${CalendarStyles.calendar}`}>
+      <div className={CalendarStyles.times}>{renderTimeSlots()}</div>
+      <div className={CalendarStyles.days}>{renderDayColumns()}</div>
+      <div className={CalendarStyles.meetings}></div>
+    </div>
+  );
+};
 
 export default Calendar;
