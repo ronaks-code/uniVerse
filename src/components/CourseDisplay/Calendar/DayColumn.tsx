@@ -1,7 +1,6 @@
 import React from "react";
-import TimeSlot from "./TimeSlot";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { Section, SectionWithCourseCode } from "../CourseUI/CourseTypes";
+import { SectionWithCourseCode } from "../CourseUI/CourseTypes";
 
 type CardProps = {
   code: string;
@@ -10,27 +9,46 @@ type CardProps = {
   style: React.CSSProperties;
 };
 
-const Card: React.FC<CardProps> = ({ code, meetTimeBegin, meetTimeEnd, style }) => (
+const Card: React.FC<CardProps> = ({
+  code,
+  meetTimeBegin,
+  meetTimeEnd,
+  style,
+}) => (
   <div
     style={{
       backgroundColor: "#e0e0e0", // Replace with your preferred color
+      width: "100%",
       border: "1px solid #000",
-      borderRadius: "5px",
+      borderRadius: "10px",
       padding: "10px",
-      margin: "5px",
+      color: "#000",
       ...style,
     }}
   >
-    <strong>{code}</strong> {meetTimeBegin}-{meetTimeEnd}
+    <strong>{code}</strong> {meetTimeBegin} - {meetTimeEnd}
   </div>
 );
 
 type DayColumnProps = {
   day: string;
   selectedSections: SectionWithCourseCode[];
+  timeSlots: string[];
 };
 
 class DayColumn extends React.Component<DayColumnProps> {
+  calendarRef = React.createRef<HTMLDivElement>();
+  state = {
+    calendarHeight: null,
+  };
+
+  componentDidMount() {
+    if (this.calendarRef.current) {
+      this.setState({
+        calendarHeight: this.calendarRef.current.getBoundingClientRect().height,
+      });
+    }
+  }
   // Helper function to convert time string to a percentage of the day
   timeStringToDayFraction(time: string) {
     // Split the time string into components
@@ -50,54 +68,137 @@ class DayColumn extends React.Component<DayColumnProps> {
     // Convert the minute to a fraction of an hour
     const minuteFraction = Number(minute) / 60;
 
-    // Calculate the time as a fraction of the day
-    const dayFraction = (hourNum + minuteFraction) / 24;
+    // Starting time of the calendar
+    const calendarStartTime = Number(this.props.timeSlots[0].split("am")[0]);
 
-    // Return the day fraction
-    return dayFraction;
+    return (
+      (hourNum + minuteFraction - calendarStartTime) /
+      this.props.timeSlots.length
+    );
+  }
+
+  // Function to check if two time ranges overlap
+  timeRangesOverlap(
+    start1: number,
+    end1: number,
+    start2: number,
+    end2: number
+  ) {
+    return start1 < end2 && start2 < end1;
+  }
+
+  // Function to group overlapping cards
+  groupOverlappingCards(cards: any[]) {
+    const groups: any[][] = [];
+    cards.forEach((card) => {
+      let placed = false;
+      for (const group of groups) {
+        if (
+          group.some((groupCard) =>
+            this.timeRangesOverlap(
+              groupCard.startCalendar,
+              groupCard.endCalendar,
+              card.startCalendar,
+              card.endCalendar
+            )
+          )
+        ) {
+          group.push(card);
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        groups.push([card]);
+      }
+    });
+    return groups;
   }
 
   render() {
-    // Filter out the selected sections for this day
     const daySections = this.props.selectedSections.filter((section) =>
       section.meetTimes.some((meetingTime) =>
         meetingTime.meetDays.includes(this.props.day)
       )
     );
 
-    // Generate cards for the selected sections
+    // This is the window height + 16px * 80 (80rem)
+    const calendarHeight = 1280;
+    const totalSlots = this.props.timeSlots.length;
+    console.log("totalSlots:", totalSlots);
+
     const sectionCards = daySections
       .flatMap((section, index) =>
         section.meetTimes.map((meetTime, meetIndex) => {
           if (!meetTime.meetDays.includes(this.props.day)) {
-            return null; // Don't render a card if the meet time doesn't include the current day
+            return null;
           }
 
-          return (
-            <Card
-              key={`${index}-${meetIndex}`} // Combine the section index and meet time index to create a unique key
-              code={section.code}
-              meetTimeBegin={meetTime.meetTimeBegin}
-              meetTimeEnd={meetTime.meetTimeEnd}
-              style={{
-                gridRowStart: `${this.timeStringToDayFraction(
-                  meetTime.meetTimeBegin
-                ) * 100}%`,
-                gridRowEnd: `${this.timeStringToDayFraction(
-                  meetTime.meetTimeEnd
-                ) * 100}%`,
-              }}
-            />
+          const startFraction = this.timeStringToDayFraction(
+            meetTime.meetTimeBegin
           );
+          console.log("startFraction:", startFraction);
+          const endFraction = this.timeStringToDayFraction(
+            meetTime.meetTimeEnd
+          );
+          console.log("endFraction:", endFraction);
+
+          const startCalendar = startFraction * calendarHeight;
+          console.log("startSlot:", startCalendar);
+          const endCalendar = endFraction * calendarHeight;
+          console.log("endSlot:", endCalendar);
+
+          const heightOfCard = endCalendar - startCalendar;
+
+          return {
+            key: `${index}-${meetIndex}`,
+            section,
+            meetTime,
+            startCalendar,
+            endCalendar,
+            heightOfCard,
+          };
         })
       )
-      .filter(Boolean); // Filter out null values
+      .filter(Boolean);
+
+    const overlappingGroups = this.groupOverlappingCards(sectionCards);
 
     return (
-      <div className="day">
+      <div
+        className={CalendarStyles.day}
+        ref={this.calendarRef}
+        style={{ position: "relative" }}
+      >
         <div className={CalendarStyles.label}>{this.props.day}</div>
-        <div className="grid grid-rows-60 min-w-max">
-          {sectionCards}
+        <div className={`grid grid-rows-${totalSlots}`}>
+          {overlappingGroups.map((group, groupIndex) => (
+            <div
+              key={groupIndex}
+              style={{ position: "absolute", width: "100%" }}
+            >
+              {group.map((card, cardIndex) => (
+                <div
+                  key={card.key}
+                  style={{
+                    position: "absolute",
+                    width: `${100 / group.length}%`,
+                    left: `${(100 / group.length) * cardIndex}%`,
+                    top: card.startCalendar + "px", // Set the top property instead of marginTop
+                  }}
+                >
+                  <Card
+                    code={card.section.code}
+                    meetTimeBegin={card.meetTime.meetTimeBegin}
+                    meetTimeEnd={card.meetTime.meetTimeEnd}
+                    style={{
+                      height: card.heightOfCard + "px",
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     );

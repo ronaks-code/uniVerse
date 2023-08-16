@@ -5,8 +5,7 @@ import {
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
-// import Calendar from "@toast-ui/react-calendar"
-import CalendarNew from "../../components/Tester/Calendar";
+// import CalendarNew from "../../components/CourseDisplay/Calendar/WeekCalendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 

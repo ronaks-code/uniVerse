@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from "react";
 import DayColumn from "./DayColumn";
 import { CalendarStyles } from "./CalendarUIClasses";
-import "./stylesheet.scss";
 import { SectionWithCourseCode } from "../CourseUI/CourseTypes";
 
 const days = ["M", "T", "W", "R", "F"];
+
+export const timeSlots = [
+  "7am",
+  "8am",
+  "9am",
+  "10am",
+  "11am",
+  "12pm",
+  "1pm",
+  "2pm",
+  "3pm",
+  "4pm",
+  "5pm",
+  "6pm",
+  "7pm",
+  "8pm",
+  "9pm",
+  "10pm",
+];
 
 type CalendarProps = {
   selectedSections: SectionWithCourseCode[];
@@ -16,24 +34,6 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
   }, [selectedSections]);
 
   const renderTimeSlots = () => {
-    const timeSlots = [
-      "7am",
-      "8am",
-      "9am",
-      "10am",
-      "11am",
-      "12pm",
-      "1pm",
-      "2pm",
-      "3pm",
-      "4pm",
-      "5pm",
-      "6pm",
-      "7pm",
-      "8pm",
-      "9pm",
-      "10pm",
-    ];
     return timeSlots.map((time) => (
       <div className={CalendarStyles.time} key={time}>
         <span className={CalendarStyles.label}>{time}</span>
@@ -43,7 +43,12 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
 
   const renderDayColumns = () => {
     return days.map((day) => (
-      <DayColumn key={day} day={day} selectedSections={selectedSections} />
+      <DayColumn
+        key={day}
+        day={day}
+        selectedSections={selectedSections}
+        timeSlots={timeSlots}
+      />
     ));
   };
 
