@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
-import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 import CourseDropdown from "../CourseUI/CourseDropdown";
 import {
   PiPlusBold,
@@ -19,7 +19,7 @@ interface ShowFilteredCoursesProps {
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-  onSelectSection: (section: SectionWithCourseCode) => void;
+  onSelectSection: (section: SectionWithCourse) => void;
 }
 
 const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({

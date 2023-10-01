@@ -48,7 +48,7 @@ const CourseSearch: React.FC<CourseSearchProps> = ({
       value={searchTerm}
       onChange={handleSearchChange}
       autoCorrect="off"
-      className="w-full max-w-[calc(100vw-2.5rem)] lg-xl:w-[260px] px-2 py-2 m-4 text-black bg-gray-200 rounded-md placeholder-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-500"
+      className="w-full max-w-[calc(100vw-3rem)] lg-xl:w-[260px] px-2 py-2 m-4 text-black bg-gray-200 rounded-md placeholder-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-500"
     />
   );
 };

@@ -9,6 +9,7 @@ import CourseService from "./services/CourseService";
 // import CourseCard from "./components/CourseCard/CourseCard";
 import JSONCourseDisplay from "./pages/CourseDisplay/JSONCourseDisplay";
 import FirebaseCourseDisplay from "./pages/CourseDisplay/FirebaseCourseDisplay";
+import ScheduleShare from "./pages/CourseDisplay/ScheduleShare";
 
 import { auth } from "./services/firebase";
 import { useAppDispatch } from "./hooks/storeHook";
@@ -44,7 +45,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="auth" element={<Auth />} />
         <Route path="settings" element={<Settings />} />
-        <Route path="firebase-courses" element={<FirebaseCourseDisplay />} />
+        {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
+        <Route path="firebase-courses" element={<ScheduleShare />} />
         <Route path="JSON-courses" element={<JSONCourseDisplay />} />
         <Route path="course-service" element={<CourseService />} />
       </Routes>

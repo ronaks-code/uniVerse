@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
 import CourseSearch from "./CourseSearch";
 import ShowFilteredCourses from "./ShowFilteredCourses";
-import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 
 interface CoursesHandlerProps {
-  onSelectSection: (section: SectionWithCourseCode) => void;
+  onSelectSection: (section: SectionWithCourse) => void;
 }
 
 const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
@@ -13,7 +13,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
   const [likedCourses, setLikedCourses] = useState<Course[]>([]);
   const [selectedSections, setSelectedSections] = useState<
-    SectionWithCourseCode[]
+    SectionWithCourse[]
   >([]);
 
   // Effect to log selectedSections when it changes
@@ -22,7 +22,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
   }, [selectedSections]);
 
   // Function to handle section selection
-  const handleSectionsSelection = (section: SectionWithCourseCode) => {
+  const handleSectionsSelection = (section: SectionWithCourse) => {
     setSelectedSections(prev => {
       if (prev.some(s => s.number === section.number)) {
         return prev.filter(s => s.number !== section.number);

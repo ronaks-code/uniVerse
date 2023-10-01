@@ -3,14 +3,14 @@ import {
   Course,
   Section,
   Instructor,
-  SectionWithCourseCode,
+  SectionWithCourse,
 } from "./CourseTypes";
 import { courseUIClasses } from "./CourseUIClasses";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
   course: Course;
-  onSelectSection: (section: SectionWithCourseCode) => void;
+  onSelectSection: (section: SectionWithCourse) => void;
 }
 
 const CourseDropdown: React.FC<CourseDropdownProps> = ({
@@ -61,16 +61,16 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
 
   // Function to handle the section selection
   const handleSectionSelect = (section: Section) => {
-    const sectionWithCourseCode: SectionWithCourseCode = {
+    const SectionWithCourse: SectionWithCourse = {
       ...section,
-      code: course.code,
+      ...course,
     };
 
-    onSelectSection(sectionWithCourseCode);
+    onSelectSection(SectionWithCourse);
   };
   // const handleSectionSelect = (section: Section) => {
   //   let currentSelectedSections = selectedSections || [];
-  //   const sectionWithCourseCode: SectionWithCourseCode = {
+  //   const SectionWithCourse: SectionWithCourse = {
   //     ...section,
   //     code: course.code,
   //   };
@@ -78,23 +78,23 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
   //   if (
   //     currentSelectedSections.some(
   //       (sec) =>
-  //         sec.code === sectionWithCourseCode.code &&
-  //         sec.number === sectionWithCourseCode.number
+  //         sec.code === SectionWithCourse.code &&
+  //         sec.number === SectionWithCourse.number
   //     )
   //   ) {
   //     setSelectedSections &&
   //       setSelectedSections(
   //         currentSelectedSections.filter(
   //           (sec) =>
-  //             sec.code !== sectionWithCourseCode.code ||
-  //             sec.number !== sectionWithCourseCode.number
+  //             sec.code !== SectionWithCourse.code ||
+  //             sec.number !== SectionWithCourse.number
   //         )
   //       );
   //   } else {
   //     setSelectedSections &&
   //       setSelectedSections([
   //         ...currentSelectedSections,
-  //         sectionWithCourseCode,
+  //         SectionWithCourse,
   //       ]);
   //   }
 

@@ -3,41 +3,36 @@ import {
   Course,
   SectionWithCourse,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
-import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
+import { ScheduleShareClasses } from "./ScheduleShareClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
+// import CalendarNew from "../../components/CourseDisplay/Calendar/WeekCalendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
-import LLMChatPlaceholder from "../../components/LLMChat/LLMChatPlaceholder";
+// import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
-import { AiOutlineClose } from "react-icons/ai";
-import { BsChatLeftText } from "react-icons/bs";
-
-const JSONCourseDisplay: React.FC = () => {
-  const { container, chatContainer, calendarContainer } =
-    JSONCourseDisplayClasses;
+const ScheduleShare: React.FC = () => {
+  const { container } = ScheduleShareClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
-    []
-  );
-  const [isLLMChatVisible, setLLMChatVisible] = useState(true);
-  const [isWideScreen, setIsWideScreen] = useState(false); // State to track screen width
+  const [selectedSections, setSelectedSections] = useState<
+    SectionWithCourse[]
+  >([]);
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
       case "Courses":
         setCourseHandlerVisible(true);
+        // setCourseFilterVisible(false);
         setCalendarVisible(false);
-        setLLMChatVisible(false);
         break;
+      // case "Combinations":
+      //   setCourseHandlerVisible(false);
+      //   setCourseFilterVisible(true);
+      //   setCalendarVisible(false);
+      //   break;
       case "Calendar":
         setCourseHandlerVisible(false);
+        // setCourseFilterVisible(false);
         setCalendarVisible(true);
-        setLLMChatVisible(false);
-        break;
-      case "LLMChat":
-        setCourseHandlerVisible(false);
-        setCalendarVisible(false);
-        setLLMChatVisible(true);
         break;
       default:
         break;
@@ -51,18 +46,12 @@ const JSONCourseDisplay: React.FC = () => {
       if (width < 1075) {
         setCourseHandlerVisible(true);
         setCalendarVisible(false);
-        setLLMChatVisible(false);
-        setIsWideScreen(false);
       } else if (width >= 1075 && width < 1125) {
         setCourseHandlerVisible(true);
         setCalendarVisible(false);
-        setLLMChatVisible(false);
-        setIsWideScreen(false);
       } else {
         setCourseHandlerVisible(true);
         setCalendarVisible(true);
-        setLLMChatVisible(true);
-        setIsWideScreen(true);
       }
     };
 
@@ -100,6 +89,14 @@ const JSONCourseDisplay: React.FC = () => {
         >
           Courses
         </button>
+        {/* <button
+          className={`px-4 py-2 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
+            isCourseFilterVisible ? "font-bold" : ""
+          }`}
+          onClick={() => handleHeaderClick("Combinations")}
+        >
+          Combinations
+        </button> */}
         <button
           className={`px-4 py-4 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
             isCalendarVisible ? "font-bold" : ""
@@ -108,59 +105,30 @@ const JSONCourseDisplay: React.FC = () => {
         >
           Calendar
         </button>
-        <button
-          className={`px-4 py-4 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
-            isLLMChatVisible ? "font-bold" : ""
-          }`}
-          onClick={() => handleHeaderClick("LLMChat")}
-        >
-          LLM Chat
-        </button>
       </div>
       {/* Components */}
-      <div className={`${container} ${isCourseHandlerVisible ? "" : "hidden"}`}>
+      <div
+        className={`${container} ${
+          isCourseHandlerVisible ? "" : "hidden"
+        } flex-grow`}
+      >
         {isCourseHandlerVisible && (
           <CoursesHandler onSelectSection={handleSectionsSelection} />
         )}
       </div>
-      <div className="flex flex-grow overflow-hidden">
-        <div
-          className={`overflow-y-scroll bg-white dark:bg-gray-800 transition-all duration-500 ease-in-out ${JSONCourseDisplayClasses.calendarContainer}`}
-          style={{
-            flexBasis: isLLMChatVisible ? "100%" : "100%",
-          }}
-        >
-          {isCalendarVisible && (
-            <Calendar selectedSections={selectedSections} />
-          )}
-
-          {/* Modern Icon Button to toggle LLMChat */}
-          {isWideScreen && (
-            <button
-              className={`absolute right-4 top-4 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 transition-transform duration-500 ease-in-out z-10`}
-              onClick={() => setLLMChatVisible(!isLLMChatVisible)}
-            >
-              {isLLMChatVisible ? (
-                <AiOutlineClose size={20} />
-              ) : (
-                <BsChatLeftText size={20} />
-              )}
-            </button>
-          )}
-        </div>
-        {/* LLMChat Placeholder */}
-        <div
-          className={`transform transition-transform duration-500 ease-in-out overflow-hidden ${JSONCourseDisplayClasses.chatContainer}`}
-          style={{
-            display:
-              window.innerWidth >= 1125 || !isLLMChatVisible ? "none" : "block",
-          }}
-        >
-          <LLMChatPlaceholder />
-        </div>
+      {/* <div className={`course-filter ${isCourseFilterVisible ? "" : "hidden"}`}>
+        {isCourseFilterVisible && <CourseFilter />}
+      </div> */}
+      <div
+        className={`overflow-y-scroll bg-white dark:bg-gray-800 transition-colors duration-200 ease-in-out w-full ${
+          isCalendarVisible ? "" : "hidden"
+        }`}
+      >
+        {isCalendarVisible && <Calendar selectedSections={selectedSections} />}
+        {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>
   );
 };
 
-export default JSONCourseDisplay;
+export default ScheduleShare;
