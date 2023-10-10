@@ -1,16 +1,44 @@
 import { useState } from "react";
+import {
+  Course,
+  SectionWithCourse,
+} from "../CourseDisplay/CourseUI/CourseTypes";
 import HomeButton from "./HomeButton";
 import NewScheduleDropdown from "./NewScheduleDropdown";
 import ThemeIcon from "./ThemeIcon";
 import UserProfileOrSignIn from "./UserProfileOrSignIn";
 import { FaSearch, FaRegBell } from "react-icons/fa";
 
+type Schedule = {
+  name: string;
+  selectedCourses: Course[];
+  selectedSections: SectionWithCourse[];
+};
+
 const TopNavigation = () => {
   // Default schedules
-  const defaultSchedules = ["Primary", "Secondary", "Tertiary"];
+  const defaultSchedules: Schedule[] = [
+    { name: "Primary", selectedCourses: [], selectedSections: [] },
+    { name: "Secondary", selectedCourses: [], selectedSections: [] },
+    { name: "Tertiary", selectedCourses: [], selectedSections: [] },
+  ];
+
+  // Migrate old schedule structure to new structure if necessary
+  const migrateOldStructure = (oldSchedules: any[]): Schedule[] => {
+    if (oldSchedules.length && typeof oldSchedules[0] === "string") {
+      return oldSchedules.map((name) => ({
+        name: name,
+        selectedCourses: [],
+        selectedSections: [],
+      }));
+    }
+    return oldSchedules;
+  };
 
   // Retrieve saved state from localStorage or use default values
-  const savedSchedules = JSON.parse(localStorage.getItem("schedules") || "[]");
+  const savedSchedules = migrateOldStructure(
+    JSON.parse(localStorage.getItem("schedules") || "[]")
+  );
   const savedSelected = localStorage.getItem("selectedSchedule") || "Primary";
 
   const [selected, setSelected] = useState(savedSelected);
@@ -32,14 +60,19 @@ const TopNavigation = () => {
 
   const handleAddNew = () => {
     if (schedules.length < scheduleNames.length) {
-      setSchedules([...schedules, scheduleNames[schedules.length]]);
+      const newSchedule: Schedule = {
+        name: scheduleNames[schedules.length],
+        selectedCourses: [],
+        selectedSections: [],
+      };
+      setSchedules((prevSchedules) => [...prevSchedules, newSchedule]);
     }
   };
 
   const handleRename = (oldName: string, newName: string) => {
-    const updatedSchedules = schedules.map((schedule: string) => {
-      if (schedule === oldName) {
-        return newName;
+    const updatedSchedules = schedules.map((schedule) => {
+      if (schedule.name === oldName) {
+        return { ...schedule, name: newName };
       }
       return schedule;
     });
@@ -47,10 +80,32 @@ const TopNavigation = () => {
     setSelected(newName); // update the selected schedule as well
   };
 
-  const handleCopy = (originalSchedule: string, copiedScheduleName: string) => {
-    // Check if the copied name already exists and handle accordingly.
-    // Here, I'm just adding the copied name to the list, but you might want to add checks to ensure no duplicates.
-    setSchedules((prevSchedules: string[]) => [...prevSchedules, copiedScheduleName]);
+  const handleCopy = (
+    originalScheduleName: string,
+    copiedScheduleName: string
+  ) => {
+    console.log(
+      "handleCopy called with:",
+      originalScheduleName,
+      copiedScheduleName
+    );
+
+    // Find the original schedule
+    const originalSchedule = schedules.find(
+      (schedule) => schedule.name === originalScheduleName
+    );
+
+    // If original schedule is found, create a copy and add to schedules
+    if (originalSchedule) {
+      const copiedSchedule: Schedule = {
+        name: copiedScheduleName,
+        selectedCourses: [...originalSchedule.selectedCourses],
+        selectedSections: [...originalSchedule.selectedSections],
+      };
+      setSchedules((prevSchedules) => [...prevSchedules, copiedSchedule]);
+    } else {
+      console.error("Could not find original schedule:", originalScheduleName);
+    }
   };
 
   return (
@@ -59,7 +114,9 @@ const TopNavigation = () => {
         <HomeButton />
         <div className="ml-4">
           <NewScheduleDropdown
-            schedules={schedules}
+            schedules={schedules
+              .filter((schedule) => schedule && schedule.name)
+              .map((schedule) => schedule.name)}
             selectedSchedule={selected}
             onSelectSchedule={(schedule) => {
               console.log(`${schedule} selected`);
@@ -67,9 +124,11 @@ const TopNavigation = () => {
             }}
             onRename={handleRename}
             onCopy={handleCopy}
-            onDelete={(schedule) => {
-              console.log(`Delete ${schedule}`);
-              setSchedules(schedules.filter((s: string) => s !== schedule));
+            onDelete={(scheduleName) => {
+              console.log(`Delete ${scheduleName}`);
+              setSchedules(
+                schedules.filter((schedule) => schedule.name !== scheduleName)
+              );
             }}
             onAddNew={handleAddNew}
           />

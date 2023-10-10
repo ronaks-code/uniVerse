@@ -18,13 +18,31 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 const JSONCourseDisplay: React.FC = () => {
   const [globalState, dispatch] = useStateValue();
 
+  const [selected, setSelected] = useLocalStorage("selected", "");
+  const [schedules, setSchedules] = useLocalStorage("schedules", []);
+
   const { container } = JSONCourseDisplayClasses;
   // Use the global state and synchronize with local storage
-  const [courseHandlerVisible, setCourseHandlerVisible] = useLocalStorage("isCourseHandlerVisible", globalState.courseHandlerVisible);
-  const [calendarVisible, setCalendarVisible] = useLocalStorage("isCalendarVisible", globalState.calendarVisible);
-  const [selectedSections, setSelectedSections] = useLocalStorage("selectedSections", globalState.selectedSections);
-  const [LLMChatVisible, setLLMChatVisible] = useLocalStorage("isLLMChatVisible", globalState.LLMChatVisible);
-  const [isWideScreen, setIsWideScreen] = useLocalStorage("isWideScreen", globalState.isWideScreen);
+  const [courseHandlerVisible, setCourseHandlerVisible] = useLocalStorage(
+    "isCourseHandlerVisible",
+    globalState.courseHandlerVisible
+  );
+  const [calendarVisible, setCalendarVisible] = useLocalStorage(
+    "isCalendarVisible",
+    globalState.calendarVisible
+  );
+  const [selectedSections, setSelectedSections] = useLocalStorage(
+    "selectedSections",
+    globalState.selectedSections
+  );
+  const [LLMChatVisible, setLLMChatVisible] = useLocalStorage(
+    "isLLMChatVisible",
+    globalState.LLMChatVisible
+  );
+  const [isWideScreen, setIsWideScreen] = useLocalStorage(
+    "isWideScreen",
+    globalState.isWideScreen
+  );
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
@@ -124,7 +142,11 @@ const JSONCourseDisplay: React.FC = () => {
       {/* Components */}
       <div className={`${container} ${courseHandlerVisible ? "" : "hidden"}`}>
         {courseHandlerVisible && (
-          <CoursesHandler onSelectSection={handleSectionsSelection} />
+          <CoursesHandler
+            onSelectSection={handleSectionsSelection}
+            selected={selected}
+            schedules={schedules}
+          />
         )}
       </div>
       <div className="flex flex-grow overflow-hidden">
@@ -134,9 +156,7 @@ const JSONCourseDisplay: React.FC = () => {
             flexBasis: LLMChatVisible ? "100%" : "100%",
           }}
         >
-          {calendarVisible && (
-            <Calendar selectedSections={selectedSections} />
-          )}
+          {calendarVisible && <Calendar selectedSections={selectedSections} />}
 
           {/* Modern Icon Button to toggle LLMChat */}
           {isWideScreen && (

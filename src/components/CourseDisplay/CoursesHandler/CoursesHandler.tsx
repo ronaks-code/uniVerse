@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
 import CourseSearch from "./CourseSearch";
 import ShowFilteredCourses from "./ShowFilteredCourses";
-import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourse, Schedule } from "../CourseUI/CourseTypes";
 
-// Import gloabl state and custom hook
+// Import global state and custom hook
 import { useStateValue } from "../../../context/globalState";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 
@@ -12,7 +12,7 @@ interface CoursesHandlerProps {
   onSelectSection: (section: SectionWithCourse) => void;
 }
 
-const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
+const CoursesHandler: React.FC<CoursesHandlerProps & { selected: string, schedules: Schedule[] }> = ({ onSelectSection, selected, schedules }) => {
   const [globalState, dispatch] = useStateValue();
 
   // Use React's local state for debouncedSearchTerm
@@ -52,9 +52,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
   return (
     <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">
       <div className="overflow-y-scroll lg-xl:mb-0 pb-4 flex flex-col max-h-[calc(100vh-4rem)] lg-xl:max-h-[calc(100vh-2rem)]">
-      {/* Replace line below with the one below that if you want to include sidebar}
-      {/* <div className="sticky top-0 lg-xl:pl-14"> */}
-      <div className="sticky top-0">
+        <div className="sticky top-0">
           <CourseSearch
             debouncedSearchTerm={debouncedSearchTerm}
             setDebouncedSearchTerm={setDebouncedSearchTerm}
@@ -62,7 +60,6 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({ onSelectSection}) => {
         </div>
 
         <div className="flex-grow overflow-y-auto pb-4">
-          {/* The rest of your content */}
           <LikedSelectedCourses
             selectedCourses={selectedCourses}
             likedCourses={likedCourses}

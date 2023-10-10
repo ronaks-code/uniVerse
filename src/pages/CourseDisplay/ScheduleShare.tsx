@@ -9,13 +9,20 @@ import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 // import CourseFilter from "../../components/CourseFilter/CourseFilter";
 
+// Import global state and custom hook
+import { useStateValue } from "../../context/globalState";
+import useLocalStorage from "../../hooks/useLocalStorage";
+
 const ScheduleShare: React.FC = () => {
   const { container } = ScheduleShareClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<
-    SectionWithCourse[]
-  >([]);
+  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
+    []
+  );
+
+  const [selected, setSelected] = useLocalStorage("selected", "");
+  const [schedules, setSchedules] = useLocalStorage("schedules", []);
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
@@ -113,7 +120,11 @@ const ScheduleShare: React.FC = () => {
         } flex-grow`}
       >
         {isCourseHandlerVisible && (
-          <CoursesHandler onSelectSection={handleSectionsSelection} />
+          <CoursesHandler
+            onSelectSection={handleSectionsSelection}
+            selected={selected}
+            schedules={schedules}
+          />
         )}
       </div>
       {/* <div className={`course-filter ${isCourseFilterVisible ? "" : "hidden"}`}>

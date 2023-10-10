@@ -31,6 +31,11 @@ const NewScheduleDropdown = ({
   };
 
   const handleRename = (schedule: string) => {
+    if (!schedule) {
+      console.error("handleRename: Schedule is undefined or null");
+      return;
+    }
+
     console.log("handleRename called with", schedule);
     setIsRenaming(schedule);
     setRenameValue(schedule);
@@ -45,6 +50,11 @@ const NewScheduleDropdown = ({
   };
 
   const handleRenameSubmit = (schedule: string) => {
+    if (!schedule) {
+      console.error("handleRenameSubmit: Schedule is undefined or null");
+      return;
+    }
+
     console.log("handleRenameSubmit called with", schedule);
     onRename(schedule, renameValue);
     setIsRenaming(null);

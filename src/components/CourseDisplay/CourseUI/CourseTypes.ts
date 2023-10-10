@@ -17,7 +17,6 @@ export type Section = {
   deptName: string;
   instructors: Instructor[];
   meetTimes: MeetingTime[];
-  // openSeats: number;
   finalExam: string;
 };
 
@@ -32,3 +31,9 @@ export type Course = {
 };
 
 export type SectionWithCourse = Section & Course;
+
+export interface Schedule {
+  name: string;
+  selectedCourses: Course[];
+  selectedSections: SectionWithCourse[];
+}
