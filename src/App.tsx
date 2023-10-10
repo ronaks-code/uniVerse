@@ -16,6 +16,13 @@ import { useAppDispatch } from "./hooks/storeHook";
 import { login } from "./features/authSlice";
 import AuthRoutes from "./components/HOC/AuthRoutes";
 import SideBar from "./components/SideBar/Sidebar";
+import TopNavigation from "./components/TopNavigation/TopNav";
+
+// Import the StateProvider component
+import { StateProvider } from "./context/globalState";
+
+// Import the darkMode context
+import { DarkModeProvider } from "./hooks/darkModeContext";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -36,21 +43,25 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <SideBar />
-      <Routes>
-        <Route element={<AuthRoutes />}>
-          <Route path="profile" element={<Profile />} />
-        </Route>
-        <Route path="/" element={<Home />} />
-        <Route path="auth" element={<Auth />} />
-        <Route path="settings" element={<Settings />} />
-        {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
-        <Route path="firebase-courses" element={<ScheduleShare />} />
-        <Route path="JSON-courses" element={<JSONCourseDisplay />} />
-        <Route path="course-service" element={<CourseService />} />
-      </Routes>
-    </>
+    <StateProvider>
+      <DarkModeProvider>
+        <TopNavigation />
+        {/* <SideBar /> */}
+        <Routes>
+          <Route element={<AuthRoutes />}>
+            <Route path="profile" element={<Profile />} />
+          </Route>
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="auth" element={<Auth />} />
+          <Route path="settings" element={<Settings />} />
+          {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
+          <Route path="firebase-courses" element={<ScheduleShare />} />
+          {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
+          <Route path="/" element={<JSONCourseDisplay />} />
+          <Route path="course-service" element={<CourseService />} />
+        </Routes>
+      </DarkModeProvider>
+    </StateProvider>
   );
 };
 

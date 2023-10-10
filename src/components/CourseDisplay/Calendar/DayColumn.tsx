@@ -2,6 +2,10 @@ import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
 import { SectionWithCourse } from "../CourseUI/CourseTypes";
 
+// import global state and custom hook
+import { useStateValue } from "../../../context/globalState";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+
 type CardProps = {
   name: string;
   code: string;
@@ -59,9 +63,10 @@ const Card: React.FC<CardProps> = ({
         padding: "10px",
         color: "#000",
         fontSize: "0.8rem",
-        whiteSpace: "nowrap",
+        whiteSpace: "normal",
         overflow: "hidden",
         textOverflow: "ellipsis",
+        lineClamp: 3,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -70,54 +75,140 @@ const Card: React.FC<CardProps> = ({
     >
       {hovered && (
         <>
-          <div 
-            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[107%] z-10"
+          <div
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[110%] z-10"
             style={{
-              background: 'rgba(0, 0, 0, 0.7)',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #333',
-              borderRadius: '5px',
-              padding: '10px',
-              width: '280px',
-              transition: 'all 0.3s ease-in-out',
-              color: '#fff',
-              marginBottom: '10px',
+              background: "rgba(0, 0, 0, 0.7)",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              border: "1px solid #333",
+              borderRadius: "5px",
+              padding: "10px",
+              width: "280px",
+              transition: "all 0.3s ease-in-out",
+              color: "#fff",
+              marginBottom: "10px",
               // position: "relative"
             }}
           >
-            <div style={{marginBottom: '6px'}}>
-              <strong>Course Name:</strong> {name}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "6px",
+                alignItems: "center",
+              }}
+            >
+              <strong>Course Name</strong>{" "}
+              <span
+                style={{
+                  maxWidth: "60%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {name}
+              </span>
             </div>
-            <div style={{marginBottom: '6px'}}>
-              <strong>Instructors:</strong> {instructors && instructors.join(", ")}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "6px",
+                alignItems: "center",
+              }}
+            >
+              <strong>Instructors</strong>{" "}
+              <span
+                style={{
+                  maxWidth: "60%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {instructors && instructors.join(", ")}
+              </span>
             </div>
-            <div style={{marginBottom: '6px'}}>
-              <strong>Location:</strong> {meetBuilding} {meetBldgCode}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "6px",
+                alignItems: "center",
+              }}
+            >
+              <strong>Location</strong>{" "}
+              <span
+                style={{
+                  maxWidth: "60%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {meetBuilding} {meetBldgCode}
+              </span>
             </div>
-            <div style={{marginBottom: '6px'}}>
-              <strong>CourseID:</strong> {courseId}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "6px",
+                alignItems: "center",
+              }}
+            >
+              <strong>CourseID</strong>{" "}
+              <span
+                style={{
+                  maxWidth: "60%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {courseId}
+              </span>
             </div>
-            <div>
-              <strong>Credit Hours:</strong> {credits}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <strong>Credit Hours</strong>{" "}
+              <span
+                style={{
+                  maxWidth: "60%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {credits}
+              </span>
             </div>
           </div>
           {/* Arrow for the popup */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-[1100%]"
-               style={{
-                 width: 0,
-                 height: 0,
-                 borderTop: "10px solid rgba(0, 0, 0, 0.7)",
-                 borderLeft: "10px solid transparent",
-                 borderRight: "10px solid transparent",
-                 position: "absolute",
-                 top: "100%",
-                 zIndex: 11,
-               }}
+          <div
+            className="absolute left-1/2 transform -translate-x-1/2 -translate-y-[2350%]"
+            style={{
+              width: 0,
+              height: 0,
+              borderTop: "10px solid rgba(0, 0, 0, 0.7)",
+              borderLeft: "10px solid transparent",
+              borderRight: "10px solid transparent",
+              position: "absolute",
+              top: "100%",
+              zIndex: 11,
+            }}
           ></div>
         </>
       )}
-      <strong>{formatCourseCode(code)}</strong> {meetTimeBegin} - {meetTimeEnd} 
-      <br /> {meetBuilding} {meetBldgCode} <br /> {instructors && instructors.join(", ")}
+      <strong>{formatCourseCode(code)}</strong> {meetTimeBegin} - {meetTimeEnd}
+      <br /> {meetBuilding} {meetBldgCode} <br />{" "}
+      {instructors && instructors.join(", ")}
     </div>
   );
 };
@@ -290,7 +381,7 @@ class DayColumn extends React.Component<DayColumnProps> {
                     instructors={card.section.instructors.map(
                       (instr: { name: string }) => capitalizeName(instr.name)
                     )}
-                    credits={card.section.credits} 
+                    credits={card.section.credits}
                     style={{
                       height: card.heightOfCard + "px",
                     }}

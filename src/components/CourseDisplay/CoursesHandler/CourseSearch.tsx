@@ -1,5 +1,9 @@
 import React, { useState, useRef } from "react";
 
+// Import global state and custom hook
+import { useStateValue } from "../../../context/globalState";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+
 interface CourseSearchProps {
   debouncedSearchTerm: string;
   setDebouncedSearchTerm: (searchTerm: string) => void;
@@ -9,7 +13,8 @@ const CourseSearch: React.FC<CourseSearchProps> = ({
   debouncedSearchTerm,
   setDebouncedSearchTerm,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage("searchTerm", "");
+  const [searchTerm, setSearchTerm] = useState(storedSearchTerm); // Initialize with stored value
   const debounceRef = useRef<NodeJS.Timeout>(); // Store the timeout reference
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +53,7 @@ const CourseSearch: React.FC<CourseSearchProps> = ({
       value={searchTerm}
       onChange={handleSearchChange}
       autoCorrect="off"
-      className="w-full max-w-[calc(100vw-3rem)] lg-xl:w-[260px] px-2 py-2 m-4 text-black bg-gray-200 rounded-md placeholder-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-500"
+      className="w-full max-w-[calc(100vw-3rem)] lg-xl:w-[320px] px-2 py-2 m-4 text-black bg-gray-200 rounded-md placeholder-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors duration-500"
     />
   );
 };

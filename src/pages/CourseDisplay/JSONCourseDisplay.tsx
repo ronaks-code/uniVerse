@@ -11,16 +11,20 @@ import LLMChatPlaceholder from "../../components/LLMChat/LLMChatPlaceholder";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsChatLeftText } from "react-icons/bs";
 
+// Import global state and custom hook
+import { useStateValue } from "../../context/globalState";
+import useLocalStorage from "../../hooks/useLocalStorage";
+
 const JSONCourseDisplay: React.FC = () => {
-  const { container, chatContainer, calendarContainer } =
-    JSONCourseDisplayClasses;
-  const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
-  const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
-    []
-  );
-  const [isLLMChatVisible, setLLMChatVisible] = useState(true);
-  const [isWideScreen, setIsWideScreen] = useState(false); // State to track screen width
+  const [globalState, dispatch] = useStateValue();
+
+  const { container } = JSONCourseDisplayClasses;
+  // Use the global state and synchronize with local storage
+  const [courseHandlerVisible, setCourseHandlerVisible] = useLocalStorage("isCourseHandlerVisible", globalState.courseHandlerVisible);
+  const [calendarVisible, setCalendarVisible] = useLocalStorage("isCalendarVisible", globalState.calendarVisible);
+  const [selectedSections, setSelectedSections] = useLocalStorage("selectedSections", globalState.selectedSections);
+  const [LLMChatVisible, setLLMChatVisible] = useLocalStorage("isLLMChatVisible", globalState.LLMChatVisible);
+  const [isWideScreen, setIsWideScreen] = useLocalStorage("isWideScreen", globalState.isWideScreen);
 
   const handleHeaderClick = (option: string) => {
     switch (option) {
@@ -94,7 +98,7 @@ const JSONCourseDisplay: React.FC = () => {
       <div className="lg-xl:hidden flex justify-center items-center bg-white dark:bg-gray-900 h-12 border-b border-gray-300 dark:border-gray-700">
         <button
           className={`px-4 py-2 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
-            isCourseHandlerVisible ? "font-bold" : ""
+            courseHandlerVisible ? "font-bold" : ""
           }`}
           onClick={() => handleHeaderClick("Courses")}
         >
@@ -102,7 +106,7 @@ const JSONCourseDisplay: React.FC = () => {
         </button>
         <button
           className={`px-4 py-4 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
-            isCalendarVisible ? "font-bold" : ""
+            calendarVisible ? "font-bold" : ""
           }`}
           onClick={() => handleHeaderClick("Calendar")}
         >
@@ -110,7 +114,7 @@ const JSONCourseDisplay: React.FC = () => {
         </button>
         <button
           className={`px-4 py-4 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white ${
-            isLLMChatVisible ? "font-bold" : ""
+            LLMChatVisible ? "font-bold" : ""
           }`}
           onClick={() => handleHeaderClick("LLMChat")}
         >
@@ -118,8 +122,8 @@ const JSONCourseDisplay: React.FC = () => {
         </button>
       </div>
       {/* Components */}
-      <div className={`${container} ${isCourseHandlerVisible ? "" : "hidden"}`}>
-        {isCourseHandlerVisible && (
+      <div className={`${container} ${courseHandlerVisible ? "" : "hidden"}`}>
+        {courseHandlerVisible && (
           <CoursesHandler onSelectSection={handleSectionsSelection} />
         )}
       </div>
@@ -127,20 +131,20 @@ const JSONCourseDisplay: React.FC = () => {
         <div
           className={`overflow-y-scroll bg-white dark:bg-gray-800 transition-all duration-500 ease-in-out ${JSONCourseDisplayClasses.calendarContainer}`}
           style={{
-            flexBasis: isLLMChatVisible ? "100%" : "100%",
+            flexBasis: LLMChatVisible ? "100%" : "100%",
           }}
         >
-          {isCalendarVisible && (
+          {calendarVisible && (
             <Calendar selectedSections={selectedSections} />
           )}
 
           {/* Modern Icon Button to toggle LLMChat */}
           {isWideScreen && (
             <button
-              className={`absolute right-4 top-4 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 transition-transform duration-500 ease-in-out z-10`}
-              onClick={() => setLLMChatVisible(!isLLMChatVisible)}
+              className={`absolute right-4 top-20 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 transition-transform duration-500 ease-in-out z-10`}
+              onClick={() => setLLMChatVisible(!LLMChatVisible)}
             >
-              {isLLMChatVisible ? (
+              {LLMChatVisible ? (
                 <AiOutlineClose size={20} />
               ) : (
                 <BsChatLeftText size={20} />
@@ -153,7 +157,7 @@ const JSONCourseDisplay: React.FC = () => {
           className={`transform transition-transform duration-500 ease-in-out overflow-hidden ${JSONCourseDisplayClasses.chatContainer}`}
           style={{
             display:
-              window.innerWidth >= 1125 || !isLLMChatVisible ? "none" : "block",
+              window.innerWidth >= 1125 || !LLMChatVisible ? "none" : "block",
           }}
         >
           <LLMChatPlaceholder />

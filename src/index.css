@@ -28,7 +28,8 @@
     text-purple-600 hover:text-white
     hover:rounded-2xl rounded-3xl
     transition-all duration-200 ease-linear
-    cursor-pointer shadow-lg;
+    cursor-pointer shadow-lg
+    hover:scale-105 hover:shadow-xl;
   }
 
   .sidebar-icon:hover {
@@ -63,11 +64,12 @@
   } */
 
   .top-navigation {
-    @apply flex flex-row items-center justify-evenly 
+    @apply flex flex-row items-center
     bg-gray-300 dark:bg-gray-700 bg-opacity-90 
     w-full h-16 
-    m-0 
-    shadow-lg;
+    m-0 px-6
+    shadow-lg
+    transition-colors duration-300 ease-in-out;
   }
 
   .title-text {
@@ -294,7 +296,7 @@
 
 @media (max-width: 600px) {
   /* Adjust the top margin as needed */
-  
+
   body {
     margin-top: -16px; /* For example, you can adjust the margin to your desired value */
   }

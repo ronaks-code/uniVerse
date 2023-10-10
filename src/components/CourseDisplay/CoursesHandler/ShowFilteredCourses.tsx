@@ -13,6 +13,10 @@ import {
 } from "react-icons/pi";
 import { ShowFilteredCoursesClasses } from "./ShowFilteredCoursesClasses";
 
+// Import global state and custom hook
+import { useStateValue } from "../../../context/globalState";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+
 interface ShowFilteredCoursesProps {
   debouncedSearchTerm: string;
   selectedCourses: Course[];
@@ -21,6 +25,10 @@ interface ShowFilteredCoursesProps {
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   onSelectSection: (section: SectionWithCourse) => void;
 }
+
+type CourseState = {
+  [key: string]: boolean;
+};
 
 const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   debouncedSearchTerm,
@@ -36,12 +44,13 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   const [openCourses, setOpenCourses] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const doubleClickRef = useRef(false);
-  const lastClickRef = useRef(0);
-  const courseAnimation = useRef<{ [key: string]: boolean }>({});
   const [isDescriptionOpen, setIsDescriptionOpen] = useState<{
     [key: string]: boolean;
   }>({});
+    
+  const doubleClickRef = useRef(false);
+  const lastClickRef = useRef(0);
+  const courseAnimation = useRef<{ [key: string]: boolean }>({});
 
   const {
     minusIcon,

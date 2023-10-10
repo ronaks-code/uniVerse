@@ -5,6 +5,7 @@ import chroma from "chroma-js";
 import CourseDropdown from "../CourseUI/CourseDropdown";
 import { PiCaretDownBold, PiCaretUpBold, PiTrashBold } from "react-icons/pi";
 
+
 interface LikedSelectedCoursesProps {
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
