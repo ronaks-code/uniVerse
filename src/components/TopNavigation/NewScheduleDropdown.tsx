@@ -3,6 +3,7 @@ import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { PiPlusBold } from "react-icons/pi";
 import { topNavClasses } from "./topNavClasses";
 import IconGroup from "./IconGroup";
+import { auth } from "../../services/firebase";
 
 const NewScheduleDropdown = ({
   schedules,
@@ -13,7 +14,7 @@ const NewScheduleDropdown = ({
   onDelete,
   onAddNew,
 }: {
-  schedules: string[];
+  schedules: any[];
   selectedSchedule: string;
   onSelectSchedule: (schedule: string) => void;
   onRename: (schedule: string, newName: string) => void;
@@ -68,8 +69,11 @@ const NewScheduleDropdown = ({
 
   // Effect to save the state to localStorage when schedules or selectedSchedule changes
   useEffect(() => {
-    localStorage.setItem("schedules", JSON.stringify(schedules));
-    localStorage.setItem("selectedSchedule", selectedSchedule);
+    if (!auth.currentUser) {
+      console.log("Saving to localStorage" + schedules, selectedSchedule);
+      localStorage.setItem("schedules", JSON.stringify(schedules));
+      localStorage.setItem("selectedSchedule", selectedSchedule);
+    }
   }, [schedules, selectedSchedule]);
 
   return (
@@ -118,6 +122,7 @@ const NewScheduleDropdown = ({
                     autoFocus
                   />
                   <IconGroup
+                    schedules={schedules}
                     isRenamingSchedule={true}
                     schedule={schedule}
                     handleRename={handleRename}
@@ -140,6 +145,7 @@ const NewScheduleDropdown = ({
                     {schedule}
                   </span>
                   <IconGroup
+                    schedules={schedules}
                     isRenamingSchedule={false}
                     schedule={schedule}
                     handleRename={handleRename}
@@ -162,7 +168,7 @@ const NewScheduleDropdown = ({
             </span>
             <PiPlusBold
               className={`text-gray-500 hover:text-white cursor-pointer ${topNavClasses.iconClasses}`}
-              onClick={onAddNew}
+              // onClick={onAddNew}
               title="Add New Schedule"
             />
           </div>

@@ -7,6 +7,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { topNavClasses } from "./topNavClasses";
 
 type IconGroupProps = {
+  schedules: any[];
   isRenamingSchedule: boolean;
   schedule: string;
   handleRename: (schedule: string) => void;
@@ -18,6 +19,7 @@ type IconGroupProps = {
 };
 
 const IconGroup: React.FC<IconGroupProps> = ({
+  schedules,
   isRenamingSchedule,
   schedule,
   handleRename,
@@ -29,7 +31,9 @@ const IconGroup: React.FC<IconGroupProps> = ({
 }) => (
   <div
     className={`flex absolute right-0 transition-opacity 
-      ${isRenamingSchedule ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+      ${
+        isRenamingSchedule ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+      }`}
   >
     {isRenamingSchedule ? (
       <>
@@ -81,16 +85,18 @@ const IconGroup: React.FC<IconGroupProps> = ({
         title="Copy"
       />
     </div>
-    <div className={topNavClasses.iconBlock}>
-      <BsFillTrashFill
-        className={iconClasses}
-        onClick={(e) => {
-          onDelete(schedule);
-          e.stopPropagation();
-        }}
-        title="Delete"
-      />
-    </div>
+    {schedules.length > 1 && (
+      <div className={topNavClasses.iconBlock}>
+        <BsFillTrashFill
+          className={iconClasses}
+          onClick={(e) => {
+            onDelete(schedule);
+            e.stopPropagation();
+          }}
+          title="Delete"
+        />
+      </div>
+    )}
   </div>
 );
 

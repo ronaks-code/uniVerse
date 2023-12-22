@@ -25,7 +25,7 @@ export const timeSlots = [
 ];
 
 type CalendarProps = {
-  selectedSections: SectionWithCourse[];
+  selectedSections: number[];
 };
 
 const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {

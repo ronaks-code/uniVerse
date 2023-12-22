@@ -49,6 +49,20 @@
     border border-gray-400 dark:border-gray-500 rounded-full mx-2;
   }
 
+  .loading-icon {
+    @apply opacity-0 ease-in-out duration-3000;
+    animation-iteration-count: infinite;
+  }
+
+  @layer utilities {
+    .delay-1000 {
+      animation-delay: 1s;
+    }
+    .delay-2000 {
+      animation-delay: 2s;
+    }
+  }
+
   /* .sidebar-icon-gradient::after {
     content: '';
     display: block;

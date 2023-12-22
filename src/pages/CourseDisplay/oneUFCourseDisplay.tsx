@@ -7,7 +7,7 @@ import React, {
   lazy,
 } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../services/firebase";
+import { firestore } from "../../services/firebase";
 
 import { Course } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 
@@ -36,7 +36,7 @@ const oneUFCourseDisplay: React.FC = () => {
   const fetchData = async (searchTerm: string) => {
     try {
       const universityDocRef = doc(
-        collection(db, "courses"),
+        collection(firestore, "courses"),
         "UniversityOfFlorida"
       );
       const nestedCollectionRef = collection(universityDocRef, "2023-Summer");

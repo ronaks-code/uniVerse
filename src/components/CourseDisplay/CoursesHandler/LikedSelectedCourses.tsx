@@ -1,10 +1,41 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
 import CourseDropdown from "../CourseUI/CourseDropdown";
 import { PiCaretDownBold, PiCaretUpBold, PiTrashBold } from "react-icons/pi";
+import { useStateValue } from "../../../context/globalState";
+import { updateDoc, arrayUnion, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { firestore } from "../../../services/firebase";
 
+const userId = getAuth().currentUser?.email || localStorage.getItem("userId");
+const isUserSignedIn = !!getAuth().currentUser;
+
+// Function to update liked courses in Firebase
+const updateLikedCoursesInFirebase = async (courseCode: string) => {
+  if (!userId) {
+    console.error("User ID is not available.");
+    return;
+  }
+  const userDocRef = doc(firestore, "users", userId);
+  await updateDoc(userDocRef, {
+    likedCourses: arrayUnion(courseCode),
+  });
+};
+
+// Function to update selected courses in Firebase
+const updateSelectedCoursesInFirebase = async (courseCode: string) => {
+  if (!userId) {
+    console.error("User ID is not available.");
+    return;
+  }
+
+  const userDocRef = doc(firestore, "users", userId);
+  await updateDoc(userDocRef, {
+    selectedCourses: arrayUnion(courseCode),
+  });
+};
 
 interface LikedSelectedCoursesProps {
   likedCourses: Course[];
@@ -80,6 +111,18 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   setSelectedCourses,
   onSelectSection,
 }) => {
+  const [user] = useStateValue();
+
+  // Save data to Firebase when courses are liked or selected
+  useEffect(() => {
+    if (user) {
+      // Save data to Firebase for the selected schedule
+      // TODO: Implement Firebase save logic here
+    } else {
+      // Data is already saved using useLocalStorage hook
+    }
+  }, [likedCourses, selectedCourses, user]);
+
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -93,12 +136,20 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
       )
     );
 
+    if (isUserSignedIn) {
+      updateSelectedCoursesInFirebase(course.code);
+    }
+
     setLikedCourses((prevLikedCourses) =>
       prevLikedCourses.filter(
         (likedCourse) =>
           likedCourse.code !== course.code || likedCourse.name !== course.name
       )
     );
+
+    if (isUserSignedIn) {
+      updateLikedCoursesInFirebase(course.code);
+    }
   };
 
   const handleCardClick = (course: Course, event: React.MouseEvent) => {

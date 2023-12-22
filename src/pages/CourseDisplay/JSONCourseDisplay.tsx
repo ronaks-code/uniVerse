@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
   Course,
+  Schedule,
   SectionWithCourse,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
 import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/CoursesHandler";
 import LLMChatPlaceholder from "../../components/LLMChat/LLMChatPlaceholder";
+import LLMChat from "../../components/LLMChat/LLMChat";
 
 import { AiOutlineClose } from "react-icons/ai";
 import { BsChatLeftText } from "react-icons/bs";
@@ -15,11 +17,91 @@ import { BsChatLeftText } from "react-icons/bs";
 import { useStateValue } from "../../context/globalState";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
-const JSONCourseDisplay: React.FC = () => {
+import {
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { auth, firestore } from "../../services/firebase";
+
+const updateSelectedSectionsInFirebase = async (
+  sectionNumber: number,
+  scheduleIndex: number
+) => {
+  // Retrieve the userId within the function
+  const userId = getAuth().currentUser?.email || localStorage.getItem("userId");
+
+  if (!userId) {
+    console.error("User ID is not available.");
+    return;
+  }
+
+  const userDocRef = doc(firestore, "users", userId);
+
+  // Fetch the current schedules array
+  const docSnapshot = await getDoc(userDocRef);
+  if (!docSnapshot.exists()) {
+    console.error("Document does not exist.");
+    return;
+  }
+
+  const currentSchedules = docSnapshot.data()?.schedules || [];
+  const scheduleToUpdate = currentSchedules[scheduleIndex];
+
+  if (!scheduleToUpdate) {
+    console.error(`Schedule at index ${scheduleIndex} not found.`);
+    return;
+  }
+
+  // Create the updated schedule
+  const updatedSchedule: Schedule = {
+    ...scheduleToUpdate,
+    selectedSections: [
+      ...(scheduleToUpdate.selectedSections || []),
+      sectionNumber,
+    ],
+  };
+
+  // Use arrayRemove and arrayUnion to update the schedules array
+  await updateDoc(userDocRef, {
+    schedules: updatedSchedule,
+  });
+};
+
+interface JSONCourseDisplayProps {
+  selectedSchedule: string;
+}
+
+const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
+  selectedSchedule,
+}) => {
   const [globalState, dispatch] = useStateValue();
 
-  const [selected, setSelected] = useLocalStorage("selected", "");
-  const [schedules, setSchedules] = useLocalStorage("schedules", []);
+  useEffect(() => {
+    console.log("*Selected Schedule has changed to:", selectedSchedule);
+
+    // Any other side-effects you want to perform when selectedSchedule changes
+  }, [selectedSchedule]);
+
+  // console.log("ALKJFDKLJFSJLFDSJ" + localStorage.getItem("selectedSchedule"));
+
+  // selectedSchedule = useState(() => {
+  //   const localSelectedSchedule =
+  //     localStorage.getItem("selectedSchedule") || "";
+  //   // const jsonSelectedSchedule = JSON.parse(localSelectedSchedule || "");
+  //   return localSelectedSchedule;
+  // });
+
+  // console.log(localStorage.getItem("selectedSchedule"));
+
+  // const selectedSchedule = useEffect(() => {
+  //   JSON.parse(localStorage.getItem("selectedSchedule") || "");
+  // }, []);
+
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
 
   const { container } = JSONCourseDisplayClasses;
   // Use the global state and synchronize with local storage
@@ -31,10 +113,18 @@ const JSONCourseDisplay: React.FC = () => {
     "isCalendarVisible",
     globalState.calendarVisible
   );
-  const [selectedSections, setSelectedSections] = useLocalStorage(
-    "selectedSections",
-    globalState.selectedSections
-  );
+  // Initialize selectedSections based on the current selectedSchedule
+  const [selectedSections, setSelectedSections] = useState<number[]>(() => {
+    const schedule = schedules.find((s) => s.name === selectedSchedule);
+    return schedule ? schedule.selectedSections : [];
+  });
+
+  // Update selectedSections when selectedSchedule changes
+  useEffect(() => {
+    const schedule = schedules.find((s) => s.name === selectedSchedule);
+    setSelectedSections(schedule ? schedule.selectedSections : []);
+  }, [selectedSchedule, schedules]);
+
   const [LLMChatVisible, setLLMChatVisible] = useLocalStorage(
     "isLLMChatVisible",
     globalState.LLMChatVisible
@@ -102,16 +192,38 @@ const JSONCourseDisplay: React.FC = () => {
 
   const handleSectionsSelection = (section: SectionWithCourse) => {
     setSelectedSections((prev) => {
-      if (prev.some((s) => s.number === section.number)) {
-        return prev.filter((s) => s.number !== section.number);
+      if (prev.includes(section.classNumber)) {
+        return prev.filter((classNum) => classNum !== section.classNumber);
       } else {
-        return [...prev, section];
+        return [...prev, section.classNumber];
       }
     });
+
+    if (auth.currentUser) {
+      console.log("Section Number: " + section.classNumber);
+      console.log(
+        "Index: " +
+          schedules.findIndex((s: Schedule) => s.name === selectedSchedule)
+      );
+      // Determine the index of the currently active schedule
+      const currentScheduleIndex = schedules.findIndex(
+        (schedule: Schedule) => schedule.name === selectedSchedule
+      );
+      if (currentScheduleIndex !== -1) {
+        updateSelectedSectionsInFirebase(
+          section.classNumber,
+          currentScheduleIndex
+        );
+      } else {
+        console.error("Current active schedule not found in schedules array.");
+      }
+    }
   };
 
+  console.log("JSON Selected:", selectedSchedule);
+
   return (
-    <div className="flex flex-col lg-xl:flex-row h-screen max-h-[calc(100vh] overflow-hidden">
+    <div className="flex flex-col lg-xl:flex-row h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem] overflow-hidden">
       {/* Header for options */}
       <div className="lg-xl:hidden flex justify-center items-center bg-white dark:bg-gray-900 h-12 border-b border-gray-300 dark:border-gray-700">
         <button
@@ -144,43 +256,40 @@ const JSONCourseDisplay: React.FC = () => {
         {courseHandlerVisible && (
           <CoursesHandler
             onSelectSection={handleSectionsSelection}
-            selected={selected}
-            schedules={schedules}
+            selectedSchedule={selectedSchedule}
+            // schedules={schedules}
           />
         )}
       </div>
       <div className="flex flex-grow overflow-hidden">
         <div
-          className={`overflow-y-scroll bg-white dark:bg-gray-800 transition-all duration-500 ease-in-out ${JSONCourseDisplayClasses.calendarContainer}`}
-          style={{
-            flexBasis: LLMChatVisible ? "100%" : "100%",
-          }}
+          className={`flex-grow overflow-y-scroll bg-white dark:bg-gray-800 ${JSONCourseDisplayClasses.calendarContainer}`}
         >
           {calendarVisible && <Calendar selectedSections={selectedSections} />}
-
-          {/* Modern Icon Button to toggle LLMChat */}
-          {isWideScreen && (
-            <button
-              className={`absolute right-4 top-20 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 transition-transform duration-500 ease-in-out z-10`}
-              onClick={() => setLLMChatVisible(!LLMChatVisible)}
-            >
-              {LLMChatVisible ? (
-                <AiOutlineClose size={20} />
-              ) : (
-                <BsChatLeftText size={20} />
-              )}
-            </button>
-          )}
         </div>
+        {/* Modern Icon Button to toggle LLMChat */}
+        {isWideScreen && (
+          <button
+            className="absolute right-4 top-20 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 z-10"
+            onClick={() => setLLMChatVisible(!LLMChatVisible)}
+          >
+            {LLMChatVisible ? (
+              <AiOutlineClose size={20} />
+            ) : (
+              <BsChatLeftText size={20} />
+            )}
+          </button>
+        )}
+
         {/* LLMChat Placeholder */}
         <div
-          className={`transform transition-transform duration-500 ease-in-out overflow-hidden ${JSONCourseDisplayClasses.chatContainer}`}
+          className={`${JSONCourseDisplayClasses.chatContainer}`}
           style={{
-            display:
-              window.innerWidth >= 1125 || !LLMChatVisible ? "none" : "block",
+            flexBasis: LLMChatVisible ? "400px" : "0px", // Adjust 300px to your desired width
           }}
         >
-          <LLMChatPlaceholder />
+          {/* <LLMChatPlaceholder /> */}
+          <LLMChat />
         </div>
       </div>
     </div>

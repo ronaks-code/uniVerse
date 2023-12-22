@@ -1,10 +1,18 @@
 import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { SectionWithCourse } from "../CourseUI/CourseTypes";
+import { SectionWithCourse, Course } from "../CourseUI/CourseTypes";
+
+// Import Firebase services
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+
+// Import the JSON data
+import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
 
 // import global state and custom hook
 import { useStateValue } from "../../../context/globalState";
 import useLocalStorage from "../../../hooks/useLocalStorage";
+
+const firestore = getFirestore();
 
 type CardProps = {
   name: string;
@@ -213,24 +221,64 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
+const getAllCourses = async (): Promise<Course[]> => {
+  try {
+    const coursesCollection = collection(firestore, "courses");
+    const courseSnapshot = await getDocs(coursesCollection);
+    const courses = courseSnapshot.docs.map((doc) => doc.data()) as Course[];
+    return courses;
+  } catch (error) {
+    console.error("Error fetching courses from Firebase:", error);
+    // If there's an error (maybe due to network issues), return the local JSON data
+    return jsonData as Course[];
+  }
+};
+
+const findSectionByClassNumber = async (
+  classNumber: number
+): Promise<SectionWithCourse | undefined> => {
+  const courses = await getAllCourses();
+  for (let course of courses) {
+    for (let section of course.sections) {
+      if (section.classNumber === classNumber) {
+        // Combine the course and section into a SectionWithCourse object
+        return { ...section, ...course };
+      }
+    }
+  }
+  return undefined;
+};
+
 type DayColumnProps = {
   day: string;
-  selectedSections: SectionWithCourse[];
+  selectedSections: number[];
   timeSlots: string[];
 };
 
 class DayColumn extends React.Component<DayColumnProps> {
   calendarRef = React.createRef<HTMLDivElement>();
-  state = {
+  state: {
+    calendarHeight: number | null;
+    selectedSectionDetails: (SectionWithCourse | undefined)[];
+  } = {
     calendarHeight: null,
+    selectedSectionDetails: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.calendarRef.current) {
       this.setState({
         calendarHeight: this.calendarRef.current.getBoundingClientRect().height,
       });
     }
+
+    // Fetch all relevant sections based on selectedSections
+    const selectedSectionDetails = await Promise.all(
+      this.props.selectedSections.map((classNumber) =>
+        findSectionByClassNumber(classNumber)
+      )
+    );
+    this.setState({ selectedSectionDetails });
   }
   // Helper function to convert time string to a percentage of the day
   timeStringToDayFraction(time: string) {
@@ -299,20 +347,27 @@ class DayColumn extends React.Component<DayColumnProps> {
   }
 
   render() {
-    const daySections = this.props.selectedSections.filter((section) =>
-      section.meetTimes.some((meetingTime) =>
-        meetingTime.meetDays.includes(this.props.day)
-      )
+    const daySections = this.state.selectedSectionDetails.filter(
+      (sectionDetail) => {
+        // Ensure sectionDetail is not undefined before proceeding
+        if (!sectionDetail) return false;
+
+        return sectionDetail.meetTimes.some((meetingTime) =>
+          meetingTime.meetDays.includes(this.props.day)
+        );
+      }
     );
 
     // This is the window height + 16px * 80 (80rem)
     const calendarHeight = 1280;
     const totalSlots = this.props.timeSlots.length;
-    console.log("totalSlots:", totalSlots);
+    // console.log("totalSlots:", totalSlots);
 
     const sectionCards = daySections
-      .flatMap((section, index) =>
-        section.meetTimes.map((meetTime, meetIndex) => {
+      .flatMap((section, index) => {
+        if (!section) return [];
+
+        return section.meetTimes.map((meetTime, meetIndex) => {
           if (!meetTime.meetDays.includes(this.props.day)) {
             return null;
           }
@@ -320,16 +375,12 @@ class DayColumn extends React.Component<DayColumnProps> {
           const startFraction = this.timeStringToDayFraction(
             meetTime.meetTimeBegin
           );
-          console.log("startFraction:", startFraction);
           const endFraction = this.timeStringToDayFraction(
             meetTime.meetTimeEnd
           );
-          console.log("endFraction:", endFraction);
 
           const startCalendar = startFraction * calendarHeight;
-          console.log("startSlot:", startCalendar);
           const endCalendar = endFraction * calendarHeight;
-          console.log("endSlot:", endCalendar);
 
           const heightOfCard = endCalendar - startCalendar;
 
@@ -341,8 +392,8 @@ class DayColumn extends React.Component<DayColumnProps> {
             endCalendar,
             heightOfCard,
           };
-        })
-      )
+        });
+      })
       .filter(Boolean);
 
     const overlappingGroups = this.groupOverlappingCards(sectionCards);

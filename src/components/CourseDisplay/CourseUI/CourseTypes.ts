@@ -11,7 +11,8 @@ export type MeetingTime = {
 };
 
 export type Section = {
-  number: string;
+  number: number;
+  classNumber: number;
   display: string;
   credits: number;
   deptName: string;
@@ -34,6 +35,7 @@ export type SectionWithCourse = Section & Course;
 
 export interface Schedule {
   name: string;
-  selectedCourses: Course[];
-  selectedSections: SectionWithCourse[];
+  likedCourses: number[];
+  selectedCourses: number[];
+  selectedSections: number[];
 }

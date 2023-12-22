@@ -17,9 +17,7 @@ const ScheduleShare: React.FC = () => {
   const { container } = ScheduleShareClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
-    []
-  );
+  const [selectedSections, setSelectedSections] = useState<number[]>([]);
 
   const [selected, setSelected] = useLocalStorage("selected", "");
   const [schedules, setSchedules] = useLocalStorage("schedules", []);
@@ -76,10 +74,10 @@ const ScheduleShare: React.FC = () => {
 
   const handleSectionsSelection = (section: SectionWithCourse) => {
     setSelectedSections((prev) => {
-      if (prev.some((s) => s.number === section.number)) {
-        return prev.filter((s) => s.number !== section.number);
+      if (prev.includes(section.classNumber)) {
+        return prev.filter((classNum) => classNum !== section.classNumber);
       } else {
-        return [...prev, section];
+        return [...prev, section.classNumber];
       }
     });
   };
@@ -122,8 +120,8 @@ const ScheduleShare: React.FC = () => {
         {isCourseHandlerVisible && (
           <CoursesHandler
             onSelectSection={handleSectionsSelection}
-            selected={selected}
-            schedules={schedules}
+            selectedSchedule={selected}
+            // schedules={schedules}
           />
         )}
       </div>

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import Home from "./pages/Home/Home";
 import Auth from "./pages/Auth/Auth";
@@ -26,6 +26,9 @@ import { DarkModeProvider } from "./hooks/darkModeContext";
 
 const App = () => {
   const dispatch = useAppDispatch();
+  const [selected, setSelected] = useState<string>(
+    localStorage.getItem("selectedSchedule") || "Primary"
+  );
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -45,7 +48,7 @@ const App = () => {
   return (
     <StateProvider>
       <DarkModeProvider>
-        <TopNavigation />
+        <TopNavigation selected={selected} setSelected={setSelected} />
         {/* <SideBar /> */}
         <Routes>
           <Route element={<AuthRoutes />}>
@@ -57,7 +60,10 @@ const App = () => {
           {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
           <Route path="firebase-courses" element={<ScheduleShare />} />
           {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
-          <Route path="/" element={<JSONCourseDisplay />} />
+          <Route
+            path="/"
+            element={<JSONCourseDisplay selectedSchedule={selected} />}
+          />
           <Route path="course-service" element={<CourseService />} />
         </Routes>
       </DarkModeProvider>

@@ -10,6 +10,8 @@ type GlobalState = {
   calendarVisible: boolean;
   LLMChatVisible: boolean;
   isWideScreen: boolean;
+  user?: any;
+  selected?: string;
 };
 
 // Define actions to modify the state
@@ -32,6 +34,8 @@ const initialState: GlobalState = {
   calendarVisible: true,
   LLMChatVisible: false,
   isWideScreen: false,
+  user: null,
+  selected: "Primary",
 };
 
 const StateContext = createContext<[GlobalState, React.Dispatch<Action>]>([initialState, () => {}]);
