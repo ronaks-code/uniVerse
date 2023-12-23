@@ -173,7 +173,7 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
       } else {
         setCourseHandlerVisible(true);
         setCalendarVisible(true);
-        setLLMChatVisible(true);
+        setLLMChatVisible(false);
         setIsWideScreen(true);
       }
     };

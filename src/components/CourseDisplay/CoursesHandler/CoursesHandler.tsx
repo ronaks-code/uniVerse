@@ -88,21 +88,21 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
     }
   }, [selectedCourses, likedCourses, selectedSections, user]);
 
-  useEffect(() => {
-    dispatch({
-      type: "SET_DEBOUNCED_SEARCH_TERM",
-      payload: debouncedSearchTerm,
-    });
-    dispatch({ type: "SET_SELECTED_COURSES", payload: selectedCourses });
-    dispatch({ type: "SET_LIKED_COURSES", payload: likedCourses });
-    dispatch({ type: "SET_SELECTED_SECTIONS", payload: selectedSections });
-  }, [
-    debouncedSearchTerm,
-    selectedCourses,
-    likedCourses,
-    selectedSections,
-    dispatch,
-  ]);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: "SET_DEBOUNCED_SEARCH_TERM",
+  //     payload: debouncedSearchTerm,
+  //   });
+  //   dispatch({ type: "SET_SELECTED_COURSES", payload: selectedCourses });
+  //   dispatch({ type: "SET_LIKED_COURSES", payload: likedCourses });
+  //   dispatch({ type: "SET_SELECTED_SECTIONS", payload: selectedSections });
+  // }, [
+  //   debouncedSearchTerm,
+  //   selectedCourses,
+  //   likedCourses,
+  //   selectedSections,
+  //   dispatch,
+  // ]);
 
   useEffect(() => {
     console.log("CoursesHandler - Selected Sections:", selectedSections);
