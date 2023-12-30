@@ -1,6 +1,7 @@
 import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
 import { SectionWithCourse, Course } from "../CourseUI/CourseTypes";
+import Card, { CardProps, formatCourseCode, capitalizeName } from "./Card";
 
 // Import Firebase services
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -13,213 +14,6 @@ import { useStateValue } from "../../../context/globalState";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const firestore = getFirestore();
-
-type CardProps = {
-  name: string;
-  code: string;
-  courseId: string;
-  meetTimeBegin: string;
-  meetTimeEnd: string;
-  meetBuilding: string;
-  meetBldgCode: string;
-  instructors?: string[];
-  credits: number;
-  style: React.CSSProperties;
-};
-
-// Helper function to format the course code
-const formatCourseCode = (code: string) => {
-  const match = code.match(/^([a-zA-Z]+)(\d+[a-zA-Z]*)$/);
-  if (match) {
-    return `${match[1]} ${match[2]}`;
-  }
-  return code;
-};
-
-// Helper function to format the instructor name
-const capitalizeName = (name: string) => {
-  return name
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-};
-
-const Card: React.FC<CardProps> = ({
-  name,
-  code,
-  courseId,
-  meetTimeBegin,
-  meetTimeEnd,
-  meetBuilding,
-  meetBldgCode,
-  instructors,
-  credits,
-  style,
-}) => {
-  const [hovered, setHovered] = React.useState(false);
-
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        // position: "absolute",
-        backgroundColor: "#e0e0e0", // Replace with your preferred color
-        width: "100%",
-        border: "1px solid #000",
-        borderRadius: "10px",
-        padding: "10px",
-        color: "#000",
-        fontSize: "0.8rem",
-        whiteSpace: "normal",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        lineClamp: 3,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        ...style,
-      }}
-    >
-      {hovered && (
-        <>
-          <div
-            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[110%] z-10"
-            style={{
-              background: "rgba(0, 0, 0, 0.7)",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              border: "1px solid #333",
-              borderRadius: "5px",
-              padding: "10px",
-              width: "280px",
-              transition: "all 0.3s ease-in-out",
-              color: "#fff",
-              marginBottom: "10px",
-              // position: "relative"
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "6px",
-                alignItems: "center",
-              }}
-            >
-              <strong>Course Name</strong>{" "}
-              <span
-                style={{
-                  maxWidth: "60%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {name}
-              </span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "6px",
-                alignItems: "center",
-              }}
-            >
-              <strong>Instructors</strong>{" "}
-              <span
-                style={{
-                  maxWidth: "60%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {instructors && instructors.join(", ")}
-              </span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "6px",
-                alignItems: "center",
-              }}
-            >
-              <strong>Location</strong>{" "}
-              <span
-                style={{
-                  maxWidth: "60%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {meetBuilding} {meetBldgCode}
-              </span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "6px",
-                alignItems: "center",
-              }}
-            >
-              <strong>CourseID</strong>{" "}
-              <span
-                style={{
-                  maxWidth: "60%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {courseId}
-              </span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <strong>Credit Hours</strong>{" "}
-              <span
-                style={{
-                  maxWidth: "60%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {credits}
-              </span>
-            </div>
-          </div>
-          {/* Arrow for the popup */}
-          <div
-            className="absolute left-1/2 transform -translate-x-1/2 -translate-y-[2350%]"
-            style={{
-              width: 0,
-              height: 0,
-              borderTop: "10px solid rgba(0, 0, 0, 0.7)",
-              borderLeft: "10px solid transparent",
-              borderRight: "10px solid transparent",
-              position: "absolute",
-              top: "100%",
-              zIndex: 11,
-            }}
-          ></div>
-        </>
-      )}
-      <strong>{formatCourseCode(code)}</strong> {meetTimeBegin} - {meetTimeEnd}
-      <br /> {meetBuilding} {meetBldgCode} <br />{" "}
-      {instructors && instructors.join(", ")}
-    </div>
-  );
-};
 
 const getAllCourses = async (): Promise<Course[]> => {
   try {
@@ -237,6 +31,7 @@ const getAllCourses = async (): Promise<Course[]> => {
 const findSectionByClassNumber = async (
   classNumber: number
 ): Promise<SectionWithCourse | undefined> => {
+  // console.log("classNumber:", classNumber);
   const courses = await getAllCourses();
   for (let course of courses) {
     for (let section of course.sections) {
@@ -280,6 +75,7 @@ class DayColumn extends React.Component<DayColumnProps> {
     );
     this.setState({ selectedSectionDetails });
   }
+
   // Helper function to convert time string to a percentage of the day
   timeStringToDayFraction(time: string) {
     // Split the time string into components
@@ -422,19 +218,20 @@ class DayColumn extends React.Component<DayColumnProps> {
                   }}
                 >
                   <Card
-                    name={card.section.name} // Using the name from Course type
-                    code={formatCourseCode(card.section.code)}
-                    courseId={card.section.courseId} // Using the courseId from Course type
-                    meetTimeBegin={card.meetTime.meetTimeBegin}
-                    meetTimeEnd={card.meetTime.meetTimeEnd}
-                    meetBuilding={card.meetTime.meetBuilding}
-                    meetBldgCode={card.meetTime.meetBldgCode}
-                    instructors={card.section.instructors.map(
-                      (instr: { name: string }) => capitalizeName(instr.name)
+                    name={card.name}
+                    code={formatCourseCode(card.code)}
+                    courseId={card.courseId}
+                    meetTimeBegin={card.meetTimeBegin}
+                    meetTimeEnd={card.meetTimeEnd}
+                    meetBuilding={card.meetBuilding}
+                    meetBldgCode={card.meetBldgCode}
+                    instructors={card.instructors?.map((instr: string) =>
+                      capitalizeName(instr)
                     )}
-                    credits={card.section.credits}
+                    credits={card.credits}
                     style={{
-                      height: card.heightOfCard + "px",
+                      height: `${card.heightOfCard}px`,
+                      ...card.style,
                     }}
                   />
                 </div>
