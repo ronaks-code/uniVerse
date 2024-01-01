@@ -33,13 +33,18 @@ type CalendarProps = {
 };
 
 const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
+  // State to hold the full section details
+  const [selectedSectionsPostLookup, setSelectedSectionsPostLookup] = useState<
+    SectionWithCourse[]
+  >([]);
+
   // Function to get the full details of a section based on its classNumber
-  const getSectionDetails = (classNumber: number): Section | null => {
+  const getSectionDetails = (classNumber: number): SectionWithCourse | null => {
     for (const course of courses) {
-      // Now using the correctly typed 'courses' variable
       for (const section of course.sections) {
         if (section.classNumber === classNumber) {
-          return section;
+          // Combine the course and section data to fit SectionWithCourse type
+          return { ...section, ...course };
         }
       }
     }
@@ -47,12 +52,16 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
   };
 
   useEffect(() => {
-    // Log the full details of selected sections when they change
     if (selectedSections.length > 0) {
-      const details = selectedSections.map((sectionNumber) =>
-        getSectionDetails(sectionNumber)
-      );
+      // Map the section numbers to SectionWithCourse objects
+      const details = selectedSections
+        .map((sectionNumber) => getSectionDetails(sectionNumber))
+        .filter((section): section is SectionWithCourse => section !== null);
+      setSelectedSectionsPostLookup(details);
       console.log("Full Section Details:", details);
+    } else {
+      // If there are no selected sections, clear the details
+      setSelectedSectionsPostLookup([]);
     }
   }, [selectedSections]);
 
@@ -69,7 +78,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
       <DayColumn
         key={day}
         day={day}
-        selectedSections={selectedSections}
+        selectedSections={selectedSectionsPostLookup} // Pass the detailed sections here
         timeSlots={timeSlots}
       />
     ));

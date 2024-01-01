@@ -1,6 +1,7 @@
 import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
 import { SectionWithCourse, Course } from "../CourseUI/CourseTypes";
+
 import Card, { CardProps, formatCourseCode, capitalizeName } from "./Card";
 
 // Import Firebase services
@@ -15,67 +16,39 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const firestore = getFirestore();
 
-const getAllCourses = async (): Promise<Course[]> => {
-  try {
-    const coursesCollection = collection(firestore, "courses");
-    const courseSnapshot = await getDocs(coursesCollection);
-    const courses = courseSnapshot.docs.map((doc) => doc.data()) as Course[];
-    return courses;
-  } catch (error) {
-    console.error("Error fetching courses from Firebase:", error);
-    // If there's an error (maybe due to network issues), return the local JSON data
-    return jsonData as Course[];
-  }
-};
-
-const findSectionByClassNumber = async (
-  classNumber: number
-): Promise<SectionWithCourse | undefined> => {
-  const courses = await getAllCourses();
-  console.log("Courses:", courses);
-  for (let course of courses) {
-    for (let section of course.sections) {
-      if (section.classNumber === classNumber) {
-        // Combine the course and section into a SectionWithCourse object
-        return { ...section, ...course };
-      }
-    }
-  }
-  return undefined;
-};
-
 type DayColumnProps = {
   day: string;
-  selectedSections: number[];
+  selectedSections: SectionWithCourse[];
   timeSlots: string[];
 };
 
+// TODO: Fix Function to get all courses from Firebase
+// const getAllCourses = async (): Promise<Course[]> => {
+//   try {
+//     const coursesCollection = collection(firestore, "courses");
+//     const courseSnapshot = await getDocs(coursesCollection);
+//     const courses = courseSnapshot.docs.map((doc) => doc.data()) as Course[];
+//     return courses;
+//   } catch (error) {
+//     console.error("Error fetching courses from Firebase:", error);
+//     // If there's an error (maybe due to network issues), return the local JSON data
+//     return jsonData as Course[];
+//   }
+// };
+
 class DayColumn extends React.Component<DayColumnProps> {
   calendarRef = React.createRef<HTMLDivElement>();
-  state: {
-    calendarHeight: number | null;
-    selectedSectionDetails: (SectionWithCourse | undefined)[];
-  } = {
+  state = {
     calendarHeight: null,
-    selectedSectionDetails: [],
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     if (this.calendarRef.current) {
       this.setState({
         calendarHeight: this.calendarRef.current.getBoundingClientRect().height,
       });
     }
-
-    // Fetch all relevant sections based on selectedSections
-    const selectedSectionDetails = await Promise.all(
-      this.props.selectedSections.map((classNumber) =>
-        findSectionByClassNumber(classNumber)
-      )
-    );
-    this.setState({ selectedSectionDetails });
   }
-
   // Helper function to convert time string to a percentage of the day
   timeStringToDayFraction(time: string) {
     // Split the time string into components
@@ -143,15 +116,10 @@ class DayColumn extends React.Component<DayColumnProps> {
   }
 
   render() {
-    const daySections = this.state.selectedSectionDetails.filter(
-      (sectionDetail) => {
-        // Ensure sectionDetail is not undefined before proceeding
-        if (!sectionDetail) return false;
-
-        return sectionDetail.meetTimes.some((meetingTime) =>
-          meetingTime.meetDays.includes(this.props.day)
-        );
-      }
+    const daySections = this.props.selectedSections.filter((section) =>
+      section.meetTimes.some((meetingTime) =>
+        meetingTime.meetDays.includes(this.props.day)
+      )
     );
 
     // This is the window height + 16px * 80 (80rem)
@@ -160,10 +128,8 @@ class DayColumn extends React.Component<DayColumnProps> {
     // console.log("totalSlots:", totalSlots);
 
     const sectionCards = daySections
-      .flatMap((section, index) => {
-        if (!section) return [];
-
-        return section.meetTimes.map((meetTime, meetIndex) => {
+      .flatMap((section, index) =>
+        section.meetTimes.map((meetTime, meetIndex) => {
           if (!meetTime.meetDays.includes(this.props.day)) {
             return null;
           }
@@ -171,12 +137,16 @@ class DayColumn extends React.Component<DayColumnProps> {
           const startFraction = this.timeStringToDayFraction(
             meetTime.meetTimeBegin
           );
+          // console.log("startFraction:", startFraction);
           const endFraction = this.timeStringToDayFraction(
             meetTime.meetTimeEnd
           );
+          // console.log("endFraction:", endFraction);
 
           const startCalendar = startFraction * calendarHeight;
+          // console.log("startSlot:", startCalendar);
           const endCalendar = endFraction * calendarHeight;
+          // console.log("endSlot:", endCalendar);
 
           const heightOfCard = endCalendar - startCalendar;
 
@@ -188,8 +158,8 @@ class DayColumn extends React.Component<DayColumnProps> {
             endCalendar,
             heightOfCard,
           };
-        });
-      })
+        })
+      )
       .filter(Boolean);
 
     const overlappingGroups = this.groupOverlappingCards(sectionCards);
@@ -218,20 +188,19 @@ class DayColumn extends React.Component<DayColumnProps> {
                   }}
                 >
                   <Card
-                    name={card.name}
-                    code={formatCourseCode(card.code)}
-                    courseId={card.courseId}
-                    meetTimeBegin={card.meetTimeBegin}
-                    meetTimeEnd={card.meetTimeEnd}
-                    meetBuilding={card.meetBuilding}
-                    meetBldgCode={card.meetBldgCode}
-                    instructors={card.instructors?.map((instr: string) =>
-                      capitalizeName(instr)
+                    name={card.section.name} // Using the name from Course type
+                    code={formatCourseCode(card.section.code)}
+                    courseId={card.section.courseId} // Using the courseId from Course type
+                    meetTimeBegin={card.meetTime.meetTimeBegin}
+                    meetTimeEnd={card.meetTime.meetTimeEnd}
+                    meetBuilding={card.meetTime.meetBuilding}
+                    meetBldgCode={card.meetTime.meetBldgCode}
+                    instructors={card.section.instructors.map(
+                      (instr: { name: string }) => capitalizeName(instr.name)
                     )}
-                    credits={card.credits}
+                    credits={card.section.credits}
                     style={{
-                      height: `${card.heightOfCard}px`,
-                      ...card.style,
+                      height: card.heightOfCard + "px",
                     }}
                   />
                 </div>
