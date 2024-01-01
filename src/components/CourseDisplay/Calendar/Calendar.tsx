@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import DayColumn from "./DayColumn";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { SectionWithCourse } from "../CourseUI/CourseTypes";
+import { Section, Course, SectionWithCourse } from "../CourseUI/CourseTypes";
+import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
+
+// Assuming jsonData is an array of courses directly
+const courses: Course[] = jsonData as Course[];
 
 const days = ["M", "T", "W", "R", "F"];
 
@@ -29,8 +33,27 @@ type CalendarProps = {
 };
 
 const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
+  // Function to get the full details of a section based on its classNumber
+  const getSectionDetails = (classNumber: number): Section | null => {
+    for (const course of courses) {
+      // Now using the correctly typed 'courses' variable
+      for (const section of course.sections) {
+        if (section.classNumber === classNumber) {
+          return section;
+        }
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-    console.log("Calendar - Selected Sections:", selectedSections);
+    // Log the full details of selected sections when they change
+    if (selectedSections.length > 0) {
+      const details = selectedSections.map((sectionNumber) =>
+        getSectionDetails(sectionNumber)
+      );
+      console.log("Full Section Details:", details);
+    }
   }, [selectedSections]);
 
   const renderTimeSlots = () => {

@@ -31,8 +31,8 @@ const getAllCourses = async (): Promise<Course[]> => {
 const findSectionByClassNumber = async (
   classNumber: number
 ): Promise<SectionWithCourse | undefined> => {
-  // console.log("classNumber:", classNumber);
   const courses = await getAllCourses();
+  console.log("Courses:", courses);
   for (let course of courses) {
     for (let section of course.sections) {
       if (section.classNumber === classNumber) {
