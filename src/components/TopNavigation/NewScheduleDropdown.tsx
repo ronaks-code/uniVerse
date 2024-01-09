@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { PiPlusBold } from "react-icons/pi";
 import { topNavClasses } from "./topNavClasses";
+import Schedule from "./TopNav";
 import IconGroup from "./IconGroup";
 import { auth } from "../../services/firebase";
+
+import useLocalStorage from "../../hooks/useLocalStorage";
+import LikedSelectedCourses from "../CourseDisplay/CoursesHandler/LikedSelectedCourses";
 
 const NewScheduleDropdown = ({
   schedules,
@@ -70,7 +74,6 @@ const NewScheduleDropdown = ({
   // Effect to save the state to localStorage when schedules or selectedSchedule changes
   useEffect(() => {
     if (!auth.currentUser) {
-      console.log("Saving to localStorage" + schedules, selectedSchedule);
       localStorage.setItem("schedules", JSON.stringify(schedules));
       localStorage.setItem("selectedSchedule", selectedSchedule);
     }
@@ -102,8 +105,21 @@ const NewScheduleDropdown = ({
             <div
               key={schedule}
               className={`${topNavClasses.rowClasses} text-black dark:text-white`}
+              // TODO: Make sure to save everything into Local Storage here before doing the functionality before (makes sure data is properly saved)
               onClick={() => {
                 if (isRenaming !== schedule) {
+                  console.log("Switching Schedules.\nOld Schedule: " + selectedSchedule + "\nNew Schedule: " + schedule);
+                  // localStorage.setItem(`selectedCourses-${selectedSchedule}`, JSON.stringify(selectedCourses));
+                  // localStorage.setItem(`selectedSections-${selectedSchedule}`, JSON.stringify(selectedSections));
+                  // localStorage.setItem(`likedCourses-${selectedSchedule}`, JSON.stringify(likedCourses));
+                  // console.log("Saved data for old schedule");
+                  // console.log(localStorage.getItem(`selectedCourses-${selectedSchedule}`));
+                  // console.log(localStorage.getItem(`selectedSections-${selectedSchedule}`));
+                  // console.log(localStorage.getItem(`likedCourses-${selectedSchedule}`));
+                  // console.log("***********************************************************************************");
+                  // console.log(localStorage.getItem(`selectedCourses-${schedule}`));
+                  // console.log(localStorage.getItem(`selectedSections-${schedule}`));
+                  // console.log(localStorage.getItem(`likedCourses-${schedule}`));
                   onSelectSchedule(schedule);
                   setIsOpen(false);
                 }
@@ -168,7 +184,6 @@ const NewScheduleDropdown = ({
             </span>
             <PiPlusBold
               className={`text-gray-500 hover:text-white cursor-pointer ${topNavClasses.iconClasses}`}
-              // onClick={onAddNew}
               title="Add New Schedule"
             />
           </div>

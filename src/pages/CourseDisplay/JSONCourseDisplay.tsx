@@ -80,11 +80,11 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
 }) => {
   const [globalState, dispatch] = useStateValue();
 
-  useEffect(() => {
-    console.log("*Selected Schedule has changed to:", selectedSchedule);
+  // useEffect(() => {
+  //   console.log("*Selected Schedule has changed to:", selectedSchedule);
 
-    // Any other side-effects you want to perform when selectedSchedule changes
-  }, [selectedSchedule]);
+  //   // Any other side-effects you want to perform when selectedSchedule changes
+  // }, [selectedSchedule]);
 
   // console.log("ALKJFDKLJFSJLFDSJ" + localStorage.getItem("selectedSchedule"));
 
@@ -115,16 +115,16 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
   );
   // Initialize selectedSections based on the current selectedSchedule
   const [selectedSections, setSelectedSections] = useState<number[]>(() => {
-    const schedule = schedules.find((s) => s.name === selectedSchedule);
-    return schedule ? schedule.selectedSections : [];
+    const storedSchedule = localStorage.getItem(`selectedSections-${selectedSchedule}`);
+    return storedSchedule ? JSON.parse(storedSchedule) : [];
   });
 
   // Update selectedSections when selectedSchedule changes
-  useEffect(() => {
-    const schedule = schedules.find((s) => s.name === selectedSchedule);
-    setSelectedSections(schedule ? schedule.selectedSections : []);
-  }, [selectedSchedule, schedules]);
-
+  // useEffect(() => {
+  //   const schedule = schedules.find((s) => s.name === selectedSchedule);
+  //   setSelectedSections(schedule ? schedule.selectedSections : []);
+  // }, [selectedSchedule, schedules]);
+    
   const [LLMChatVisible, setLLMChatVisible] = useLocalStorage(
     "isLLMChatVisible",
     globalState.LLMChatVisible
@@ -220,7 +220,7 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     }
   };
 
-  console.log("JSON Selected:", selectedSchedule);
+  // console.log("JSON Selected:", selectedSchedule);
 
   return (
     <div className="flex flex-col lg-xl:flex-row h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem] overflow-hidden">

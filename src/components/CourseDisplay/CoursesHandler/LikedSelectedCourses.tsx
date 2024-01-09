@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
@@ -43,6 +43,7 @@ interface LikedSelectedCoursesProps {
   selectedCourses: Course[];
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   onSelectSection: (section: SectionWithCourse) => void;
+  selectedSchedule: string;
 }
 
 const colorHash = new ColorHash({
@@ -110,6 +111,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   selectedCourses,
   setSelectedCourses,
   onSelectSection,
+  selectedSchedule,
 }) => {
   const [user] = useStateValue();
 
@@ -122,6 +124,56 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
       // Data is already saved using useLocalStorage hook
     }
   }, [likedCourses, selectedCourses, user]);
+
+  // Update the liked and selected courses array when selectedSchedule changes from local storage values
+  useEffect(() => {
+    // Function to fetch from local storage or initialize if not present
+    const fetchFromLocalStorage = (key: string) => {
+      const dataFromLocalStorage = localStorage.getItem(key);
+      return dataFromLocalStorage ? JSON.parse(dataFromLocalStorage) : [];
+    };
+
+    console.log("_________________________________________________");
+    console.log("*Selected Schedule has changed to:", selectedSchedule);
+
+    // setSelectedCourses(
+    //   fetchFromLocalStorage(`selectedCourses-${selectedSchedule}`)
+    // );
+    // console.log("Selected Courses:", selectedCourses);
+    // setLikedCourses(fetchFromLocalStorage(`likedCourses-${selectedSchedule}`));
+    // console.log("Liked Courses:", likedCourses);
+
+    // console.log("Selected Courses:", selectedCourses);
+    // console.log("Liked Courses:", likedCourses);
+    // console.log("Primary Data: " + localStorage.getItem("selectedCourses-Primary") + "\n" + localStorage.getItem("likedCourses-Primary") + "\n***********************************************************************************");
+    // console.log("Secondary Data: " + localStorage.getItem("selectedCourses-Secondary") + "\n" + localStorage.getItem("likedCourses-Secondary") + "\n***********************************************************************************");
+    // console.log("Tertiary Data: " + localStorage.getItem("selectedCourses-Tertiary") + "\n" + localStorage.getItem("likedCourses-Tertiary") + "\n***********************************************************************************");
+  }, [selectedSchedule]);
+
+  // useEffect(() => {
+  //   // Function to fetch and log course counts from local storage
+  //   const logCourseCounts = () => {
+  //     const primarySelected = JSON.parse(
+  //       localStorage.getItem("selectedCourses-Primary") || "[]"
+  //     ).length;
+  //     const primaryLiked = JSON.parse(
+  //       localStorage.getItem("likedCourses-Primary") || "[]"
+  //     ).length;
+  //     const secondarySelected = JSON.parse(
+  //       localStorage.getItem("selectedCourses-Secondary") || "[]"
+  //     ).length;
+  //     const secondaryLiked = JSON.parse(
+  //       localStorage.getItem("likedCourses-Secondary") || "[]"
+  //     ).length;
+
+  //     console.log("Primary Selected:", primarySelected);
+  //     console.log("Primary Liked:", primaryLiked);
+  //     console.log("Secondary Selected:", secondarySelected);
+  //     console.log("Secondary Liked:", secondaryLiked);
+  //   };
+
+  //   logCourseCounts();
+  // }, [likedCourses, selectedCourses]);
 
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);

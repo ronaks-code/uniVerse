@@ -21,7 +21,7 @@ import {
 } from "../../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-type Schedule = {
+export type Schedule = {
   name: string;
   selectedCourses: Course[];
   likedCourses: Course[];
@@ -72,7 +72,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   const savedSchedules = migrateToObjectFormat(
     JSON.parse(localStorage.getItem("schedules") || "[]")
   );
-  const savedSelected = localStorage.getItem("selectedSchedule") || "Primary";
+  const savedSelected = localStorage.getItem("selectedSchedule");
 
   // [selected, setSelected] = useState(savedSelected);
 
@@ -151,7 +151,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
         };
         const updatedSchedules = [...schedules, newSchedule];
         localStorage.setItem("schedules", JSON.stringify(updatedSchedules));
-        console.log("New schedule added successfully!: " + newName);
+        // console.log("New schedule added successfully!: " + newName);
         setSchedules(updatedSchedules);
       }
     } else {
@@ -249,8 +249,8 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
     }
   };
 
-  console.log("Current Schedules:", schedules);
-  console.log("Currently Selected:", selected);
+  // console.log("Current Schedules:", schedules);
+  // console.log("Currently Selected:", selected);
 
   return (
     <div className="top-navigation flex justify-between items-center">
@@ -266,7 +266,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                 .map((schedule) => schedule.name)}
               selectedSchedule={selected}
               onSelectSchedule={(schedule) => {
-                console.log(`${schedule} selected`);
+                // console.log(`${schedule} selected`);
                 setSelected(schedule);
               }}
               onRename={handleRename}
