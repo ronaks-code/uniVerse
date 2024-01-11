@@ -109,6 +109,8 @@ const NewScheduleDropdown = ({
               onClick={() => {
                 if (isRenaming !== schedule) {
                   console.log("Switching Schedules.\nOld Schedule: " + selectedSchedule + "\nNew Schedule: " + schedule);
+                  console.log("Data in primary: " + localStorage.getItem(`selectedCourses-${selectedSchedule}`));
+                  console.log("Data in secondary: " + localStorage.getItem(`selectedCourses-${schedule}`));
                   // localStorage.setItem(`selectedCourses-${selectedSchedule}`, JSON.stringify(selectedCourses));
                   // localStorage.setItem(`selectedSections-${selectedSchedule}`, JSON.stringify(selectedSections));
                   // localStorage.setItem(`likedCourses-${selectedSchedule}`, JSON.stringify(likedCourses));

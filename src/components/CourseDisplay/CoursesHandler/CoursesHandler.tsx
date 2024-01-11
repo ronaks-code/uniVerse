@@ -86,6 +86,8 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
       }
     });
 
+    console.log("FKLDSJLKDFJSDFKJLFDK:SJFLKJSKL:DFSelected Sections:", selectedSections);
+
     onSelectSection(section);
   };
 

@@ -8,6 +8,7 @@ import { useStateValue } from "../../../context/globalState";
 import { updateDoc, arrayUnion, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { firestore } from "../../../services/firebase";
+import { set } from "react-hook-form";
 
 const userId = getAuth().currentUser?.email || localStorage.getItem("userId");
 const isUserSignedIn = !!getAuth().currentUser;
@@ -127,14 +128,15 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
 
   // Update the liked and selected courses array when selectedSchedule changes from local storage values
   useEffect(() => {
-    // Function to fetch from local storage or initialize if not present
-    const fetchFromLocalStorage = (key: string) => {
-      const dataFromLocalStorage = localStorage.getItem(key);
-      return dataFromLocalStorage ? JSON.parse(dataFromLocalStorage) : [];
-    };
+    // console.log("_________________________________________________");
+    // console.log("*Selected Schedule has changed to:", selectedSchedule);
 
-    console.log("_________________________________________________");
-    console.log("*Selected Schedule has changed to:", selectedSchedule);
+    // console.log(`Data in ${selectedSchedule}: ` + localStorage.getItem(`selectedCourses-${selectedSchedule}`));
+    // Switching the selected/liked courses according to the selected schedule
+    setSelectedCourses(JSON.parse(localStorage.getItem(`selectedCourses-${selectedSchedule}`) || "[]"));
+    setLikedCourses(JSON.parse(localStorage.getItem(`likedCourses-${selectedSchedule}`) || "[]"));
+    // console.log("Data in secondary: " + localStorage.getItem(`selectedCourses-${schedule}`));
+
 
     // setSelectedCourses(
     //   fetchFromLocalStorage(`selectedCourses-${selectedSchedule}`)
