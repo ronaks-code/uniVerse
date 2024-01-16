@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Course,
   Schedule,
-  SectionWithCourse,
+  SectionWithCourseWithoutSectionsArray,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { ScheduleShareClasses } from "./ScheduleShareClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
@@ -72,18 +72,17 @@ interface ScheduleShareProps {
   selectedSchedule: string;
 }
 
-
-const ScheduleShare: React.FC<ScheduleShareProps> = ({
-  selectedSchedule,
-}) => {
+const ScheduleShare: React.FC<ScheduleShareProps> = ({ selectedSchedule }) => {
   const { container } = ScheduleShareClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<number[]>([]);
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
+    number[]
+  >([]);
 
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
-    []
-  );
+  const [selectedSections, setSelectedSections] = useLocalStorage<
+    SectionWithCourseWithoutSectionsArray[]
+  >(`selectedSections-${selectedSchedule}`, []);
 
   const [selected, setSelected] = useLocalStorage("selected", "");
   const [schedules, setSchedules] = useLocalStorage("schedules", []);
@@ -135,28 +134,33 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log("JSONCourseDisplay - Selected Sections:", selectedSectionsNumbers);
+    console.log(
+      "JSONCourseDisplay - Selected Sections:",
+      selectedSectionsNumbers
+    );
   }, [selectedSectionsNumbers]);
 
-  const onSectionSelect = (section: SectionWithCourse) => {
+  const onSectionSelect = (section: SectionWithCourseWithoutSectionsArray) => {
     // Update selectedSectionsNumbers
     setSelectedSectionsNumbers((prevNumbers) => {
       if (prevNumbers.includes(section.classNumber)) {
-        return prevNumbers.filter(num => num !== section.classNumber);
+        return prevNumbers.filter((num) => num !== section.classNumber);
       } else {
         return [...prevNumbers, section.classNumber];
       }
     });
-  
+
     // Update selectedSections
     setSelectedSections((prevSections) => {
-      if (prevSections.some(sec => sec.classNumber === section.classNumber)) {
-        return prevSections.filter(sec => sec.classNumber !== section.classNumber);
+      if (prevSections.some((sec) => sec.classNumber === section.classNumber)) {
+        return prevSections.filter(
+          (sec) => sec.classNumber !== section.classNumber
+        );
       } else {
         return [...prevSections, section];
       }
     });
-  
+
     // Update Firebase if a user is authenticated
     if (auth.currentUser) {
       console.log("Section Number: " + section.classNumber);
@@ -172,7 +176,7 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({
         console.error("Current active schedule not found in schedules array.");
       }
     }
-  
+
     // Update Firebase logic here
     // ...
   };
@@ -214,7 +218,9 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({
       >
         {isCourseHandlerVisible && (
           <CoursesHandler
-          onSectionSelect={onSectionSelect}
+            onSectionSelect={onSectionSelect}
+            selectedSections={selectedSections}
+            setSelectedSections={setSelectedSections}
             selectedSchedule={selected}
             // schedules={schedules}
           />
@@ -228,7 +234,12 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({
           isCalendarVisible ? "" : "hidden"
         }`}
       >
-        {isCalendarVisible && <Calendar selectedSections={selectedSections} />}
+        {isCalendarVisible && (
+          <Calendar
+            selectedSchedule={selectedSchedule}
+            selectedSections={selectedSections}
+          />
+        )}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourse, SectionWithCourseWithoutSectionsArray } from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
 import CourseDropdown from "../CourseUI/CourseDropdown";
@@ -44,9 +44,9 @@ interface LikedSelectedCoursesProps {
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   selectedCourses: Course[];
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-  selectedSections: SectionWithCourse[];
+  selectedSections: SectionWithCourseWithoutSectionsArray[];
   setSelectedSections: React.Dispatch<
-    React.SetStateAction<SectionWithCourse[]>
+    React.SetStateAction<SectionWithCourseWithoutSectionsArray[]>
   >;
   onSectionSelect: (section: SectionWithCourse) => void;
 }

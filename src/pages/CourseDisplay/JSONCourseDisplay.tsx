@@ -3,6 +3,7 @@ import {
   Course,
   Schedule,
   SectionWithCourse,
+  SectionWithCourseWithoutSectionsArray,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
 import Calendar from "../../components/CourseDisplay/Calendar/Calendar";
@@ -106,9 +107,9 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     return storedSchedule ? JSON.parse(storedSchedule) : [];
   });
 
-  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
-    []
-  );
+  const [selectedSections, setSelectedSections] = useLocalStorage<
+    SectionWithCourseWithoutSectionsArray[]
+  >(`selectedSections-${selectedSchedule}`, []);
 
   const onSectionSelect = (section: SectionWithCourse) => {
     // Update selectedSectionsNumbers
@@ -123,11 +124,26 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     // Update selectedSections
     setSelectedSections((prevSections) => {
       if (prevSections.some((sec) => sec.classNumber === section.classNumber)) {
+        console.log(
+          "IF OUTPUT: ",
+          prevSections.filter((s) => s.classNumber !== section.classNumber)
+        );
+
         return prevSections.filter(
           (sec) => sec.classNumber !== section.classNumber
         );
       } else {
-        return [...prevSections, section];
+        console.log("ELSE OUTPUT: ", [...prevSections, section]);
+        // Create a new section object without the 'sections' array
+        const { sections, ...sectionDataWithoutSections } = section;
+
+        // Construct the new object as SectionWithCourseWithoutSectionsArray
+        const newSection: SectionWithCourseWithoutSectionsArray = {
+          ...sectionDataWithoutSections,
+        };
+
+        // Add the new section to the array
+        return [...prevSections, newSection];
       }
     });
 
@@ -151,13 +167,28 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     // ...
   };
 
+  useEffect(() => {
+    console.log("Selected Sections Numbers:", selectedSectionsNumbers);
+    console.log("Selected Sections:", selectedSections);
+  }, [selectedSectionsNumbers]);
+
   // Function to get the full details of a section based on its classNumber
-  const getSectionDetails = (classNumber: number): SectionWithCourse | null => {
+  const getSectionDetails = (
+    classNumber: number
+  ): SectionWithCourseWithoutSectionsArray | null => {
     for (const course of courses) {
       for (const section of course.sections) {
         if (section.classNumber === classNumber) {
+          // Extrapolate the sections array from the course object
+          const { sections, ...courseDataWithoutSectionsArray } = course;
+
+          // Create a new object with the course data and the section data (without the sections array)
+          const courseData = {
+            ...courseDataWithoutSectionsArray,
+            ...section,
+          };
           // Combine the course and section data to fit SectionWithCourse type
-          return { ...section, ...course };
+          return courseData;
         }
       }
     }
@@ -239,15 +270,6 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    console.log(
-      "JSONCourseDisplay - Selected Sections:",
-      selectedSectionsNumbers
-    );
-  }, [selectedSectionsNumbers]);
-
-  // console.log("JSON Selected:", selectedSchedule);
-
   return (
     <div className="flex flex-col lg-xl:flex-row h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem] overflow-hidden">
       {/* Header for options */}
@@ -282,6 +304,8 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         {courseHandlerVisible && (
           <CoursesHandler
             selectedSchedule={selectedSchedule}
+            selectedSections={selectedSections}
+            setSelectedSections={setSelectedSections}
             onSectionSelect={onSectionSelect}
             // schedules={schedules}
           />
@@ -291,7 +315,12 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         <div
           className={`flex-grow overflow-y-scroll bg-white dark:bg-gray-800 ${JSONCourseDisplayClasses.calendarContainer}`}
         >
-          {calendarVisible && <Calendar selectedSections={selectedSections} />}
+          {calendarVisible && (
+            <Calendar
+              selectedSchedule={selectedSchedule}
+              selectedSections={selectedSections}
+            />
+          )}
         </div>
         {/* Modern Icon Button to toggle LLMChat */}
         {isWideScreen && (

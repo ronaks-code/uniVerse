@@ -2,16 +2,26 @@ import React, { useState, useEffect } from "react";
 import LikedSelectedCourses from "./LikedSelectedCourses";
 import CourseSearch from "./CourseSearch";
 import ShowFilteredCourses from "./ShowFilteredCourses";
-import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
+import {
+  Course,
+  SectionWithCourse,
+  SectionWithCourseWithoutSectionsArray,
+} from "../CourseUI/CourseTypes";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 
 interface CoursesHandlerProps {
   selectedSchedule: string;
+  selectedSections: SectionWithCourseWithoutSectionsArray[];
+  setSelectedSections: React.Dispatch<
+    React.SetStateAction<SectionWithCourseWithoutSectionsArray[]>
+  >;
   onSectionSelect: (section: SectionWithCourse) => void;
 }
 
 const CoursesHandler: React.FC<CoursesHandlerProps> = ({
   selectedSchedule,
+  selectedSections,
+  setSelectedSections,
   onSectionSelect,
 }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -24,26 +34,6 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
     `likedCourses-${selectedSchedule}`,
     []
   );
-  // Explicitly define the type of the state as an array of SectionWithCourse
-  const [selectedSections, setSelectedSections] = useLocalStorage<
-    SectionWithCourse[]
-  >(`selectedSections-${selectedSchedule}`, []);
-
-  const handleSectionsSelection = (section: SectionWithCourse) => {
-    setSelectedSections((prev) => {
-      if (prev.some((s) => s.classNumber === section.classNumber)) {
-        // console.log("1")
-        return prev.filter((s) => s.classNumber !== section.classNumber);
-      } else {
-        // console.log("2")
-        return [...prev, section];
-      }
-    });
-
-    // console.log("3")
-    onSectionSelect(section);
-    // console.log("4")
-  };
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">
@@ -63,7 +53,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
             setSelectedCourses={setSelectedCourses}
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
-            onSectionSelect={handleSectionsSelection}
+            onSectionSelect={onSectionSelect}
           />
           <div className="">
             <ShowFilteredCourses
@@ -72,7 +62,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
               setSelectedCourses={setSelectedCourses}
               likedCourses={likedCourses}
               setLikedCourses={setLikedCourses}
-              onSectionSelect={handleSectionsSelection}
+              onSectionSelect={onSectionSelect}
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DayColumn from "./DayColumn";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { Section, Course, SectionWithCourse } from "../CourseUI/CourseTypes";
+import { Section, Course, SectionWithCourseWithoutSectionsArray } from "../CourseUI/CourseTypes";
 
 const days = ["M", "T", "W", "R", "F"];
 
@@ -25,10 +25,14 @@ export const timeSlots = [
 ];
 
 type CalendarProps = {
-  selectedSections: SectionWithCourse[];
+  selectedSchedule: string;
+  selectedSections: SectionWithCourseWithoutSectionsArray[];
 };
 
-const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
+const Calendar: React.FC<CalendarProps> = ({
+  selectedSchedule,
+  selectedSections,
+}) => {
   // State to hold the full section details
   // const [selectedSections, setSelectedSections] = useState<
   //   SectionWithCourse[]

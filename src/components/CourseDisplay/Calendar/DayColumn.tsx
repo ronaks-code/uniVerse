@@ -1,6 +1,6 @@
 import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { SectionWithCourse, Course } from "../CourseUI/CourseTypes";
+import { SectionWithCourseWithoutSectionsArray, Course } from "../CourseUI/CourseTypes";
 
 import Card, { CardProps, formatCourseCode, capitalizeName } from "./Card";
 
@@ -18,7 +18,7 @@ const firestore = getFirestore();
 
 type DayColumnProps = {
   day: string;
-  selectedSections: SectionWithCourse[];
+  selectedSections: SectionWithCourseWithoutSectionsArray[];
   timeSlots: string[];
 };
 
