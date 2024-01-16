@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Course,
+  Schedule,
   SectionWithCourse,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { ScheduleShareClasses } from "./ScheduleShareClasses";
@@ -13,11 +14,76 @@ import CoursesHandler from "../../components/CourseDisplay/CoursesHandler/Course
 import { useStateValue } from "../../context/globalState";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
-const ScheduleShare: React.FC = () => {
+import {
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { auth, firestore } from "../../services/firebase";
+
+const updateSelectedSectionsInFirebase = async (
+  sectionNumber: number,
+  scheduleIndex: number
+) => {
+  // Retrieve the userId within the function
+  const userId = getAuth().currentUser?.email || localStorage.getItem("userId");
+
+  if (!userId) {
+    console.error("User ID is not available.");
+    return;
+  }
+
+  const userDocRef = doc(firestore, "users", userId);
+
+  // Fetch the current schedules array
+  const docSnapshot = await getDoc(userDocRef);
+  if (!docSnapshot.exists()) {
+    console.error("Document does not exist.");
+    return;
+  }
+
+  const currentSchedules = docSnapshot.data()?.schedules || [];
+  const scheduleToUpdate = currentSchedules[scheduleIndex];
+
+  if (!scheduleToUpdate) {
+    console.error(`Schedule at index ${scheduleIndex} not found.`);
+    return;
+  }
+
+  // Create the updated schedule
+  const updatedSchedule: Schedule = {
+    ...scheduleToUpdate,
+    selectedSections: [
+      ...(scheduleToUpdate.selectedSections || []),
+      sectionNumber,
+    ],
+  };
+
+  // Use arrayRemove and arrayUnion to update the schedules array
+  await updateDoc(userDocRef, {
+    schedules: updatedSchedule,
+  });
+};
+
+interface ScheduleShareProps {
+  selectedSchedule: string;
+}
+
+
+const ScheduleShare: React.FC<ScheduleShareProps> = ({
+  selectedSchedule,
+}) => {
   const { container } = ScheduleShareClasses;
   const [isCourseHandlerVisible, setCourseHandlerVisible] = useState(true);
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<number[]>([]);
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<number[]>([]);
+
+  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
+    []
+  );
 
   const [selected, setSelected] = useLocalStorage("selected", "");
   const [schedules, setSchedules] = useLocalStorage("schedules", []);
@@ -69,17 +135,46 @@ const ScheduleShare: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("JSONCourseDisplay - Selected Sections:", selectedSections);
-  }, [selectedSections]);
+    console.log("JSONCourseDisplay - Selected Sections:", selectedSectionsNumbers);
+  }, [selectedSectionsNumbers]);
 
-  const handleSectionsSelection = (section: SectionWithCourse) => {
-    setSelectedSections((prev) => {
-      if (prev.includes(section.classNumber)) {
-        return prev.filter((classNum) => classNum !== section.classNumber);
+  const onSectionSelect = (section: SectionWithCourse) => {
+    // Update selectedSectionsNumbers
+    setSelectedSectionsNumbers((prevNumbers) => {
+      if (prevNumbers.includes(section.classNumber)) {
+        return prevNumbers.filter(num => num !== section.classNumber);
       } else {
-        return [...prev, section.classNumber];
+        return [...prevNumbers, section.classNumber];
       }
     });
+  
+    // Update selectedSections
+    setSelectedSections((prevSections) => {
+      if (prevSections.some(sec => sec.classNumber === section.classNumber)) {
+        return prevSections.filter(sec => sec.classNumber !== section.classNumber);
+      } else {
+        return [...prevSections, section];
+      }
+    });
+  
+    // Update Firebase if a user is authenticated
+    if (auth.currentUser) {
+      console.log("Section Number: " + section.classNumber);
+      const currentScheduleIndex = schedules.findIndex(
+        (schedule: Schedule) => schedule.name === selectedSchedule
+      );
+      if (currentScheduleIndex !== -1) {
+        updateSelectedSectionsInFirebase(
+          section.classNumber,
+          currentScheduleIndex
+        );
+      } else {
+        console.error("Current active schedule not found in schedules array.");
+      }
+    }
+  
+    // Update Firebase logic here
+    // ...
   };
 
   return (
@@ -119,7 +214,7 @@ const ScheduleShare: React.FC = () => {
       >
         {isCourseHandlerVisible && (
           <CoursesHandler
-          onSectionSelect={handleSectionsSelection}
+          onSectionSelect={onSectionSelect}
             selectedSchedule={selected}
             // schedules={schedules}
           />
@@ -133,7 +228,7 @@ const ScheduleShare: React.FC = () => {
           isCalendarVisible ? "" : "hidden"
         }`}
       >
-        {isCalendarVisible && <Calendar selectedSectionsNumbers={selectedSections} />}
+        {isCalendarVisible && <Calendar selectedSections={selectedSections} />}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>

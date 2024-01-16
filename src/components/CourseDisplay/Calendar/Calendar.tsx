@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import DayColumn from "./DayColumn";
 import { CalendarStyles } from "./CalendarUIClasses";
 import { Section, Course, SectionWithCourse } from "../CourseUI/CourseTypes";
-import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
-
-// Assuming jsonData is an array of courses directly
-const courses: Course[] = jsonData as Course[];
 
 const days = ["M", "T", "W", "R", "F"];
 
@@ -29,41 +25,14 @@ export const timeSlots = [
 ];
 
 type CalendarProps = {
-  selectedSectionsNumbers: number[];
+  selectedSections: SectionWithCourse[];
 };
 
-const Calendar: React.FC<CalendarProps> = ({ selectedSectionsNumbers }) => {
+const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
   // State to hold the full section details
-  const [selectedSections, setSelectedSections] = useState<
-    SectionWithCourse[]
-  >([]);
-
-  // Function to get the full details of a section based on its classNumber
-  const getSectionDetails = (classNumber: number): SectionWithCourse | null => {
-    for (const course of courses) {
-      for (const section of course.sections) {
-        if (section.classNumber === classNumber) {
-          // Combine the course and section data to fit SectionWithCourse type
-          return { ...section, ...course };
-        }
-      }
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    if (selectedSectionsNumbers.length > 0) {
-      // Map the section numbers to SectionWithCourse objects
-      const details = selectedSectionsNumbers
-        .map((sectionNumber) => getSectionDetails(sectionNumber))
-        .filter((section): section is SectionWithCourse => section !== null);
-        setSelectedSections(details);
-      // console.log("Full Section Details:", details);
-    } else {
-      // If there are no selected sections, clear the details
-      setSelectedSections([]);
-    }
-  }, [selectedSectionsNumbers]);
+  // const [selectedSections, setSelectedSections] = useState<
+  //   SectionWithCourse[]
+  // >([]);
 
   const renderTimeSlots = () => {
     return timeSlots.map((time) => (

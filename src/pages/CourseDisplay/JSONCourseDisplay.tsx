@@ -16,6 +16,7 @@ import { BsChatLeftText } from "react-icons/bs";
 // Import global state and custom hook
 import { useStateValue } from "../../context/globalState";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import jsonData from "../../courses/UF_Jun-30-2023_23_summer_clean.json";
 
 import {
   updateDoc,
@@ -26,6 +27,9 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { auth, firestore } from "../../services/firebase";
+
+// Assuming jsonData is an array of courses directly
+const courses: Course[] = jsonData as Course[];
 
 const updateSelectedSectionsInFirebase = async (
   sectionNumber: number,
@@ -93,12 +97,86 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     globalState.calendarVisible
   );
   // Initialize selectedSections based on the current selectedSchedule
-  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<number[]>(() => {
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
+    number[]
+  >(() => {
     const storedSchedule = localStorage.getItem(
       `selectedSections-${selectedSchedule}`
     );
     return storedSchedule ? JSON.parse(storedSchedule) : [];
   });
+
+  const [selectedSections, setSelectedSections] = useState<SectionWithCourse[]>(
+    []
+  );
+
+  const onSectionSelect = (section: SectionWithCourse) => {
+    // Update selectedSectionsNumbers
+    setSelectedSectionsNumbers((prevNumbers) => {
+      if (prevNumbers.includes(section.classNumber)) {
+        return prevNumbers.filter((num) => num !== section.classNumber);
+      } else {
+        return [...prevNumbers, section.classNumber];
+      }
+    });
+
+    // Update selectedSections
+    setSelectedSections((prevSections) => {
+      if (prevSections.some((sec) => sec.classNumber === section.classNumber)) {
+        return prevSections.filter(
+          (sec) => sec.classNumber !== section.classNumber
+        );
+      } else {
+        return [...prevSections, section];
+      }
+    });
+
+    // Update Firebase if a user is authenticated
+    if (auth.currentUser) {
+      console.log("Section Number: " + section.classNumber);
+      const currentScheduleIndex = schedules.findIndex(
+        (schedule: Schedule) => schedule.name === selectedSchedule
+      );
+      if (currentScheduleIndex !== -1) {
+        updateSelectedSectionsInFirebase(
+          section.classNumber,
+          currentScheduleIndex
+        );
+      } else {
+        console.error("Current active schedule not found in schedules array.");
+      }
+    }
+
+    // Update Firebase logic here
+    // ...
+  };
+
+  // Function to get the full details of a section based on its classNumber
+  const getSectionDetails = (classNumber: number): SectionWithCourse | null => {
+    for (const course of courses) {
+      for (const section of course.sections) {
+        if (section.classNumber === classNumber) {
+          // Combine the course and section data to fit SectionWithCourse type
+          return { ...section, ...course };
+        }
+      }
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    if (selectedSections.length > 0) {
+      // Map the section numbers to SectionWithCourse objects
+      const details = selectedSectionsNumbers
+        .map((sectionNumber) => getSectionDetails(sectionNumber))
+        .filter((section): section is SectionWithCourse => section !== null);
+      setSelectedSections(details);
+      // console.log("Full Section Details:", details);
+    } else {
+      // If there are no selected sections, clear the details
+      setSelectedSections([]);
+    }
+  }, [selectedSectionsNumbers]);
 
   const [LLMChatVisible, setLLMChatVisible] = useLocalStorage(
     "isLLMChatVisible",
@@ -162,45 +240,11 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log("JSONCourseDisplay - Selected Sections:", selectedSectionsNumbers);
+    console.log(
+      "JSONCourseDisplay - Selected Sections:",
+      selectedSectionsNumbers
+    );
   }, [selectedSectionsNumbers]);
-
-  const onSectionSelect = (section: SectionWithCourse) => {
-    setSelectedSectionsNumbers((prev) => {
-      if (prev.includes(section.classNumber)) {
-        // console.log("Removing section:", section.classNumber);
-        // console.log("Prev:", prev);
-        // console.log("New:", prev.filter((classNum) => classNum !== section.classNumber));
-        return prev.filter((classNum) => classNum !== section.classNumber);
-      } else {
-        // console.log("Adding section:", section.classNumber);
-        // console.log("Prev:", prev);
-        // console.log("New:", [...prev, section.classNumber]);
-        return [...prev, section.classNumber];
-      }
-    });
-
-    // Update the selected sections in Firebase
-    if (auth.currentUser) {
-      console.log("Section Number: " + section.classNumber);
-      console.log(
-        "Index: " +
-          schedules.findIndex((s: Schedule) => s.name === selectedSchedule)
-      );
-      // Determine the index of the currently active schedule
-      const currentScheduleIndex = schedules.findIndex(
-        (schedule: Schedule) => schedule.name === selectedSchedule
-      );
-      if (currentScheduleIndex !== -1) {
-        updateSelectedSectionsInFirebase(
-          section.classNumber,
-          currentScheduleIndex
-        );
-      } else {
-        console.error("Current active schedule not found in schedules array.");
-      }
-    }
-  };
 
   // console.log("JSON Selected:", selectedSchedule);
 
@@ -247,9 +291,7 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         <div
           className={`flex-grow overflow-y-scroll bg-white dark:bg-gray-800 ${JSONCourseDisplayClasses.calendarContainer}`}
         >
-          {calendarVisible && (
-            <Calendar selectedSectionsNumbers={selectedSectionsNumbers} />
-          )}
+          {calendarVisible && <Calendar selectedSections={selectedSections} />}
         </div>
         {/* Modern Icon Button to toggle LLMChat */}
         {isWideScreen && (

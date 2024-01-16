@@ -58,7 +58,10 @@ const App = () => {
           <Route path="auth" element={<Auth />} />
           <Route path="settings" element={<Settings />} />
           {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
-          <Route path="firebase-courses" element={<ScheduleShare />} />
+          <Route
+            path="firebase-courses"
+            element={<ScheduleShare selectedSchedule={selected} />}
+          />
           {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
           <Route
             path="/"
