@@ -1,0 +1,156 @@
+// {
+//   "version": 3,
+//   "terms": {
+//     "202402": {
+//       "versions": {
+//         "sv_VBYCPRQss20Zt3IZMMjI": {
+//           "name": "Primary",
+//           "createdAt": "2024-01-15T21:01:53.402Z",
+//           "schedule": {
+//             "desiredCourses": ["CS 1100"],
+//             "pinnedCrns": ["25907"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "CS 1100": "#000000" },
+//             "sortingOptionIndex": 0
+//           }
+//         },
+//         "sv_ihPIWnjkl9XLx6lHv5vy": {
+//           "name": "Secondary",
+//           "schedule": {
+//             "desiredCourses": ["MATH 1111"],
+//             "pinnedCrns": [],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "MATH 1111": "#333333" },
+//             "sortingOptionIndex": 0
+//           },
+//           "createdAt": "2024-01-15T21:04:29.026Z"
+//         }
+//       }
+//     }
+//   }
+// }
+
+// {
+//   "version": 3,
+//   "terms": {
+//     "202402": {
+//       "versions": {
+//         "sv_VBYCPRQss20Zt3IZMMjI": {
+//           "name": "Primary",
+//           "createdAt": "2024-01-15T21:01:53.402Z",
+//           "schedule": {
+//             "desiredCourses": ["CS 1100"],
+//             "pinnedCrns": ["25907"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "CS 1100": "#000000" },
+//             "sortingOptionIndex": 0
+//           }
+//         },
+//         "sv_ihPIWnjkl9XLx6lHv5vy": {
+//           "name": "Secondary",
+//           "schedule": {
+//             "desiredCourses": ["MATH 1111"],
+//             "pinnedCrns": ["29496"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "MATH 1111": "#333333" },
+//             "sortingOptionIndex": 0
+//           },
+//           "createdAt": "2024-01-15T21:04:29.026Z"
+//         }
+//       }
+//     }
+//   }
+// }
+
+// {
+//   "currentTerm": "202402",
+//   "versionStates": { "202402": { "currentVersion": "sv_ihPIWnjkl9XLx6lHv5vy" } }
+// }
+
+// {
+//   "version": 3,
+//   "terms": {
+//     "202402": {
+//       "versions": {
+//         "sv_VBYCPRQss20Zt3IZMMjI": {
+//           "name": "Primary",
+//           "createdAt": "2024-01-15T21:01:53.402Z",
+//           "schedule": {
+//             "desiredCourses": ["CS 1100"],
+//             "pinnedCrns": ["25907"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "CS 1100": "#000000" },
+//             "sortingOptionIndex": 0
+//           }
+//         },
+//         "sv_ihPIWnjkl9XLx6lHv5vy": {
+//           "name": "Sigma",
+//           "schedule": {
+//             "desiredCourses": ["MATH 1111"],
+//             "pinnedCrns": ["29496"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "MATH 1111": "#333333" },
+//             "sortingOptionIndex": 0
+//           },
+//           "createdAt": "2024-01-15T21:04:29.026Z"
+//         }
+//       }
+//     }
+//   }
+// }
+
+// {
+//   "version": 3,
+//   "terms": {
+//     "202308": {
+//       "versions": {
+//         "sv_FiLpFE4wvxmplB3uoylQ": {
+//           "name": "Primary",
+//           "createdAt": "2024-01-15T21:11:31.150Z",
+//           "schedule": {
+//             "desiredCourses": ["CS 1331"],
+//             "pinnedCrns": ["87304"],
+//             "excludedCrns": ["92274", "90967"],
+//             "events": [],
+//             "colorMap": { "CS 1331": "#FCC400" },
+//             "sortingOptionIndex": 0
+//           }
+//         }
+//       }
+//     },
+//     "202402": {
+//       "versions": {
+//         "sv_VBYCPRQss20Zt3IZMMjI": {
+//           "name": "Primary",
+//           "createdAt": "2024-01-15T21:01:53.402Z",
+//           "schedule": {
+//             "desiredCourses": ["CS 1100"],
+//             "pinnedCrns": ["25907"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "CS 1100": "#000000" },
+//             "sortingOptionIndex": 0
+//           }
+//         },
+//         "sv_ihPIWnjkl9XLx6lHv5vy": {
+//           "name": "Sigma",
+//           "schedule": {
+//             "desiredCourses": ["MATH 1111"],
+//             "pinnedCrns": ["29496"],
+//             "excludedCrns": [],
+//             "events": [],
+//             "colorMap": { "MATH 1111": "#333333" },
+//             "sortingOptionIndex": 0
+//           },
+//           "createdAt": "2024-01-15T21:04:29.026Z"
+//         }
+//       }
+//     }
+//   }
+// }

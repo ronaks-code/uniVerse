@@ -119,7 +119,7 @@ const ScheduleShare: React.FC = () => {
       >
         {isCourseHandlerVisible && (
           <CoursesHandler
-            onSelectSection={handleSectionsSelection}
+          onSectionSelect={handleSectionsSelection}
             selectedSchedule={selected}
             // schedules={schedules}
           />
@@ -133,7 +133,7 @@ const ScheduleShare: React.FC = () => {
           isCalendarVisible ? "" : "hidden"
         }`}
       >
-        {isCalendarVisible && <Calendar selectedSections={selectedSections} />}
+        {isCalendarVisible && <Calendar selectedSectionsNumbers={selectedSections} />}
         {/* {isCalendarVisible && <CalendarNew />} */}
       </div>
     </div>

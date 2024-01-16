@@ -105,23 +105,11 @@ const NewScheduleDropdown = ({
             <div
               key={schedule}
               className={`${topNavClasses.rowClasses} text-black dark:text-white`}
-              // TODO: Make sure to save everything into Local Storage here before doing the functionality before (makes sure data is properly saved)
               onClick={() => {
                 if (isRenaming !== schedule) {
-                  console.log("Switching Schedules.\nOld Schedule: " + selectedSchedule + "\nNew Schedule: " + schedule);
-                  console.log("Data in primary: " + localStorage.getItem(`selectedCourses-${selectedSchedule}`));
-                  console.log("Data in secondary: " + localStorage.getItem(`selectedCourses-${schedule}`));
-                  // localStorage.setItem(`selectedCourses-${selectedSchedule}`, JSON.stringify(selectedCourses));
-                  // localStorage.setItem(`selectedSections-${selectedSchedule}`, JSON.stringify(selectedSections));
-                  // localStorage.setItem(`likedCourses-${selectedSchedule}`, JSON.stringify(likedCourses));
-                  // console.log("Saved data for old schedule");
-                  // console.log(localStorage.getItem(`selectedCourses-${selectedSchedule}`));
-                  // console.log(localStorage.getItem(`selectedSections-${selectedSchedule}`));
-                  // console.log(localStorage.getItem(`likedCourses-${selectedSchedule}`));
-                  // console.log("***********************************************************************************");
-                  // console.log(localStorage.getItem(`selectedCourses-${schedule}`));
-                  // console.log(localStorage.getItem(`selectedSections-${schedule}`));
-                  // console.log(localStorage.getItem(`likedCourses-${schedule}`));
+                  // console.log("Switching Schedules.\nOld Schedule: " + selectedSchedule + "\nNew Schedule: " + schedule);
+                  // console.log("Data in primary: " + localStorage.getItem(`selectedCourses-${selectedSchedule}`));
+                  // console.log("Data in secondary: " + localStorage.getItem(`selectedCourses-${schedule}`));
                   onSelectSchedule(schedule);
                   setIsOpen(false);
                 }

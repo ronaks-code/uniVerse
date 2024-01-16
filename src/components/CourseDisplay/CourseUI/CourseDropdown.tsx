@@ -10,12 +10,12 @@ import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
   course: Course;
-  onSelectSection: (section: SectionWithCourse) => void;
+  onSectionSelect: (section: SectionWithCourse) => void;
 }
 
 const CourseDropdown: React.FC<CourseDropdownProps> = ({
   course,
-  onSelectSection,
+  onSectionSelect,
 }) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
 
@@ -66,7 +66,9 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
       ...course,
     };
 
-    onSelectSection(SectionWithCourse);
+    console.log("In CourseDropdown, selectedSections is", SectionWithCourse);
+
+    onSectionSelect(SectionWithCourse);
   };
   // const handleSectionSelect = (section: Section) => {
   //   let currentSelectedSections = selectedSections || [];

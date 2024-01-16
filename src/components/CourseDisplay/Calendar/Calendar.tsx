@@ -29,12 +29,12 @@ export const timeSlots = [
 ];
 
 type CalendarProps = {
-  selectedSections: number[];
+  selectedSectionsNumbers: number[];
 };
 
-const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
+const Calendar: React.FC<CalendarProps> = ({ selectedSectionsNumbers }) => {
   // State to hold the full section details
-  const [selectedSectionsPostLookup, setSelectedSectionsPostLookup] = useState<
+  const [selectedSections, setSelectedSections] = useState<
     SectionWithCourse[]
   >([]);
 
@@ -52,18 +52,18 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
   };
 
   useEffect(() => {
-    if (selectedSections.length > 0) {
+    if (selectedSectionsNumbers.length > 0) {
       // Map the section numbers to SectionWithCourse objects
-      const details = selectedSections
+      const details = selectedSectionsNumbers
         .map((sectionNumber) => getSectionDetails(sectionNumber))
         .filter((section): section is SectionWithCourse => section !== null);
-      setSelectedSectionsPostLookup(details);
-      console.log("Full Section Details:", details);
+        setSelectedSections(details);
+      // console.log("Full Section Details:", details);
     } else {
       // If there are no selected sections, clear the details
-      setSelectedSectionsPostLookup([]);
+      setSelectedSections([]);
     }
-  }, [selectedSections]);
+  }, [selectedSectionsNumbers]);
 
   const renderTimeSlots = () => {
     return timeSlots.map((time) => (
@@ -78,7 +78,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedSections }) => {
       <DayColumn
         key={day}
         day={day}
-        selectedSections={selectedSectionsPostLookup} // Pass the detailed sections here
+        selectedSections={selectedSections} // Pass the detailed sections here
         timeSlots={timeSlots}
       />
     ));

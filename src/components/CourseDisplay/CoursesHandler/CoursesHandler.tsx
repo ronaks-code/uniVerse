@@ -6,13 +6,13 @@ import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 
 interface CoursesHandlerProps {
-  onSelectSection: (section: SectionWithCourse) => void;
   selectedSchedule: string;
+  onSectionSelect: (section: SectionWithCourse) => void;
 }
 
 const CoursesHandler: React.FC<CoursesHandlerProps> = ({
-  onSelectSection,
   selectedSchedule,
+  onSectionSelect,
 }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   // Initialize from local storage directly
@@ -29,66 +29,20 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
     SectionWithCourse[]
   >(`selectedSections-${selectedSchedule}`, []);
 
-  // Fetch or initialize states from local storage whenever selectedSchedule changes
-  useEffect(() => {
-    // Function to fetch from local storage or initialize if not present
-    const fetchFromLocalStorage = (key: string) => {
-      const dataFromLocalStorage = localStorage.getItem(key);
-      return dataFromLocalStorage ? JSON.parse(dataFromLocalStorage) : [];
-    };
-
-    console.log("_________________________________________________");
-    console.log("*Selected Schedule has changed to:", selectedSchedule);
-
-    // setSelectedCourses(
-    //   fetchFromLocalStorage(`selectedCourses-${selectedSchedule}`)
-    // );
-    // setLikedCourses(fetchFromLocalStorage(`likedCourses-${selectedSchedule}`));
-    // setSelectedSections(
-    //   fetchFromLocalStorage(`selectedSections-${selectedSchedule}`)
-    // );
-
-    // console.log("Selected Courses:", selectedCourses);
-    // console.log("Liked Courses:", likedCourses);
-    // console.log("Selected Sections:", selectedSections);
-    // console.log("Primary Data: " + localStorage.getItem("selectedCourses-Primary") + "\n" + localStorage.getItem("likedCourses-Primary") + "\n" + localStorage.getItem("selectedSections-Primary") + "\n***********************************************************************************");
-    // console.log("Secondary Data: " + localStorage.getItem("selectedCourses-Secondary") + "\n" + localStorage.getItem("likedCourses-Secondary") + "\n" + localStorage.getItem("selectedSections-Secondary") + "\n***********************************************************************************");
-    // console.log("Tertiary Data: " + localStorage.getItem("selectedCourses-Tertiary") + "\n" + localStorage.getItem("likedCourses-Tertiary") + "\n" + localStorage.getItem("selectedSections-Tertiary") + "\n***********************************************************************************");
-  }, [selectedSchedule]);
-
-  // useEffect(() => {
-  //   console.log(
-  //     "Primary Data: " +
-  //       localStorage.getItem("selectedCourses-Primary") +
-  //       "\n" +
-  //       localStorage.getItem("likedCourses-Primary") +
-  //       "\n" +
-  //       localStorage.getItem("selectedSections-Primary") +
-  //       "\n***********************************************************************************"
-  //   );
-  //   console.log(
-  //     "Secondary Data: " +
-  //       localStorage.getItem("selectedCourses-Secondary") +
-  //       "\n" +
-  //       localStorage.getItem("likedCourses-Secondary") +
-  //       "\n" +
-  //       localStorage.getItem("selectedSections-Secondary") +
-  //       "\n***********************************************************************************"
-  //   );
-  // });
-
   const handleSectionsSelection = (section: SectionWithCourse) => {
     setSelectedSections((prev) => {
       if (prev.some((s) => s.classNumber === section.classNumber)) {
+        // console.log("1")
         return prev.filter((s) => s.classNumber !== section.classNumber);
       } else {
+        // console.log("2")
         return [...prev, section];
       }
     });
 
-    console.log("FKLDSJLKDFJSDFKJLFDK:SJFLKJSKL:DFSelected Sections:", selectedSections);
-
-    onSelectSection(section);
+    // console.log("3")
+    onSectionSelect(section);
+    // console.log("4")
   };
 
   return (
@@ -102,12 +56,14 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
         </div>
         <div className="flex-grow overflow-y-auto pb-4">
           <LikedSelectedCourses
-            selectedCourses={selectedCourses}
-            likedCourses={likedCourses}
-            setSelectedCourses={setSelectedCourses}
-            setLikedCourses={setLikedCourses}
-            onSelectSection={handleSectionsSelection}
             selectedSchedule={selectedSchedule}
+            likedCourses={likedCourses}
+            setLikedCourses={setLikedCourses}
+            selectedCourses={selectedCourses}
+            setSelectedCourses={setSelectedCourses}
+            selectedSections={selectedSections}
+            setSelectedSections={setSelectedSections}
+            onSectionSelect={handleSectionsSelection}
           />
           <div className="">
             <ShowFilteredCourses
@@ -116,7 +72,7 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
               setSelectedCourses={setSelectedCourses}
               likedCourses={likedCourses}
               setLikedCourses={setLikedCourses}
-              onSelectSection={handleSectionsSelection}
+              onSectionSelect={handleSectionsSelection}
             />
           </div>
         </div>

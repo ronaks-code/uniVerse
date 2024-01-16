@@ -23,7 +23,7 @@ interface ShowFilteredCoursesProps {
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-  onSelectSection: (section: SectionWithCourse) => void;
+  onSectionSelect: (section: SectionWithCourse) => void;
 }
 
 type CourseState = {
@@ -36,7 +36,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   setSelectedCourses,
   likedCourses,
   setLikedCourses,
-  onSelectSection,
+  onSectionSelect,
 }) => {
   const [expandedCourses, setExpandedCourses] = useState<{
     [key: string]: boolean;
@@ -338,7 +338,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                         <CourseDropdown
                           key={index}
                           course={course}
-                          onSelectSection={onSelectSection}
+                          onSectionSelect={onSectionSelect}
                         />
                       ))}
                     </div>

@@ -80,27 +80,6 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
 }) => {
   const [globalState, dispatch] = useStateValue();
 
-  // useEffect(() => {
-  //   console.log("*Selected Schedule has changed to:", selectedSchedule);
-
-  //   // Any other side-effects you want to perform when selectedSchedule changes
-  // }, [selectedSchedule]);
-
-  // console.log("ALKJFDKLJFSJLFDSJ" + localStorage.getItem("selectedSchedule"));
-
-  // selectedSchedule = useState(() => {
-  //   const localSelectedSchedule =
-  //     localStorage.getItem("selectedSchedule") || "";
-  //   // const jsonSelectedSchedule = JSON.parse(localSelectedSchedule || "");
-  //   return localSelectedSchedule;
-  // });
-
-  // console.log(localStorage.getItem("selectedSchedule"));
-
-  // const selectedSchedule = useEffect(() => {
-  //   JSON.parse(localStorage.getItem("selectedSchedule") || "");
-  // }, []);
-
   const [schedules, setSchedules] = useState<Schedule[]>([]);
 
   const { container } = JSONCourseDisplayClasses;
@@ -114,17 +93,13 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     globalState.calendarVisible
   );
   // Initialize selectedSections based on the current selectedSchedule
-  const [selectedSections, setSelectedSections] = useState<number[]>(() => {
-    const storedSchedule = localStorage.getItem(`selectedSections-${selectedSchedule}`);
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<number[]>(() => {
+    const storedSchedule = localStorage.getItem(
+      `selectedSections-${selectedSchedule}`
+    );
     return storedSchedule ? JSON.parse(storedSchedule) : [];
   });
 
-  // Update selectedSections when selectedSchedule changes
-  // useEffect(() => {
-  //   const schedule = schedules.find((s) => s.name === selectedSchedule);
-  //   setSelectedSections(schedule ? schedule.selectedSections : []);
-  // }, [selectedSchedule, schedules]);
-    
   const [LLMChatVisible, setLLMChatVisible] = useLocalStorage(
     "isLLMChatVisible",
     globalState.LLMChatVisible
@@ -187,18 +162,25 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log("JSONCourseDisplay - Selected Sections:", selectedSections);
-  }, [selectedSections]);
+    console.log("JSONCourseDisplay - Selected Sections:", selectedSectionsNumbers);
+  }, [selectedSectionsNumbers]);
 
-  const handleSectionsSelection = (section: SectionWithCourse) => {
-    setSelectedSections((prev) => {
+  const onSectionSelect = (section: SectionWithCourse) => {
+    setSelectedSectionsNumbers((prev) => {
       if (prev.includes(section.classNumber)) {
+        // console.log("Removing section:", section.classNumber);
+        // console.log("Prev:", prev);
+        // console.log("New:", prev.filter((classNum) => classNum !== section.classNumber));
         return prev.filter((classNum) => classNum !== section.classNumber);
       } else {
+        // console.log("Adding section:", section.classNumber);
+        // console.log("Prev:", prev);
+        // console.log("New:", [...prev, section.classNumber]);
         return [...prev, section.classNumber];
       }
     });
 
+    // Update the selected sections in Firebase
     if (auth.currentUser) {
       console.log("Section Number: " + section.classNumber);
       console.log(
@@ -255,8 +237,8 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
       <div className={`${container} ${courseHandlerVisible ? "" : "hidden"}`}>
         {courseHandlerVisible && (
           <CoursesHandler
-            onSelectSection={handleSectionsSelection}
             selectedSchedule={selectedSchedule}
+            onSectionSelect={onSectionSelect}
             // schedules={schedules}
           />
         )}
@@ -265,7 +247,9 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         <div
           className={`flex-grow overflow-y-scroll bg-white dark:bg-gray-800 ${JSONCourseDisplayClasses.calendarContainer}`}
         >
-          {calendarVisible && <Calendar selectedSections={selectedSections} />}
+          {calendarVisible && (
+            <Calendar selectedSectionsNumbers={selectedSectionsNumbers} />
+          )}
         </div>
         {/* Modern Icon Button to toggle LLMChat */}
         {isWideScreen && (
