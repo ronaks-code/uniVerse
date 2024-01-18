@@ -124,16 +124,16 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     // Update selectedSections
     setSelectedSections((prevSections) => {
       if (prevSections.some((sec) => sec.classNumber === section.classNumber)) {
-        console.log(
-          "IF OUTPUT: ",
-          prevSections.filter((s) => s.classNumber !== section.classNumber)
-        );
+        // console.log(
+        //   "IF OUTPUT: ",
+        //   prevSections.filter((s) => s.classNumber !== section.classNumber)
+        // );
 
         return prevSections.filter(
           (sec) => sec.classNumber !== section.classNumber
         );
       } else {
-        console.log("ELSE OUTPUT: ", [...prevSections, section]);
+        // console.log("ELSE OUTPUT: ", [...prevSections, section]);
         // Create a new section object without the 'sections' array
         const { sections, ...sectionDataWithoutSections } = section;
 
@@ -168,8 +168,8 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
   };
 
   useEffect(() => {
-    console.log("Selected Sections Numbers:", selectedSectionsNumbers);
-    console.log("Selected Sections:", selectedSections);
+    console.log(`Selected Sections Numbers - ${selectedSchedule}:`, selectedSectionsNumbers);
+    console.log(`Selected Sections: - ${selectedSchedule}`, selectedSections);
   }, [selectedSectionsNumbers]);
 
   // Function to get the full details of a section based on its classNumber
