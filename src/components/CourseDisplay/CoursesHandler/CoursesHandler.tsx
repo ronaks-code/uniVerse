@@ -15,6 +15,8 @@ interface CoursesHandlerProps {
   setSelectedSections: React.Dispatch<
     React.SetStateAction<SectionWithCourseWithoutSectionsArray[]>
   >;
+  selectedSectionsNumbers: number[];
+  setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
   onSectionSelect: (section: SectionWithCourse) => void;
 }
 
@@ -22,6 +24,8 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
   selectedSchedule,
   selectedSections,
   setSelectedSections,
+  selectedSectionsNumbers,
+  setSelectedSectionsNumbers,
   onSectionSelect,
 }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -53,6 +57,8 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
             setSelectedCourses={setSelectedCourses}
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
+            selectedSectionsNumbers={selectedSectionsNumbers}
+            setSelectedSectionsNumbers={setSelectedSectionsNumbers}
             onSectionSelect={onSectionSelect}
           />
           <div className="">

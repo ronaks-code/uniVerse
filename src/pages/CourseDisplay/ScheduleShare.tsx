@@ -221,6 +221,8 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({ selectedSchedule }) => {
             onSectionSelect={onSectionSelect}
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
+            selectedSectionsNumbers={selectedSectionsNumbers}
+            setSelectedSectionsNumbers={setSelectedSectionsNumbers}
             selectedSchedule={selected}
             // schedules={schedules}
           />

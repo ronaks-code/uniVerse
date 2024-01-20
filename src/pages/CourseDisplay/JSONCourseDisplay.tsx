@@ -98,14 +98,23 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     globalState.calendarVisible
   );
   // Initialize selectedSections based on the current selectedSchedule
-  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
+  // const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
+  //   number[]
+  // >(() => {
+  //   const storedSchedule = localStorage.getItem(
+  //     `selectedSections-${selectedSchedule}`
+  //   );
+  //   return storedSchedule ? JSON.parse(storedSchedule) : [];
+  // });
+
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useLocalStorage<
     number[]
-  >(() => {
-    const storedSchedule = localStorage.getItem(
-      `selectedSections-${selectedSchedule}`
-    );
-    return storedSchedule ? JSON.parse(storedSchedule) : [];
-  });
+  >(`selectedSectionsNumbers-${selectedSchedule}`, []);
+
+  const [likedCourses, setLikedCourses] = useLocalStorage<Course[]>(
+    `likedCourses-${selectedSchedule}`,
+    []
+  );
 
   const [selectedSections, setSelectedSections] = useLocalStorage<
     SectionWithCourseWithoutSectionsArray[]
@@ -168,7 +177,10 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
   };
 
   useEffect(() => {
-    console.log(`Selected Sections Numbers - ${selectedSchedule}:`, selectedSectionsNumbers);
+    console.log(
+      `Selected Sections Numbers - ${selectedSchedule}:`,
+      selectedSectionsNumbers
+    );
     console.log(`Selected Sections: - ${selectedSchedule}`, selectedSections);
   }, [selectedSectionsNumbers]);
 
@@ -306,6 +318,8 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
             selectedSchedule={selectedSchedule}
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
+            selectedSectionsNumbers={selectedSectionsNumbers}
+            setSelectedSectionsNumbers={setSelectedSectionsNumbers}
             onSectionSelect={onSectionSelect}
             // schedules={schedules}
           />

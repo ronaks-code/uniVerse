@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Course, SectionWithCourse, SectionWithCourseWithoutSectionsArray } from "../CourseUI/CourseTypes";
+import {
+  Course,
+  SectionWithCourse,
+  SectionWithCourseWithoutSectionsArray,
+} from "../CourseUI/CourseTypes";
 import ColorHash from "color-hash";
 import chroma from "chroma-js";
 import CourseDropdown from "../CourseUI/CourseDropdown";
@@ -48,6 +52,8 @@ interface LikedSelectedCoursesProps {
   setSelectedSections: React.Dispatch<
     React.SetStateAction<SectionWithCourseWithoutSectionsArray[]>
   >;
+  selectedSectionsNumbers: number[];
+  setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
   onSectionSelect: (section: SectionWithCourse) => void;
 }
 
@@ -118,6 +124,8 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   setSelectedCourses,
   selectedSections,
   setSelectedSections,
+  selectedSectionsNumbers,
+  setSelectedSectionsNumbers,
   onSectionSelect,
 }) => {
   const [user] = useStateValue();
@@ -153,10 +161,50 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
       )
     );
 
+    setSelectedSectionsNumbers(
+      JSON.parse(
+        localStorage.getItem(`selectedSectionsNumbers-${selectedSchedule}`) ||
+          "[]"
+      )
+    );
+
     // console.log("_________________________________________________");
     // console.log("*Selected Schedule has changed to:", selectedSchedule);
     // console.log(`Data in ${selectedSchedule}: ` + localStorage.getItem(`selectedSections-${selectedSchedule}`));
   }, [selectedSchedule]);
+
+  // useEffect(() => {
+  //   console.log(
+  //     "This is selected sections Primary: ",
+  //     JSON.parse(localStorage.getItem(`selectedSections-Primary`) || "[]")
+  //   );
+  //   console.log(
+  //     "This is selected sections Secondary: ",
+  //     JSON.parse(localStorage.getItem(`selectedSections-Secondary`) || "[]")
+  //   );
+  // });
+
+  // useEffect(() => {
+  //   console.log(
+  //     "This is selected courses Primary: ",
+  //     JSON.parse(localStorage.getItem(`selectedCourses-Primary`) || "[]")
+  //   );
+  //   console.log(
+  //     "This is selected courses Secondary: ",
+  //     JSON.parse(localStorage.getItem(`selectedCourses-Secondary`) || "[]")
+  //   );
+  // });
+
+  // useEffect(() => {
+  //   console.log(
+  //     "This is liked courses Primary: ",
+  //     JSON.parse(localStorage.getItem(`likedCourses-Primary`) || "[]")
+  //   );
+  //   console.log(
+  //     "This is liked courses Secondary: ",
+  //     JSON.parse(localStorage.getItem(`likedCourses-Secondary`) || "[]")
+  //   );
+  // });
 
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
