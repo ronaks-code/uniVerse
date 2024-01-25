@@ -11,26 +11,33 @@ export type MeetingTime = {
 };
 
 export type Section = {
-  number: string;
+  number: number;
+  classNumber: number;
   display: string;
   credits: number;
   deptName: string;
   instructors: Instructor[];
   meetTimes: MeetingTime[];
-  // openSeats: number;
   finalExam: string;
 };
 
 export type Course = {
   code: string;
-  // id: string;
   name: string;
+  courseId: string;
   termInd: string;
   description: string;
   prerequisites: string;
   sections: Section[];
 };
 
-export type SectionWithCourseCode = Section & {
-  code: string;
-};
+export type SectionWithCourse = Section & Course;
+
+export type SectionWithCourseWithoutSectionsArray = Omit<Course, "sections"> & Section;
+
+export interface Schedule {
+  name: string;
+  likedCourses: number[];
+  selectedCourses: number[];
+  selectedSections: number[];
+}

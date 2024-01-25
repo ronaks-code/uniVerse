@@ -1,6 +1,6 @@
 import React from "react";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-import { db } from "./firebase";
+import { firestore } from "./firebase";
 import jsonDataImport from "../courses/UF_Jun-30-2023_23_summer_clean.json";
 import { courseServiceClasses } from "./courseServiceClasses";
 
@@ -39,7 +39,7 @@ const importDataToFirestore = async () => {
       const docPath = `${basePath}/${courseCode}-${modifiedCourseName}-${courseTerm}`;
 
       // Check if the document already exists
-      const docSnapshot = await getDoc(doc(db, docPath));
+      const docSnapshot = await getDoc(doc(firestore, docPath));
       if (docSnapshot.exists()) {
         console.log(`Document already exists at: ${docPath}`);
 
@@ -47,7 +47,7 @@ const importDataToFirestore = async () => {
         const sectionArrayField = "sections";
 
         for (const section of sections) {
-          await updateDoc(doc(db, docPath), {
+          await updateDoc(doc(firestore, docPath), {
             [sectionArrayField]: arrayUnion(section),
           });
         }
@@ -76,7 +76,7 @@ const importDataToFirestore = async () => {
       };
 
       // Set the modified course data at the specified document path
-      await setDoc(doc(db, docPath), modifiedCourse);
+      await setDoc(doc(firestore, docPath), modifiedCourse);
       console.log(`Document written at: ${docPath}`);
     } catch (e) {
       console.error("Error adding document: ", e);

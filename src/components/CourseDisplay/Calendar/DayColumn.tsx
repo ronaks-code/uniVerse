@@ -1,40 +1,40 @@
 import React from "react";
 import { CalendarStyles } from "./CalendarUIClasses";
-import { SectionWithCourseCode } from "../CourseUI/CourseTypes";
+import { SectionWithCourseWithoutSectionsArray, Course } from "../CourseUI/CourseTypes";
 
-type CardProps = {
-  code: string;
-  meetTimeBegin: string;
-  meetTimeEnd: string;
-  style: React.CSSProperties;
-};
+import Card, { CardProps, formatCourseCode, capitalizeName } from "./Card";
 
-const Card: React.FC<CardProps> = ({
-  code,
-  meetTimeBegin,
-  meetTimeEnd,
-  style,
-}) => (
-  <div
-    style={{
-      backgroundColor: "#e0e0e0", // Replace with your preferred color
-      width: "100%",
-      border: "1px solid #000",
-      borderRadius: "10px",
-      padding: "10px",
-      color: "#000",
-      ...style,
-    }}
-  >
-    <strong>{code}</strong> {meetTimeBegin} - {meetTimeEnd}
-  </div>
-);
+// Import Firebase services
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+
+// Import the JSON data
+import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
+
+// import global state and custom hook
+import { useStateValue } from "../../../context/globalState";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+
+const firestore = getFirestore();
 
 type DayColumnProps = {
   day: string;
-  selectedSections: SectionWithCourseCode[];
+  selectedSections: SectionWithCourseWithoutSectionsArray[];
   timeSlots: string[];
 };
+
+// TODO: Fix Function to get all courses from Firebase
+// const getAllCourses = async (): Promise<Course[]> => {
+//   try {
+//     const coursesCollection = collection(firestore, "courses");
+//     const courseSnapshot = await getDocs(coursesCollection);
+//     const courses = courseSnapshot.docs.map((doc) => doc.data()) as Course[];
+//     return courses;
+//   } catch (error) {
+//     console.error("Error fetching courses from Firebase:", error);
+//     // If there's an error (maybe due to network issues), return the local JSON data
+//     return jsonData as Course[];
+//   }
+// };
 
 class DayColumn extends React.Component<DayColumnProps> {
   calendarRef = React.createRef<HTMLDivElement>();
@@ -125,7 +125,7 @@ class DayColumn extends React.Component<DayColumnProps> {
     // This is the window height + 16px * 80 (80rem)
     const calendarHeight = 1280;
     const totalSlots = this.props.timeSlots.length;
-    console.log("totalSlots:", totalSlots);
+    // console.log("totalSlots:", totalSlots);
 
     const sectionCards = daySections
       .flatMap((section, index) =>
@@ -137,16 +137,16 @@ class DayColumn extends React.Component<DayColumnProps> {
           const startFraction = this.timeStringToDayFraction(
             meetTime.meetTimeBegin
           );
-          console.log("startFraction:", startFraction);
+          // console.log("startFraction:", startFraction);
           const endFraction = this.timeStringToDayFraction(
             meetTime.meetTimeEnd
           );
-          console.log("endFraction:", endFraction);
+          // console.log("endFraction:", endFraction);
 
           const startCalendar = startFraction * calendarHeight;
-          console.log("startSlot:", startCalendar);
+          // console.log("startSlot:", startCalendar);
           const endCalendar = endFraction * calendarHeight;
-          console.log("endSlot:", endCalendar);
+          // console.log("endSlot:", endCalendar);
 
           const heightOfCard = endCalendar - startCalendar;
 
@@ -184,13 +184,21 @@ class DayColumn extends React.Component<DayColumnProps> {
                     position: "absolute",
                     width: `${100 / group.length}%`,
                     left: `${(100 / group.length) * cardIndex}%`,
-                    top: card.startCalendar + "px", // Set the top property instead of marginTop
+                    top: card.startCalendar + "px",
                   }}
                 >
                   <Card
-                    code={card.section.code}
+                    name={card.section.name} // Using the name from Course type
+                    code={formatCourseCode(card.section.code)}
+                    courseId={card.section.courseId} // Using the courseId from Course type
                     meetTimeBegin={card.meetTime.meetTimeBegin}
                     meetTimeEnd={card.meetTime.meetTimeEnd}
+                    meetBuilding={card.meetTime.meetBuilding}
+                    meetBldgCode={card.meetTime.meetBldgCode}
+                    instructors={card.section.instructors.map(
+                      (instr: { name: string }) => capitalizeName(instr.name)
+                    )}
+                    credits={card.section.credits}
                     style={{
                       height: card.heightOfCard + "px",
                     }}

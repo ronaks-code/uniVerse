@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import jsonData from "../../../courses/UF_Jun-30-2023_23_summer_clean.json";
-import { Course, SectionWithCourseCode } from "../CourseUI/CourseTypes";
+import { Course, SectionWithCourse } from "../CourseUI/CourseTypes";
 import CourseDropdown from "../CourseUI/CourseDropdown";
 import {
   PiPlusBold,
@@ -13,14 +13,22 @@ import {
 } from "react-icons/pi";
 import { ShowFilteredCoursesClasses } from "./ShowFilteredCoursesClasses";
 
+// Import global state and custom hook
+import { useStateValue } from "../../../context/globalState";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+
 interface ShowFilteredCoursesProps {
   debouncedSearchTerm: string;
   selectedCourses: Course[];
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-  onSelectSection: (section: SectionWithCourseCode) => void;
+  onSectionSelect: (section: SectionWithCourse) => void;
 }
+
+type CourseState = {
+  [key: string]: boolean;
+};
 
 const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   debouncedSearchTerm,
@@ -28,7 +36,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   setSelectedCourses,
   likedCourses,
   setLikedCourses,
-  onSelectSection,
+  onSectionSelect,
 }) => {
   const [expandedCourses, setExpandedCourses] = useState<{
     [key: string]: boolean;
@@ -36,12 +44,13 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   const [openCourses, setOpenCourses] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const doubleClickRef = useRef(false);
-  const lastClickRef = useRef(0);
-  const courseAnimation = useRef<{ [key: string]: boolean }>({});
   const [isDescriptionOpen, setIsDescriptionOpen] = useState<{
     [key: string]: boolean;
   }>({});
+    
+  const doubleClickRef = useRef(false);
+  const lastClickRef = useRef(0);
+  const courseAnimation = useRef<{ [key: string]: boolean }>({});
 
   const {
     minusIcon,
@@ -329,7 +338,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                         <CourseDropdown
                           key={index}
                           course={course}
-                          onSelectSection={onSelectSection}
+                          onSectionSelect={onSectionSelect}
                         />
                       ))}
                     </div>

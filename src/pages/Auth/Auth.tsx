@@ -10,11 +10,12 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
+import { createUserDocument } from "../../services/firebase";
 import { useNavigate } from "react-router-dom";
 
 import { authClasses } from "./authClasses";
 import { AuthForm, authFormSchema } from "../../models/Form";
-import { auth, db } from "../../services/firebase";
+import { auth, firestore } from "../../services/firebase";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHook";
 import { login } from "../../features/authSlice";
 import ResetPassword from "../../components/ResetPassword/ResetPassword";
@@ -71,7 +72,9 @@ const Auth = () => {
     const provider = new GoogleAuthProvider();
     try {
       const { user } = await signInWithPopup(auth, provider);
-      if (user && user.email)
+      if (user && user.email) {
+        // Call createUserDocument to ensure a user document exists in Firestore
+        await createUserDocument(user, 'google');
         dispatch(
           login({
             email: user.email,
@@ -79,6 +82,7 @@ const Auth = () => {
             photoUrl: user.photoURL || null,
           })
         );
+      }
     } catch (error) {
       console.log("Error signing in:", error);
     }
@@ -121,10 +125,38 @@ const Auth = () => {
           email,
           password
         );
+        if (user) {
+          console.log("User from Firebase Auth:", user);
 
-        await setDoc(doc(db, "users", user.uid), { email });
+          // Call the createUserDocument function
+          await createUserDocument(user, 'email');
+
+          setLoading(false);
+
+          if (user.email)
+            dispatch(
+              login({
+                email: user.email,
+                id: user.uid,
+                photoUrl: user.photoURL || null,
+              })
+            );
+        } else {
+          setLoading(false);
+        }
+      } catch (error: any) {
         setLoading(false);
-
+        const errorCode = error.code;
+        setErrorMessage(errorCode);
+      }
+    } else {
+      try {
+        const { user } = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        setLoading(false);
         if (user && user.email)
           dispatch(
             login({
@@ -138,17 +170,6 @@ const Auth = () => {
         const errorCode = error.code;
         setErrorMessage(errorCode);
       }
-    } else {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false);
-      if (user && user.email)
-        dispatch(
-          login({
-            email: user.email,
-            id: user.uid,
-            photoUrl: user.photoURL || null,
-          })
-        );
     }
   };
 
@@ -170,7 +191,6 @@ const Auth = () => {
     navigate(-1);
   };
 
-
   return (
     <>
       <ResetPassword
@@ -191,7 +211,10 @@ const Auth = () => {
           )}
           <form onSubmit={handleSubmit(handleFormSubmit)} className={form}>
             <div className="grid gap-y-3">
-              <button className="text-blue-500 hover:underline" onClick={handleBackButtonClick}>
+              <button
+                className="text-blue-500 hover:underline"
+                onClick={handleBackButtonClick}
+              >
                 Back
               </button>
               <button
