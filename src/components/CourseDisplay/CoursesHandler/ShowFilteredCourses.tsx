@@ -142,7 +142,6 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
     }
   };
 
-  // Filter the courses based on the debounced search term
   // Filter the courses based on the debounced search term and exclude selected or liked courses
   const filteredCourses = useMemo(() => {
     const searchTerm = debouncedSearchTerm.replace(/\s/g, "").toUpperCase();

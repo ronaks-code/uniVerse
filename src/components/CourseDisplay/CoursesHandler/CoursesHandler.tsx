@@ -11,6 +11,10 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 
 interface CoursesHandlerProps {
   selectedSchedule: string;
+  selectedCourses: Course[];
+  setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  likedCourses: Course[];
+  setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   selectedSections: SectionWithCourseWithoutSectionsArray[];
   setSelectedSections: React.Dispatch<
     React.SetStateAction<SectionWithCourseWithoutSectionsArray[]>
@@ -22,6 +26,10 @@ interface CoursesHandlerProps {
 
 const CoursesHandler: React.FC<CoursesHandlerProps> = ({
   selectedSchedule,
+  selectedCourses,
+  setSelectedCourses,
+  likedCourses,
+  setLikedCourses,
   selectedSections,
   setSelectedSections,
   selectedSectionsNumbers,
@@ -29,15 +37,6 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
   onSectionSelect,
 }) => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  // Initialize from local storage directly
-  const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>(
-    `selectedCourses-${selectedSchedule}`,
-    []
-  );
-  const [likedCourses, setLikedCourses] = useLocalStorage<Course[]>(
-    `likedCourses-${selectedSchedule}`,
-    []
-  );
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow-md rounded-3xl transition-shadow duration-300 courseHandlerScrollbar max-h-[calc(100vh)]">

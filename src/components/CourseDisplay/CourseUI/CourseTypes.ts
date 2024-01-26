@@ -35,6 +35,8 @@ export type SectionWithCourse = Section & Course;
 
 export type SectionWithCourseWithoutSectionsArray = Omit<Course, "sections"> & Section;
 
+export type ExtractedCourseFromSection = Omit<SectionWithCourse, keyof Section>;
+
 export interface Schedule {
   name: string;
   likedCourses: number[];

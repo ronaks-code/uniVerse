@@ -26,7 +26,7 @@ import { DarkModeProvider } from "./hooks/darkModeContext";
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const [selected, setSelected] = useState<string>(
+  const [selectedSchedule, setSelectedSchedule] = useState<string>(
     localStorage.getItem("selectedSchedule") || "Primary"
   );
 
@@ -48,7 +48,7 @@ const App = () => {
   return (
     <StateProvider>
       <DarkModeProvider>
-        <TopNavigation selected={selected} setSelected={setSelected} />
+        <TopNavigation selected={selectedSchedule} setSelected={setSelectedSchedule} />
         {/* <SideBar /> */}
         <Routes>
           <Route element={<AuthRoutes />}>
@@ -60,12 +60,12 @@ const App = () => {
           {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
           <Route
             path="firebase-courses"
-            element={<ScheduleShare selectedSchedule={selected} />}
+            element={<ScheduleShare selectedSchedule={selectedSchedule} />}
           />
           {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
           <Route
             path="/"
-            element={<JSONCourseDisplay selectedSchedule={selected} />}
+            element={<JSONCourseDisplay selectedSchedule={selectedSchedule} />}
           />
           <Route path="course-service" element={<CourseService />} />
         </Routes>
