@@ -153,6 +153,10 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
           <strong>Term:</strong>{" "}
           <span className={term}>{course.termInd || "N/A"}</span>
         </div>
+        <div>
+          <text>Credits:</text>{" "}
+          <span className={term}>{course.sections[0].credits || "N/A"}</span>
+        </div>
         {expanded[`term|${course.termInd}`] ? (
           <PiCaretUpBold className="mx-1 h-9" />
         ) : (

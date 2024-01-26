@@ -46,7 +46,7 @@ const IconGroup: React.FC<IconGroupProps> = ({
               handleRenameSubmit(schedule);
               e.stopPropagation();
             }}
-            title="Accept Name"
+            title="Confirm Rename"
           />
         </div>
         <div className={topNavClasses.iconBlock}>
@@ -71,7 +71,7 @@ const IconGroup: React.FC<IconGroupProps> = ({
             handleRename(schedule);
             e.stopPropagation();
           }}
-          title="Rename"
+          title="Rename Schedule"
         />
       </div>
     )}
@@ -82,7 +82,7 @@ const IconGroup: React.FC<IconGroupProps> = ({
           handleCopy(schedule);
           e.stopPropagation();
         }}
-        title="Copy"
+        title="Create a Copy"
       />
     </div>
     {schedules.length > 1 && (
@@ -93,7 +93,7 @@ const IconGroup: React.FC<IconGroupProps> = ({
             onDelete(schedule);
             e.stopPropagation();
           }}
-          title="Delete"
+          title="Delete Schedule"
         />
       </div>
     )}
