@@ -331,6 +331,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                       selectedSectionsNumbers={selectedSectionsNumbers}
                       setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
+                      gradientColor={getGradientColors(course)}
                     />
                   </div>
                 )}
@@ -404,6 +405,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                       selectedSectionsNumbers={selectedSectionsNumbers}
                       setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
+                      gradientColor={getGradientColors(course)}
                     />
                   </div>
                 )}

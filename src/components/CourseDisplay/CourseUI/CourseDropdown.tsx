@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Course, Section, Instructor, SectionWithCourse } from "./CourseTypes";
 import { courseUIClasses } from "./CourseUIClasses";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
-import LocalStorage from "../../../hooks/useLocalStorage";
 
 interface CourseDropdownProps {
   course: Course;
   onSectionSelect: (section: SectionWithCourse) => void;
   selectedSectionsNumbers: number[];
   setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
+  gradientColor?: string;
 }
 
 const CourseDropdown: React.FC<CourseDropdownProps> = ({
@@ -16,6 +16,7 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
   onSectionSelect,
   selectedSectionsNumbers,
   setSelectedSectionsNumbers,
+  gradientColor,
 }) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
 
@@ -146,11 +147,14 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
             >
               <div
                 className={`flex cursor-pointer justify-between items-center font-bold text-gray-900 dark:text-white px-2 ${
-                  isSectionSelected(instructorKey)
-                    ? backgroundColor
-                    : "bg-transparent"
+                  isSectionSelected(instructorKey) ? "" : "bg-transparent"
                 }`}
-                onClick={() => toggleExpanded(`instructor|${instructorKey}`)} // Add click handler to toggle professor
+                style={{
+                  background: isSectionSelected(instructorKey)
+                    ? gradientColor
+                    : undefined,
+                }}
+                onClick={() => toggleExpanded(`instructor|${instructorKey}`)}
               >
                 <div>{instructorKey.split("|").join(", ")}</div>
                 {expanded[`instructor|${instructorKey}`] ? (
@@ -165,9 +169,16 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
                     key={sectionIndex}
                     className={`pl-4 cursor-pointer ${
                       selectedSectionsNumbers.includes(section.classNumber)
-                        ? backgroundColor
+                        ? ""
                         : "bg-transparent"
                     }`}
+                    style={{
+                      background: selectedSectionsNumbers.includes(
+                        section.classNumber
+                      )
+                        ? gradientColor
+                        : undefined,
+                    }}
                     onClick={() => handleSectionSelect(section)}
                   >
                     <div
