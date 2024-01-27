@@ -67,6 +67,8 @@ const CoursesHandler: React.FC<CoursesHandlerProps> = ({
               setSelectedCourses={setSelectedCourses}
               likedCourses={likedCourses}
               setLikedCourses={setLikedCourses}
+              selectedSectionsNumbers={selectedSectionsNumbers}
+              setSelectedSectionsNumbers={setSelectedSectionsNumbers}
               onSectionSelect={onSectionSelect}
             />
           </div>

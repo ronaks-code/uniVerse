@@ -328,6 +328,8 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
+                      selectedSectionsNumbers={selectedSectionsNumbers}
+                      setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
                     />
                   </div>
@@ -399,6 +401,8 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
+                      selectedSectionsNumbers={selectedSectionsNumbers}
+                      setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
                     />
                   </div>

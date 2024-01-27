@@ -23,6 +23,8 @@ interface ShowFilteredCoursesProps {
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  selectedSectionsNumbers: number[];
+  setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
   onSectionSelect: (section: SectionWithCourse) => void;
 }
 
@@ -36,6 +38,8 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   setSelectedCourses,
   likedCourses,
   setLikedCourses,
+  selectedSectionsNumbers,
+  setSelectedSectionsNumbers,
   onSectionSelect,
 }) => {
   const [expandedCourses, setExpandedCourses] = useState<{
@@ -346,6 +350,8 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                           key={index}
                           course={course}
                           onSectionSelect={onSectionSelect}
+                          selectedSectionsNumbers={selectedSectionsNumbers}
+                          setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                         />
                       ))}
                     </div>

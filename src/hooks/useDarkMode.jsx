@@ -34,7 +34,7 @@ const useLocalStorage = (key, initialValue) => {
 };
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage("dark-theme", false);
+  const [enabled, setEnabled] = useLocalStorage("darkMode", true);
 
   useEffect(() => {
     const className = "dark";

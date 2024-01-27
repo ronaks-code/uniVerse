@@ -99,15 +99,6 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     "isCalendarVisible",
     globalState.calendarVisible
   );
-  // Initialize selectedSections based on the current selectedSchedule
-  // const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
-  //   number[]
-  // >(() => {
-  //   const storedSchedule = localStorage.getItem(
-  //     `selectedSections-${selectedSchedule}`
-  //   );
-  //   return storedSchedule ? JSON.parse(storedSchedule) : [];
-  // });
 
   // Initialize from local storage directly
   const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>(
