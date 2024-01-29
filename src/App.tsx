@@ -23,6 +23,7 @@ import { StateProvider } from "./context/globalState";
 
 // Import the darkMode context
 import { DarkModeProvider } from "./hooks/darkModeContext";
+import FirebaseProvider from "./context/FirebaseProvider";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -45,32 +46,36 @@ const App = () => {
     return () => unsubscribe();
   }, [dispatch]);
 
+  
+
   return (
-    <StateProvider>
-      <DarkModeProvider>
-        <TopNavigation selected={selected} setSelected={setSelected} />
-        {/* <SideBar /> */}
-        <Routes>
-          <Route element={<AuthRoutes />}>
-            <Route path="profile" element={<Profile />} />
-          </Route>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="auth" element={<Auth />} />
-          <Route path="settings" element={<Settings />} />
-          {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
-          <Route
-            path="firebase-courses"
-            element={<ScheduleShare selectedSchedule={selected} />}
-          />
-          {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
-          <Route
-            path="/"
-            element={<JSONCourseDisplay selectedSchedule={selected} />}
-          />
-          <Route path="course-service" element={<CourseService />} />
-        </Routes>
-      </DarkModeProvider>
-    </StateProvider>
+    <FirebaseProvider>
+      <StateProvider>
+        <DarkModeProvider>
+          <TopNavigation selected={selected} setSelected={setSelected} />
+          {/* <SideBar /> */}
+          <Routes>
+            <Route element={<AuthRoutes />}>
+              <Route path="profile" element={<Profile />} />
+            </Route>
+            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="auth" element={<Auth />} />
+            <Route path="settings" element={<Settings />} />
+            {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
+            <Route
+              path="firebase-courses"
+              element={<ScheduleShare selectedSchedule={selected} />}
+            />
+            {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
+            <Route
+              path="/"
+              element={<JSONCourseDisplay selectedSchedule={selected} />}
+            />
+            <Route path="course-service" element={<CourseService />} />
+          </Routes>
+        </DarkModeProvider>
+      </StateProvider>
+  </FirebaseProvider>
   );
 };
 
