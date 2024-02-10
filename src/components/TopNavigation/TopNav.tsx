@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Course,
   SectionWithCourse,
@@ -20,6 +20,7 @@ import {
   deleteSchedule,
 } from "../../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { FirebaseContext } from "../../context/FirebaseContext";
 
 export type Schedule = {
   name: string;
@@ -252,6 +253,9 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   // console.log("Current Schedules:", schedules);
   // console.log("Currently Selected:", selected);
 
+  let user = useContext(FirebaseContext)?.user;
+  let email = user?.email;
+
   return (
     <div className="top-navigation flex justify-between items-center">
       <div className="flex items-center">
@@ -276,6 +280,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             />
           )}
         </div>
+        <p>{email}</p>
       </div>
       <div className="flex items-center">
         <div className="mr-4">
