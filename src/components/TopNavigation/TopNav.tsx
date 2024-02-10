@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import {
   Course,
   SectionWithCourse,
@@ -250,11 +250,9 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
     }
   };
 
-  // console.log("Current Schedules:", schedules);
-  // console.log("Currently Selected:", selected);
-
   let user = useContext(FirebaseContext)?.user;
   let email = user?.email;
+  let signInMethod = user?.signInMethod;
 
   return (
     <div className="top-navigation flex justify-between items-center">
@@ -280,7 +278,8 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             />
           )}
         </div>
-        <p>{email}</p>
+        {/* <p>{email}</p> */}
+        {/* <p>{signInMethod}</p> */}
       </div>
       <div className="flex items-center">
         <div className="mr-4">

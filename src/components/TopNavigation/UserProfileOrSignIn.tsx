@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import { topNavClasses } from "./topNavClasses";
 import { useAppSelector, useAppDispatch } from "../../hooks/storeHook";
 import ProfileDropdown from "./ProfileDropdown"; // Import the Dropdown component
@@ -6,14 +6,17 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth"; // Import n
 import { auth } from "../../services/firebase";
 import { logout } from "../../features/authSlice";
 import { PiSignIn } from "react-icons/pi";
+import { FirebaseContext } from "../../context/FirebaseContext";
 
-const UserProfileOrSignIn = () => {
+const UserProfileOrSignIn = forwardRef<HTMLDivElement>((props, ref) => {
   const { user } = useAppSelector((state) => state.auth);
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
-  const profileDropdownRef = useRef<HTMLDivElement | null>(null); // Define the ref type
+  const profileDropdownRef = useRef<HTMLDivElement | null>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null); // Add this line
   const dispatch = useAppDispatch();
 
-  const toggleProfileDropdown = () => setProfileDropdownVisible(!profileDropdownVisible);
+  const toggleProfileDropdown = () =>
+    setProfileDropdownVisible(!profileDropdownVisible);
   const handleSignOut = async () => {
     try {
       await signOut(auth); // Sign out the user using Firebase auth
@@ -29,80 +32,69 @@ const UserProfileOrSignIn = () => {
     // Example: You can show a sign-in modal or navigate to the sign-in page
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target as Node) &&
+        toggleButtonRef.current &&
+        !toggleButtonRef.current.contains(event.target as Node)
+      ) {
+        setProfileDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileDropdownVisible]);
+
   return (
-    <div className="relative">
-      <button onClick={toggleProfileDropdown}>
+    <div ref={ref} className="relative">
+      <button
+        ref={toggleButtonRef}
+        onClick={toggleProfileDropdown}
+        className="flex items-center justify-center w-10 h-10"
+      >
         {user ? (
-          <div className="sidebar-icon relative flex items-center justify-center w-10 h-10">
+          <div className="sidebar-icon">
             {user?.photoUrl ? (
               <img
-                className={`${topNavClasses.linkProfile} sidebar-icon transform transition-transform duration-300 hover:scale-105 hover:shadow-xl`}
+                className={`${topNavClasses.linkProfile} rounded-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl`}
                 src={user.photoUrl}
                 alt="Avatar"
               />
             ) : (
               <div
-                className={`sidebar-icon w-10 h-10 mb-0 text-2xl font-bold grid place-content-center bg-green-200 rounded-full shadow-lg transform transition-transform duration-300`}
+                className={`w-10 h-10 text-2xl font-bold flex items-center justify-center bg-green-200 rounded-full shadow-lg transform transition-transform duration-300`}
               >
                 {user?.email[0].toUpperCase()}
               </div>
             )}
           </div>
         ) : (
-          <span
-            className="sidebar-icon relative flex items-center justify-center w-10 h-10"
-            onClick={handleSignIn} // Add this line to handle sign-in
-          >
+          <span className="sidebar-icon" onClick={handleSignIn}>
             <PiSignIn size="28" />
           </span>
         )}
       </button>
 
       {profileDropdownVisible && (
-        <div ref={profileDropdownRef} className="absolute">
-          <ProfileDropdown user={user} onSignOut={handleSignOut} onClose={() => setProfileDropdownVisible(false)} />
+        <div
+          ref={profileDropdownRef}
+          className="absolute right-0 z-50 w-52 bg-white rounded-md shadow-lg mt-2"
+        >
+          <ProfileDropdown
+            user={user}
+            onSignOut={handleSignOut}
+            onClose={() => setProfileDropdownVisible(false)}
+          />
         </div>
       )}
     </div>
   );
-};
+});
 
 export default UserProfileOrSignIn;
-
-// const UserProfileOrSignIn = () => {
-//   const { user } = useAppSelector((state) => state.auth);
-//   if (user) {
-//     return (
-//       <Link to="/profile">
-//         {user?.photoUrl ? (
-//           <img
-//             className={`${topNavClasses.linkProfile} transform transition-transform duration-300 hover:scale-105 hover:shadow-xl`}
-//             src={user.photoUrl}
-//             alt="Avatar"
-//           />
-//         ) : (
-//           <div
-//             className={`sidebar-icon w-10 h-10 mb-0 text-2xl font-bold grid place-content-center bg-green-200 rounded-full shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl`}
-//           >
-//             {user?.email[0].toUpperCase()}
-//             <span className="sidebar-tooltip absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-3 opacity-0 transition-all duration-100 scale-0">
-//               Profile
-//             </span>
-//           </div>
-//         )}
-//       </Link>
-//     );
-//   } else {
-//     return (
-//       <Link
-//         to="/auth"
-//         className="sidebar-icon relative flex items-center justify-center w-10 h-10"
-//       >
-//         <PiSignIn size="28" />
-//         <span className="sidebar-tooltip absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-3 opacity-0 transition-all duration-100 scale-0">
-//           Sign In
-//         </span>
-//       </Link>
-//     );
-//   }
-// };

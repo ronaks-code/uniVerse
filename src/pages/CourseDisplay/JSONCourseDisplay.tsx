@@ -399,7 +399,7 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
           )}
         </div>
         {/* Modern Icon Button to toggle LLMChat */}
-        {isWideScreen && (
+        {/* {isWideScreen && (
           <button
             className="absolute right-4 top-20 bg-gray-900 hover:bg-gray-800 text-white p-2 rounded-lg shadow-md border border-gray-300 z-10"
             onClick={() => setLLMChatVisible(!LLMChatVisible)}
@@ -410,7 +410,7 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
               <BsChatLeftText size={20} />
             )}
           </button>
-        )}
+        )} */}
 
         {/* LLMChat Placeholder */}
         <div

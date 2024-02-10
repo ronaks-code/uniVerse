@@ -52,7 +52,7 @@ const App = () => {
     <FirebaseProvider>
       <StateProvider>
         <DarkModeProvider>
-          <TopNavigation selected={selected} setSelected={setSelected} />
+          <TopNavigation selected={selectedSchedule} setSelected={setSelectedSchedule} />
           {/* <SideBar /> */}
           <Routes>
             <Route element={<AuthRoutes />}>
@@ -64,12 +64,12 @@ const App = () => {
             {/* <Route path="firebase-courses" element={<FirebaseCourseDisplay />} /> */}
             <Route
               path="firebase-courses"
-              element={<ScheduleShare selectedSchedule={selected} />}
+              element={<ScheduleShare selectedSchedule={selectedSchedule} />}
             />
             {/* <Route path="JSON-courses" element={<JSONCourseDisplay />} /> */}
             <Route
               path="/"
-              element={<JSONCourseDisplay selectedSchedule={selected} />}
+              element={<JSONCourseDisplay selectedSchedule={selectedSchedule} />}
             />
             <Route path="course-service" element={<CourseService />} />
           </Routes>
