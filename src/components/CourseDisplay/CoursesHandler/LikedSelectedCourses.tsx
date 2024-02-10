@@ -209,28 +209,42 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
   const [activeCourses, setActiveCourses] = useState<Course[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleBadgeClick = (course: Course, event: React.MouseEvent) => {
+  const handleTrashClick = (course: Course, event: React.MouseEvent) => {
     event.stopPropagation();
+
+    // Remove the course from selectedCourses
     setSelectedCourses((prevSelectedCourses) =>
       prevSelectedCourses.filter(
-        (selectedCourse) =>
-          selectedCourse.code !== course.code ||
-          selectedCourse.name !== course.name
+        (selectedCourse) => selectedCourse.code !== course.code
       )
     );
 
+    // Remove the course from likedCourses
+    setLikedCourses((prevLikedCourses) =>
+      prevLikedCourses.filter((likedCourse) => likedCourse.code !== course.code)
+    );
+
+    // Remove all section numbers associated with the course from selectedSectionsNumbers
+    setSelectedSectionsNumbers((prevSelectedSectionsNumbers) => {
+      // Find the classNumbers of sections belonging to the removed course
+      const sectionNumbersToRemove = selectedSections
+        .filter((section) => section.code === course.code)
+        .map((section) => section.classNumber);
+
+      // Filter out these numbers from selectedSectionsNumbers
+      return prevSelectedSectionsNumbers.filter(
+        (number) => !sectionNumbersToRemove.includes(number)
+      );
+    });
+
+    // Remove all sections associated with the course from selectedSections
+    setSelectedSections((prevSelectedSections) =>
+      prevSelectedSections.filter((section) => section.code !== course.code)
+    );
+
+    // Update Firebase if the user is signed in
     if (isUserSignedIn) {
       updateSelectedCoursesInFirebase(course.code);
-    }
-
-    setLikedCourses((prevLikedCourses) =>
-      prevLikedCourses.filter(
-        (likedCourse) =>
-          likedCourse.code !== course.code || likedCourse.name !== course.name
-      )
-    );
-
-    if (isUserSignedIn) {
       updateLikedCoursesInFirebase(course.code);
     }
   };
@@ -298,7 +312,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                     </div>
                     <button
                       className="ml-1 h-0"
-                      onClick={(event) => handleBadgeClick(course, event)}
+                      onClick={(event) => handleTrashClick(course, event)}
                     >
                       <PiTrashBold size={16} />
                     </button>
@@ -314,7 +328,10 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
+                      selectedSectionsNumbers={selectedSectionsNumbers}
+                      setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
+                      gradientColor={getGradientColors(course)}
                     />
                   </div>
                 )}
@@ -369,7 +386,7 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                     </div>
                     <button
                       className="ml-1 h-0"
-                      onClick={(event) => handleBadgeClick(course, event)}
+                      onClick={(event) => handleTrashClick(course, event)}
                     >
                       <PiTrashBold size={16} />
                     </button>
@@ -385,7 +402,10 @@ const LikedSelectedCourses: React.FC<LikedSelectedCoursesProps> = ({
                   >
                     <CourseDropdown
                       course={course}
+                      selectedSectionsNumbers={selectedSectionsNumbers}
+                      setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                       onSectionSelect={onSectionSelect}
+                      gradientColor={getGradientColors(course)}
                     />
                   </div>
                 )}

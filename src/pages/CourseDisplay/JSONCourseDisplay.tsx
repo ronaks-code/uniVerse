@@ -3,6 +3,7 @@ import {
   Course,
   Schedule,
   SectionWithCourse,
+  ExtractedCourseFromSection,
   SectionWithCourseWithoutSectionsArray,
 } from "../../components/CourseDisplay/CourseUI/CourseTypes";
 import { JSONCourseDisplayClasses } from "./JSONCourseDisplayClasses";
@@ -28,6 +29,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { auth, firestore } from "../../services/firebase";
+import { set } from "react-hook-form";
 
 // Assuming jsonData is an array of courses directly
 const courses: Course[] = jsonData as Course[];
@@ -97,28 +99,71 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
     "isCalendarVisible",
     globalState.calendarVisible
   );
-  // Initialize selectedSections based on the current selectedSchedule
-  // const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useState<
-  //   number[]
-  // >(() => {
-  //   const storedSchedule = localStorage.getItem(
-  //     `selectedSections-${selectedSchedule}`
-  //   );
-  //   return storedSchedule ? JSON.parse(storedSchedule) : [];
-  // });
 
-  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useLocalStorage<
-    number[]
-  >(`selectedSectionsNumbers-${selectedSchedule}`, []);
-
+  // Initialize from local storage directly
+  const [selectedCourses, setSelectedCourses] = useLocalStorage<Course[]>(
+    `selectedCourses-${selectedSchedule}`,
+    []
+  );
   const [likedCourses, setLikedCourses] = useLocalStorage<Course[]>(
     `likedCourses-${selectedSchedule}`,
     []
   );
 
+  const [selectedSectionsNumbers, setSelectedSectionsNumbers] = useLocalStorage<
+    number[]
+  >(`selectedSectionsNumbers-${selectedSchedule}`, []);
+
   const [selectedSections, setSelectedSections] = useLocalStorage<
     SectionWithCourseWithoutSectionsArray[]
   >(`selectedSections-${selectedSchedule}`, []);
+
+  const extractCourseFromSection = (
+    sectionWithCourse: SectionWithCourse
+  ): ExtractedCourseFromSection => {
+    const {
+      number,
+      classNumber,
+      display,
+      credits,
+      deptName,
+      instructors,
+      meetTimes,
+      finalExam,
+      ...courseData
+    } = sectionWithCourse;
+    return courseData as ExtractedCourseFromSection;
+  };
+
+  // Function to select or deselect a course
+  const toggleCourseSelected = (course: Course) => {
+    const isSelected = selectedCourses.includes(course);
+
+    if (isSelected) {
+      setSelectedCourses((prev) => prev.filter((c) => c !== course));
+    } else {
+      setSelectedCourses((prev) => [...prev, course]);
+    }
+
+    if (likedCourses.includes(course)) {
+      toggleCourseLiked(course);
+    }
+  };
+
+  // Function to like or unlike a course
+  const toggleCourseLiked = (course: Course) => {
+    const isLiked = likedCourses.includes(course);
+
+    if (isLiked) {
+      setLikedCourses((prev) => prev.filter((c) => c !== course));
+    } else {
+      setLikedCourses((prev) => [...prev, course]);
+    }
+
+    if (selectedCourses.includes(course)) {
+      toggleCourseSelected(course);
+    }
+  };
 
   const onSectionSelect = (section: SectionWithCourse) => {
     // Update selectedSectionsNumbers
@@ -155,6 +200,19 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         return [...prevSections, newSection];
       }
     });
+
+    // Extract the course data from the section
+    const course = extractCourseFromSection(section);
+
+    // Check if the course is already selected
+    const isCourseSelected = selectedCourses.some(
+      (c) => c.code === course.code
+    );
+
+    // If course is not in selectedCourses, run toggleCourseSelected
+    if (!isCourseSelected) {
+      toggleCourseSelected(course);
+    }
 
     // Update Firebase if a user is authenticated
     if (auth.currentUser) {
@@ -316,6 +374,10 @@ const JSONCourseDisplay: React.FC<JSONCourseDisplayProps> = ({
         {courseHandlerVisible && (
           <CoursesHandler
             selectedSchedule={selectedSchedule}
+            selectedCourses={selectedCourses}
+            setSelectedCourses={setSelectedCourses}
+            likedCourses={likedCourses}
+            setLikedCourses={setLikedCourses}
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
             selectedSectionsNumbers={selectedSectionsNumbers}

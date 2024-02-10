@@ -27,7 +27,7 @@ import FirebaseProvider from "./context/FirebaseProvider";
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const [selected, setSelected] = useState<string>(
+  const [selectedSchedule, setSelectedSchedule] = useState<string>(
     localStorage.getItem("selectedSchedule") || "Primary"
   );
 

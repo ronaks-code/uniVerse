@@ -23,6 +23,8 @@ interface ShowFilteredCoursesProps {
   setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   likedCourses: Course[];
   setLikedCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  selectedSectionsNumbers: number[];
+  setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
   onSectionSelect: (section: SectionWithCourse) => void;
 }
 
@@ -36,6 +38,8 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   setSelectedCourses,
   likedCourses,
   setLikedCourses,
+  selectedSectionsNumbers,
+  setSelectedSectionsNumbers,
   onSectionSelect,
 }) => {
   const [expandedCourses, setExpandedCourses] = useState<{
@@ -47,7 +51,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   const [isDescriptionOpen, setIsDescriptionOpen] = useState<{
     [key: string]: boolean;
   }>({});
-    
+
   const doubleClickRef = useRef(false);
   const lastClickRef = useRef(0);
   const courseAnimation = useRef<{ [key: string]: boolean }>({});
@@ -142,7 +146,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
     }
   };
 
-  // Filter the courses based on the debounced search term
+  // Filter the courses based on the debounced search term and exclude selected or liked courses
   const filteredCourses = useMemo(() => {
     const searchTerm = debouncedSearchTerm.replace(/\s/g, "").toUpperCase();
 
@@ -156,21 +160,28 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
     return (jsonData as Course[])
       .filter((course) => {
         const code = course.code.toUpperCase();
-        return (
-          code.startsWith(coursePrefix || "") && code.includes(additionalChars)
+        const isCourseMatch =
+          code.startsWith(coursePrefix || "") && code.includes(additionalChars);
+        const isCourseSelected = selectedCourses.some(
+          (selectedCourse) => selectedCourse.code === course.code
         );
+        const isCourseLiked = likedCourses.some(
+          (likedCourse) => likedCourse.code === course.code
+        );
+        return isCourseMatch && !isCourseSelected && !isCourseLiked;
       })
       .sort(
         (a, b) =>
           a.code.localeCompare(b.code) || a.termInd.localeCompare(b.termInd)
       );
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, selectedCourses, likedCourses]);
 
   // Group the filtered courses by code and name
   const groupedFilteredCourses = useMemo(() => {
     return filteredCourses.reduce<{ [key: string]: Course[] }>(
       (acc, course) => {
-        const key = `${course.code}|${course.name}`;
+        // Use a combination of courseId and code as the key.
+        const key = `${course.courseId}|${course.code}`;
         acc[key] = acc[key] || [];
         acc[key].push(course);
         return acc;
@@ -180,7 +191,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
   }, [filteredCourses]);
 
   return (
-    <div className={`pl-4`}>
+    <div className={`pl-4 select-none`}>
       <Suspense fallback={<div>Loading...</div>}>
         {Object.keys(groupedFilteredCourses).length > 0 ? (
           <div className="mb-[-2rem]">
@@ -218,6 +229,39 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                             </div>
                           )}
 
+                          {/* Dropdown toggle */}
+                          <div className="ml-1 h-9">
+                            {isOpen ? (
+                              <PiCaretUpBold
+                                className={`${caretUpIcon} ${
+                                  isCourseAnimated
+                                    ? "opacity-100 transition-opacity duration-300"
+                                    : ""
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseDropdown(
+                                    `${firstCourse.code}|${firstCourse.name}`
+                                  );
+                                }}
+                              />
+                            ) : (
+                              <PiCaretDownBold
+                                className={`${caretDownIcon} ${
+                                  isCourseAnimated
+                                    ? "opacity-100 transition-opacity duration-100"
+                                    : ""
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCourseDropdown(
+                                    `${firstCourse.code}|${firstCourse.name}`
+                                  );
+                                }}
+                              />
+                            )}
+                          </div>
+
                           {/* View description */}
                           <div className="ml-1 h-9">
                             <PiEye
@@ -250,41 +294,8 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                             )}
                           </div>
 
-                          {/* Dropdown toggle */}
-                          <div className="mx-1 h-9">
-                            {isOpen ? (
-                              <PiCaretUpBold
-                                className={`${caretUpIcon} ${
-                                  isCourseAnimated
-                                    ? "opacity-100 transition-opacity duration-300"
-                                    : ""
-                                }`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseDropdown(
-                                    `${firstCourse.code}|${firstCourse.name}`
-                                  );
-                                }}
-                              />
-                            ) : (
-                              <PiCaretDownBold
-                                className={`${caretDownIcon} ${
-                                  isCourseAnimated
-                                    ? "opacity-100 transition-opacity duration-100"
-                                    : ""
-                                }`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleCourseDropdown(
-                                    `${firstCourse.code}|${firstCourse.name}`
-                                  );
-                                }}
-                              />
-                            )}
-                          </div>
-
                           {/* Like toggle */}
-                          <div className="ml-1 mr-[-0.25rem] h-9">
+                          {/* <div className="ml-1 mr-[-0.25rem] h-9">
                             {likedCourses.includes(firstCourse) ? (
                               <PiHeartFill
                                 className={`${heartFillIcon}`}
@@ -302,7 +313,7 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                                 }}
                               />
                             )}
-                          </div>
+                          </div> */}
                         </div>
 
                         {/* Course name */}
@@ -339,6 +350,8 @@ const ShowFilteredCourses: React.FC<ShowFilteredCoursesProps> = ({
                           key={index}
                           course={course}
                           onSectionSelect={onSectionSelect}
+                          selectedSectionsNumbers={selectedSectionsNumbers}
+                          setSelectedSectionsNumbers={setSelectedSectionsNumbers}
                         />
                       ))}
                     </div>

@@ -3,9 +3,7 @@ import React, { createContext, useReducer, useContext } from "react";
 // Define the shape of the global state
 type GlobalState = {
   debouncedSearchTerm: string;
-  // selectedCourses: any[];
-  // likedCourses: any[];
-  // selectedSections: any[];
+  darkMode: boolean;
   courseHandlerVisible: boolean;
   calendarVisible: boolean;
   LLMChatVisible: boolean;
@@ -17,9 +15,6 @@ type GlobalState = {
 // Define actions to modify the state
 type Action = 
   | { type: "SET_DEBOUNCED_SEARCH_TERM"; payload: string }
-  // | { type: "SET_SELECTED_COURSES"; payload: any[] }
-  // | { type: "SET_LIKED_COURSES"; payload: any[] }
-  // | { type: "SET_SELECTED_SECTIONS"; payload: any[] }
   | { type: "SET_COURSE_HANDLER_VISIBLE"; payload: boolean }
   | { type: "SET_CALENDAR_VISIBLE"; payload: boolean }
   | { type: "SET_LLM_CHAT_VISIBLE"; payload: boolean }
@@ -27,9 +22,7 @@ type Action =
 
 const initialState: GlobalState = {
   debouncedSearchTerm: "",
-  // selectedCourses: [],
-  // likedCourses: [],
-  // selectedSections: [],
+  darkMode: true,
   courseHandlerVisible: true,
   calendarVisible: true,
   LLMChatVisible: false,
@@ -44,12 +37,6 @@ const reducer = (state: GlobalState, action: Action): GlobalState => {
   switch (action.type) {
     case "SET_DEBOUNCED_SEARCH_TERM":
       return { ...state, debouncedSearchTerm: action.payload };
-    // case "SET_SELECTED_COURSES":
-    //   return { ...state, selectedCourses: action.payload };
-    // case "SET_LIKED_COURSES":
-    //   return { ...state, likedCourses: action.payload };
-    // case "SET_SELECTED_SECTIONS":
-    //   return { ...state, selectedSections: action.payload };
     default:
       return state;
   }

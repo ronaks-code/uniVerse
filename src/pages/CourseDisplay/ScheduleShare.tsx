@@ -216,9 +216,10 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({ selectedSchedule }) => {
           isCourseHandlerVisible ? "" : "hidden"
         } flex-grow`}
       >
-        {isCourseHandlerVisible && (
+        {/* {isCourseHandlerVisible && (
           <CoursesHandler
             onSectionSelect={onSectionSelect}
+
             selectedSections={selectedSections}
             setSelectedSections={setSelectedSections}
             selectedSectionsNumbers={selectedSectionsNumbers}
@@ -226,7 +227,7 @@ const ScheduleShare: React.FC<ScheduleShareProps> = ({ selectedSchedule }) => {
             selectedSchedule={selected}
             // schedules={schedules}
           />
-        )}
+        )} */}
       </div>
       {/* <div className={`course-filter ${isCourseFilterVisible ? "" : "hidden"}`}>
         {isCourseFilterVisible && <CourseFilter />}

@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
-import {
-  Course,
-  Section,
-  Instructor,
-  SectionWithCourse,
-} from "./CourseTypes";
+import { Course, Section, Instructor, SectionWithCourse } from "./CourseTypes";
 import { courseUIClasses } from "./CourseUIClasses";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
 
 interface CourseDropdownProps {
   course: Course;
   onSectionSelect: (section: SectionWithCourse) => void;
+  selectedSectionsNumbers: number[];
+  setSelectedSectionsNumbers: React.Dispatch<React.SetStateAction<number[]>>;
+  gradientColor?: string;
 }
 
 const CourseDropdown: React.FC<CourseDropdownProps> = ({
   course,
   onSectionSelect,
+  selectedSectionsNumbers,
+  setSelectedSectionsNumbers,
+  gradientColor,
 }) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
+
+  const isSectionSelected = (instructorKey: string) => {
+    return instructors[instructorKey].some((section) =>
+      selectedSectionsNumbers.includes(section.classNumber)
+    );
+  };
+
+  const backgroundColor = "bg-green-600";
 
   const { listItem, content, noContent, term, sectionContainer } =
     courseUIClasses;
@@ -66,42 +75,8 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
       ...course,
     };
 
-    console.log("In CourseDropdown, selectedSections is", SectionWithCourse);
-
     onSectionSelect(SectionWithCourse);
   };
-  // const handleSectionSelect = (section: Section) => {
-  //   let currentSelectedSections = selectedSections || [];
-  //   const SectionWithCourse: SectionWithCourse = {
-  //     ...section,
-  //     code: course.code,
-  //   };
-
-  //   if (
-  //     currentSelectedSections.some(
-  //       (sec) =>
-  //         sec.code === SectionWithCourse.code &&
-  //         sec.number === SectionWithCourse.number
-  //     )
-  //   ) {
-  //     setSelectedSections &&
-  //       setSelectedSections(
-  //         currentSelectedSections.filter(
-  //           (sec) =>
-  //             sec.code !== SectionWithCourse.code ||
-  //             sec.number !== SectionWithCourse.number
-  //         )
-  //       );
-  //   } else {
-  //     setSelectedSections &&
-  //       setSelectedSections([
-  //         ...currentSelectedSections,
-  //         SectionWithCourse,
-  //       ]);
-  //   }
-
-  //   console.log("In CourseDropdown, selectedSections is", selectedSections);
-  // };
 
   // Function to toggle the expanded state of terms and professors
   const toggleExpanded = (key: string) => {
@@ -153,6 +128,10 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
           <strong>Term:</strong>{" "}
           <span className={term}>{course.termInd || "N/A"}</span>
         </div>
+        <div>
+          <p>Credits:</p>{" "}
+          <span className={term}>{course.sections[0].credits || "N/A"}</span>
+        </div>
         {expanded[`term|${course.termInd}`] ? (
           <PiCaretUpBold className="mx-1 h-9" />
         ) : (
@@ -160,15 +139,22 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
         )}
       </div>
       {expanded[`term|${course.termInd}`] && ( // Only render if term is expanded
-        <ul className="list-none pl-0">
+        <ul className={`list-none pl-0`}>
           {Object.keys(instructors).map((instructorKey, index) => (
             <li
               key={index}
               className={`${listItem} border-t border-gray-400 dark:border-gray-700 mr-auto`}
             >
               <div
-                className="flex cursor-pointer justify-between items-center font-bold text-gray-900 dark:text-white px-2"
-                onClick={() => toggleExpanded(`instructor|${instructorKey}`)} // Add click handler to toggle professor
+                className={`flex cursor-pointer justify-between items-center font-bold text-gray-900 dark:text-white px-2 ${
+                  isSectionSelected(instructorKey) ? "" : "bg-transparent"
+                }`}
+                style={{
+                  background: isSectionSelected(instructorKey)
+                    ? gradientColor
+                    : undefined,
+                }}
+                onClick={() => toggleExpanded(`instructor|${instructorKey}`)}
               >
                 <div>{instructorKey.split("|").join(", ")}</div>
                 {expanded[`instructor|${instructorKey}`] ? (
@@ -181,10 +167,23 @@ const CourseDropdown: React.FC<CourseDropdownProps> = ({
                 instructors[instructorKey].map((section, sectionIndex) => (
                   <div
                     key={sectionIndex}
-                    className="pl-4 cursor-pointer"
+                    className={`pl-4 cursor-pointer ${
+                      selectedSectionsNumbers.includes(section.classNumber)
+                        ? ""
+                        : "bg-transparent"
+                    }`}
+                    style={{
+                      background: selectedSectionsNumbers.includes(
+                        section.classNumber
+                      )
+                        ? gradientColor
+                        : undefined,
+                    }}
                     onClick={() => handleSectionSelect(section)}
                   >
-                    <div className="font-bold text-gray-900 dark:text-white px-2">{`${section.number}`}</div>
+                    <div
+                      className={`font-bold text-gray-900 dark:text-white px-2 `}
+                    >{`${section.number}`}</div>
                     {renderSectionInformation(section)}
                   </div>
                 ))}
